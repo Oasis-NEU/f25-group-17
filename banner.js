@@ -16,7 +16,12 @@ const postData = {
 }
 
 const clickContinueURL = `${bannerURL}/term/search?mode=search`
-const postRequest = await fetch(clickContinueURL, {method: "POST", body: JSON.stringify(postData)})
+// const postRequest = await fetch(clickContinueURL, {method: "POST", body: JSON.stringify(postData)})
+const postRequest = await fetch(clickContinueURL, {
+    method: "POST",
+    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UT'},
+    body: `term=${termId}&studyPath=&studyPathText=&startDatepicker=&endDatepicker=`
+})
 // console.log(postRequest.headers.get("Set-Cookie"))
 const cookieResponse = postRequest.headers.get("Set-Cookie");
 const sessionIdMatch = cookieResponse.match(/JSESSIONID=[^;]+/)[0];
@@ -28,19 +33,28 @@ const postRequest2 = await fetch(clickContinueURL, {
     method: "POST",
     headers: {
         "Content-Type": 'application/x-www-form-urlencoded; charset=UTF',
-        "Cookie": cookieResponse
+        "Cookie": cookieResponse,
+        credentials: 'include'
     },
     body: `term=${termId}&studyPath=&studyPathText=&startDatepicker=&endDatepicker=`
 })
 
-console.log(await postRequest2.text())
+console.log(await postRequest.text())
+
+// const cookieResponse2 = await postRequest2.headers.get("set-cookie");
+// const sessionIdMatch2 = cookieResponse2.match(/JSESSIONID=[^;]+/)[0];
+// const bannerCookieMatch2 = cookieResponse2.match(/nubanner-cookie=[^;]+/)[0];
+// const cookies2 = sessionIdMatch2 + '; ' + bannerCookieMatch2;
+// console.log(cookies2)
+// console.log(await postRequest2.text())
 
 const searchCoursesURL = `${bannerURL}
     /searchResults/searchResults?
     txt_subject=${subject}&txt_courseNumber=&txt_term=${termId}
     &startDatepicker=&endDatepicker=
     &pageOffset=0&pageMaxSize=10&sortColumn=subjectDescription&sortDirection=asc`
-const courseRequest = await fetch(searchCoursesURL, {headers: {Cookie: cookieResponse}})
+const courseRequest = await fetch(searchCoursesURL, {headers: {Cookie: cookieResponse},
+        credentials: 'include'})
 
 // console.log(await courseRequest.text())
 

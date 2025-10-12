@@ -1,0 +1,2 @@
+make the cookie actually generated instead of constant
+get all courses and clean data
