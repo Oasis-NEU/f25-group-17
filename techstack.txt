@@ -1,5 +1,0 @@
-The tech stack
-
-Front End:
-
-Back End:

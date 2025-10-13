@@ -1,0 +1,10 @@
+Frontend:
+Matt
+
+Backend:
+Ayaan 
+Andy 
+
+Full Stack:
+Jackson 
+Mason
