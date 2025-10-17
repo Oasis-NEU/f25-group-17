@@ -9,6 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.4.2",
+    "@chakra-ui/react": "^3.27.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "framer-motion": "^12.23.24",
     "gsap": "^3.13.0",
     "motion": "^12.23.24",
     "next": "15.5.5",
