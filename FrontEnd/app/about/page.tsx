@@ -4,11 +4,11 @@ import React from "react";
 import '../globals.css'
 import StaggeredMenu from '../../components/StaggeredMenu';
 
-export default function pages() {
+export default function about() {
   const menuItems = [
   { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
   { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
-  { label: 'Services', ariaLabel: 'View our services', link: '/services' },
+  { label: 'Study', ariaLabel: 'View our services', link: '/study' },
   { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' }
   ];
 
