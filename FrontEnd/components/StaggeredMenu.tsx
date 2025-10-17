@@ -346,7 +346,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
   return (
     <div
-      className={`sm-scope z-40 ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'}`}
+      className={`sm-scope z-40 w-full h-full`}
     >
       <div
         className={(className ? className + ' ' : '') + 'staggered-menu-wrapper relative w-full h-full z-40'}
@@ -380,17 +380,6 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[2em] bg-transparent pointer-events-none z-20"
           aria-label="Main navigation header"
         >
-          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-            <img
-              src={logoUrl || '/src/assets/logos/reactbits-gh-white.svg'}
-              alt="Logo"
-              className="sm-logo-img block h-8 w-auto object-contain"
-              draggable={false}
-              width={110}
-              height={24}
-            />
-          </div>
-
           <button
             ref={toggleBtnRef}
             className={`sm-toggle relative inline-flex items-center gap-[0.3rem] bg-transparent border-0 cursor-pointer font-medium leading-none overflow-visible pointer-events-auto ${
@@ -431,6 +420,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               />
             </span>
           </button>
+
+          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
+            <img
+              src={logoUrl || '/src/assets/logos/reactbits-gh-white.svg'}
+              alt="Logo"
+              className="sm-logo-img block h-8 w-auto object-contain"
+              draggable={false}
+              width={110}
+              height={24}
+            />
+          </div>
         </header>
 
         <aside
