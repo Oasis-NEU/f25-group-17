@@ -6,7 +6,7 @@ const cacheDirPath = "../cache"
 class Cache {
     constructor(filepath) {
         this.filepath = path.join(cacheDirPath, filepath);
-        this.loadCacheDir();
+        this.load();
     }
 
     async loadCacheDir() {
@@ -22,7 +22,7 @@ class Cache {
         }
     }
 
-    async loadFile() {
+    async load() {
         await this.loadCacheDir();
         if(!fs.existsSync(this.filepath)) {
             console.log(`Creating cache file ${this.filepath}`)
@@ -40,15 +40,23 @@ class Cache {
         return fs.readFileSync(this.filepath, "utf-8") == ""
     }
 
-    async readCache() {
-
+    async read() {
+        return fs.readFileSync(this.filepath, "utf-8")
     }
 
-    async writeCache() {
-        
+    async update(data) {
+        try {
+            let writeData = JSON.stringify(data, null, 4);
+            JSON.parse(writeData);
+            fs.writeFileSync(this.filepath, writeData, (err) => {
+                if(err) {
+                    console.log(`Error updating cache file ${this.filepath}`);
+                }
+            });
+        } catch(error) {
+            console.error(`Invalid JSON format while attempting to update cache ${this.filepath}!`)
+        }
     }
 }
-
-let cache = new Cache("currentTerms.json")
 
 export default Cache;

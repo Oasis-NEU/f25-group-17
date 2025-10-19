@@ -1,4 +1,3 @@
-import * as fs from "fs"
 import { bannerURL } from "./constants.js"
 import Cache from "./cache.js"
 
@@ -31,12 +30,10 @@ class TermParser {
     }
 
     async updateCache() {
-
+        console.log("Updating current terms cache...")
+        this.cache.update(await this.getCurrentTerms());
     }
 }
-
-// let parser = new TermParser();
-// await parser.updateCache();
 
 const instance = new TermParser();
 
