@@ -1,0 +1,14 @@
+{
+  "name": "f25-group-17-root",
+  "private": true,
+  "scripts": {
+    "install": "cd FrontEnd && npm ci",
+    "build": "cd FrontEnd && npm run build",
+    "dev": "cd FrontEnd && npm run dev",
+    "start": "cd FrontEnd && npm run start",
+    "vercel-build": "cd FrontEnd && npm run build"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
