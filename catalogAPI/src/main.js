@@ -1,3 +1,4 @@
-import termParser from "./termParser.js"
+import termParser from "./termParser.js";
 
-termParser.updateCache();
+// await termParser.updateCache();
+console.log(await termParser.getCurrentTerms());

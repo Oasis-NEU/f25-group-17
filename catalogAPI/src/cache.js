@@ -1,15 +1,17 @@
-import * as fs from "fs"
-import * as path from "path"
+import * as fs from "fs";
+import * as path from "path";
 
-const cacheDirPath = "../cache"
+const cacheDirPath = "../cache";
 
 class Cache {
     constructor(filepath) {
+        this.loaded = false;
         this.filepath = path.join(cacheDirPath, filepath);
         this.load();
+        this.loaded = true;
     }
 
-    async loadCacheDir() {
+    loadCacheDir() {
         if(!fs.existsSync(cacheDirPath)) {
             console.log(`Creating cache directory ${cacheDirPath} since it does not exist`)
             fs.mkdir(cacheDirPath, { recursive: true }, mkdirErr => {
@@ -22,8 +24,8 @@ class Cache {
         }
     }
 
-    async load() {
-        await this.loadCacheDir();
+    load() {
+        this.loadCacheDir();
         if(!fs.existsSync(this.filepath)) {
             console.log(`Creating cache file ${this.filepath}`)
             fs.writeFile(`${this.filepath}`, "", writeErr => {
@@ -37,14 +39,14 @@ class Cache {
     }
 
     isEmpty() {
-        return fs.readFileSync(this.filepath, "utf-8") == ""
+        return this.loaded && fs.readFileSync(this.filepath, "utf-8") == ""
     }
 
-    async read() {
+    read() {
         return fs.readFileSync(this.filepath, "utf-8")
     }
 
-    async update(data) {
+    update(data) {
         try {
             let writeData = JSON.stringify(data, null, 4);
             JSON.parse(writeData);
