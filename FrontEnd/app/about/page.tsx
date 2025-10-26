@@ -32,6 +32,7 @@ export default function about() {
           <div className="absolute top-0 left-0 ">
             <div style={{ height: '100vh', background: '#1a1a1a' }}>
               <StaggeredMenu
+                isFixed={true}
                 position="left"
                 items={menuItems}
                 socialItems={socialItems}
