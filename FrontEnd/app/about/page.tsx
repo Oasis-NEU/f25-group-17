@@ -78,8 +78,8 @@ export default function About() {
         <div className="fixed inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0 pointer-events-none" />
         
         {/* Staggered Menu */}
-        <div className="fixed top-0 left-0 z-50">
-            <div style={{ height: '100vh', background: '#1a1a1a' }}>
+        <div className="absolute top-0 left-0 z-50">
+          <div style={{ height: '100vh', background: 'transparent' }}>
               <StaggeredMenu
                 isFixed={true}
                 position="left"
@@ -104,8 +104,8 @@ export default function About() {
           <div ref={heroRef} className="w-full mb-12 transition-all duration-700">
             <Box maxW="6xl" mx="auto">
               <div className="mb-10 text-center">
-                <Heading as="h1" className="text-8xl" color="white" fontWeight="black" mb={6} lineHeight="1">
-                  About EMPTY NEU
+                <Heading as="h1" className="text-9xl" color="white" fontWeight="black" mb={6} lineHeight="1">
+                  About Us
                 </Heading>
                 <Text fontSize="3xl" color="gray.400" maxW="4xl" mx="auto" fontWeight="light">
                   Your campus, simplified.
@@ -147,42 +147,42 @@ export default function About() {
             </Box>
           </div>
 
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-10" />
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-4" />
 
           {/* ============ SECTION 2: STUDY SPACES ============ */}
-          <div ref={cardSectionRef} className="w-full mb-32 relative pt-2 pb-16 transition-all duration-700" style={{ minHeight: '900px' }}>
+          <div ref={cardSectionRef} className="w-full relative transition-all duration-700" style={{ minHeight: '850px', paddingBottom: '75px', marginBottom: '80px' }}>
             {/* Two Column Layout */}
-            <div className="grid grid-cols-5 gap-12 items-center" style={{ minHeight: '800px' }}>
+            <div className="grid grid-cols-5 gap-12 pt-8" style={{ minHeight: '750px' }}>
               {/* Left Side Text - Takes 2 columns */}
-              <div className="col-span-2 space-y-4 pr-8">
-                <div className="space-y-3">
-                  <Heading size="5xl" color="white" fontWeight="black" lineHeight="1.1">
+              <div className="col-span-2 space-y-6 pr-8 mt-8 self-start">
+                <div className="space-y-4">
+                  <Heading size="6xl" color="white" fontWeight="black" lineHeight="1.1">
                     Study spaces have never looked so good
                   </Heading>
-                  <Text fontSize="2xl" color="gray.400" fontWeight="light">
+                  <Text fontSize="3xl" color="gray.400" fontWeight="light">
                     Just look at them!
                   </Text>
                 </div>
                 
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white flex-shrink-0" />
-                    <Text fontSize="md" color="gray.300" fontWeight="medium">Modern & collaborative spaces</Text>
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-3 h-3 rounded-full bg-white flex-shrink-0" />
+                    <Text fontSize="xl" color="gray.300" fontWeight="medium">Modern & collaborative spaces</Text>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white flex-shrink-0" />
-                    <Text fontSize="md" color="gray.300" fontWeight="medium">Real-time availability tracking</Text>
+                  <div className="flex items-center gap-4">
+                    <div className="w-3 h-3 rounded-full bg-white flex-shrink-0" />
+                    <Text fontSize="xl" color="gray.300" fontWeight="medium">Real-time availability tracking</Text>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white flex-shrink-0" />
-                    <Text fontSize="md" color="gray.300" fontWeight="medium">Premium amenities included</Text>
+                  <div className="flex items-center gap-4">
+                    <div className="w-3 h-3 rounded-full bg-white flex-shrink-0" />
+                    <Text fontSize="xl" color="gray.300" fontWeight="medium">Premium amenities included</Text>
                   </div>
                 </div>
               </div>
 
               {/* Right Side Card Swap - Takes 3 columns */}
-              <div className="col-span-3 relative w-full flex items-center justify-center transition-all duration-500" style={{ minHeight: '800px' }}>
-                <div className="-mt-32">
+              <div className="col-span-3 relative w-full transition-all duration-500" style={{ minHeight: '800px' }}>
+                <div className="absolute left-0 w-full" style={{ top: '480px' }}>
                   {isCardSectionVisible && (
                     <CardSwap
                       width={600}
@@ -299,14 +299,14 @@ export default function About() {
 
           {/* ============ SECTION 3: STUDENT REVIEWS ============ */}
           <div ref={featuresRef} className="w-full mb-24 py-8 transition-all duration-700">
-            <div className="text-center mb-10">
-              <Text fontSize="sm" color="red.400" fontWeight="bold" letterSpacing="widest" mb={3} textTransform="uppercase">
+            <div className="text-center mb-12">
+              <Text fontSize="md" color="red.400" fontWeight="bold" letterSpacing="widest" mb={4} textTransform="uppercase">
                 TESTIMONIALS
               </Text>
-              <Heading size="3xl" mb={3} color="white" fontWeight="black">
+              <Heading size="5xl" mb={4} color="white" fontWeight="black">
                 What Students Are Saying
               </Heading>
-              <Text fontSize="lg" color="gray.400" maxW="2xl" mx="auto">
+              <Text fontSize="xl" color="gray.400" maxW="2xl" mx="auto">
                 Real feedback from Northeastern students who use EMPTY NEU every day.
               </Text>
             </div>
@@ -363,14 +363,14 @@ export default function About() {
                 shadow: "dark-lg"
               }}
             >
-              <Text fontSize="xs" color="red.400" fontWeight="bold" letterSpacing="widest" mb={3} textTransform="uppercase">
+              <Text fontSize="md" color="red.400" fontWeight="bold" letterSpacing="widest" mb={4} textTransform="uppercase">
                 GET STARTED
               </Text>
-              <Heading size="4xl" mb={5} color="white" fontWeight="black">Ready to Find Your Spot?</Heading>
-              <Text fontSize="xl" color="gray.300" mb={3} fontWeight="medium">
+              <Heading size="5xl" mb={6} color="white" fontWeight="black">Ready to Find Your Spot?</Heading>
+              <Text fontSize="2xl" color="gray.300" mb={4} fontWeight="medium">
                 Join hundreds of Northeastern students who've already discovered their perfect study space.
               </Text>
-              <Text fontSize="md" color="gray.400" mb={7} maxW="2xl" mx="auto">
+              <Text fontSize="xl" color="gray.400" mb={8} maxW="2xl" mx="auto">
                 Experience the convenience of real-time availability, smart filtering, and community-driven updates. 
                 Start studying smarter, not harder—find your ideal study environment in seconds.
               </Text>
@@ -380,7 +380,6 @@ export default function About() {
                 </button>
               </a>
               <Text fontSize="sm" color="gray.500" mt={5} fontWeight="medium">
-                No sign-up required • 100% free • Updated in real-time
               </Text>
             </Box>
         </div>
