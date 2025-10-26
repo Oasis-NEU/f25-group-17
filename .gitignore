@@ -1,9 +1,11 @@
 # Dependencies
 node_modules/
 **/node_modules/
+package-lock.json
 
 # Build outputs
 .next/
+**/.next/
 out/
 build/
 dist/
@@ -16,6 +18,8 @@ dist/
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # OS files
 .DS_Store
@@ -33,3 +37,9 @@ coverage/
 *.swo
 *~
 
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
