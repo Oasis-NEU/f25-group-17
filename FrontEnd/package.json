@@ -1,13 +1,14 @@
 {
-  "name": "f25-group-17",
-  "version": "0.1.0",
+  "name": "f25-group-17-root",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
+    "install": "cd FrontEnd && npm ci",
+    "build": "cd FrontEnd && npm run build",
+    "dev": "cd FrontEnd && npm run dev",
+    "start": "cd FrontEnd && npm run start",
+    "vercel-build": "cd FrontEnd && npm run build"
   },
+<<<<<<<< HEAD:FrontEnd/package.json
   "dependencies": {
     "@chakra-ui/next-js": "^2.4.2",
     "@chakra-ui/react": "^3.27.1",
@@ -33,5 +34,9 @@
     "eslint-config-next": "15.5.5",
     "tailwindcss": "^4",
     "typescript": "5.9.3"
+========
+  "engines": {
+    "node": "18.x"
+>>>>>>>> origin/main:package.json
   }
 }
