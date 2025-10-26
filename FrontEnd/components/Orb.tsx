@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Renderer, Program, Mesh, Triangle, Vec3 } from 'ogl';
+import { Renderer, Program, Mesh, Triangle, Vec3, type OGLRenderingContext } from 'ogl';
 
 interface OrbProps {
   hue?: number;
@@ -180,13 +180,15 @@ export default function Orb({
     if (!container) return;
 
     let renderer: Renderer | null = null;
-    let gl: WebGLRenderingContext | null = null;
+    let gl: OGLRenderingContext | null = null;
     
     try {
       renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
       gl = renderer.gl;
       gl.clearColor(0, 0, 0, 0);
-      container.appendChild(gl.canvas);
+      if (gl.canvas instanceof HTMLCanvasElement) {
+        container.appendChild(gl.canvas);
+      }
     } catch (error) {
       console.warn('WebGL not supported, skipping Orb renderer');
       return;
@@ -211,7 +213,7 @@ export default function Orb({
     const mesh = new Mesh(gl, { geometry, program });
 
     function resize() {
-      if (!container) return;
+      if (!container || !renderer || !gl) return;
       const dpr = window.devicePixelRatio || 1;
       const width = container.clientWidth;
       const height = container.clientHeight;
@@ -229,6 +231,7 @@ export default function Orb({
     const rotationSpeed = 0.3;
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!container) return;
       const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -256,6 +259,7 @@ export default function Orb({
 
     let rafId: number;
     const update = (t: number) => {
+      if (!renderer) return;
       rafId = requestAnimationFrame(update);
       const dt = (t - lastTime) * 0.001;
       lastTime = t;

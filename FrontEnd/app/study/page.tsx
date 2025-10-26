@@ -18,8 +18,6 @@ import {
   CardRoot,
   Box,
   Dialog,
-  Portal, 
-  createOverlay
 } from "@chakra-ui/react";
 
 export default function About() {
@@ -63,22 +61,24 @@ export default function About() {
       {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0" />
 
-          {/* Staggered Menu */}
-          <div className="position sticky top-0 left-0 z-100 w-screen h-full">
-            <StaggeredMenu
-              position="left"
-              items={menuItems}
-              socialItems={socialItems}
-              displaySocials={false}
-              displayItemNumbering={true}
-              menuButtonColor="#fff"
-              openMenuButtonColor="#fff"
-              changeMenuColorOnOpen={true}
-              colors={["#FF0000", "#FF8A8A"]}
-              logoUrl="https://www.svgrepo.com/show/499592/close-x.svg"
-              accentColor="#ff6b6b"
-              isFixed={false}
-            />
+          {/* Staggered Menu (sticky to stay visible while scrolling) */}
+          <div className="sticky top-0 left-0 z-50 w-full h-screen pointer-events-none">
+            <div className="pointer-events-auto">
+              <StaggeredMenu
+                position="left"
+                items={menuItems}
+                socialItems={socialItems}
+                displaySocials={false}
+                displayItemNumbering={true}
+                menuButtonColor="#fff"
+                openMenuButtonColor="#fff"
+                changeMenuColorOnOpen={true}
+                colors={["#FF0000", "#FF8A8A"]}
+                logoUrl="https://www.svgrepo.com/show/499592/close-x.svg"
+                accentColor="#ff6b6b"
+                isFixed={false}
+              />
+            </div>
           </div>
 
         {/* Page content */}
@@ -141,6 +141,62 @@ export default function About() {
             ))}
           </SimpleGrid>
         </div>
+
+        {/* Single Dialog for all cards */}
+        {openDialogId !== null && (
+          <Dialog.Root open={true} onOpenChange={(details) => !details.open && handleCloseDialog()}>
+            <Dialog.Backdrop 
+              bg="blackAlpha.700" 
+              backdropFilter="blur(4px)"
+              zIndex={200}
+              onClick={handleCloseDialog}
+            />
+            <Dialog.Positioner zIndex={201}>
+              <Dialog.Content 
+                bg="gray.800" 
+                borderColor="whiteAlpha.300" 
+                border="2px solid"
+                maxW="lg"
+                mx="auto"
+                my="auto"
+              >
+                <Dialog.Header>
+                  <Dialog.Title color="white">
+                    Location {openDialogId + 1} — Room {100 + openDialogId}
+                  </Dialog.Title>
+                  <Dialog.CloseTrigger onClick={handleCloseDialog} />
+                </Dialog.Header>
+                <Dialog.Body>
+                  <Stack gap={4}>
+                    <Box>
+                      <Heading size="sm" mb={2} color="white">Open Hours</Heading>
+                      <Text color="gray.300">8:00 AM – 10:00 PM</Text>
+                    </Box>
+                    <Box>
+                      <Heading size="sm" mb={2} color="white">People Currently Here</Heading>
+                      <Text color="gray.300">Alice, Bob, Charlie</Text>
+                    </Box>
+                    <Box>
+                      <Heading size="sm" mb={2} color="white">Description</Heading>
+                      <Text color="gray.300">
+                        This is a cozy study area designed for productivity and focus. 
+                        Equipped with fast Wi‑Fi, ample outlets, and comfy seating.
+                      </Text>
+                    </Box>
+                  </Stack>
+                </Dialog.Body>
+                <Dialog.Footer gap={3}>
+                  <Button colorScheme="red">
+                    Join
+                  </Button>
+                  <Button variant="outline" onClick={handleCloseDialog}>
+                    Close
+                  </Button>
+                </Dialog.Footer>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Dialog.Root>
+        )}
       </main>
     </PageTransition>
   );

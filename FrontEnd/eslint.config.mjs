@@ -21,8 +21,7 @@ const eslintConfig = [
     ],
   },
   {
-    "extends": ["next/core-web-vitals"],
-    "rules": {
+    rules: {
       "@typescript-eslint/no-explicit-any": "off"
     }
   }
