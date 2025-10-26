@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import "../globals.css";
 import StaggeredMenu from "../../components/StaggeredMenu";
 import PageTransition from "../../components/PageTransition";
 import {
   Avatar,
   Button,
-  Card,
   CardHeader,
   CardBody,
   CardFooter,
@@ -17,13 +16,26 @@ import {
   Stack,
   CardRoot,
   Box,
-  Dialog,
-  Portal, 
-  createOverlay
+  DialogRoot,
+  DialogContent,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogTitle
 } from "@chakra-ui/react";
 
 export default function About() {
-  const [openDialogId, setOpenDialogId] = React.useState<number | null>(null);
+  const [openDialogId, setOpenDialogId] = useState<number | null>(null);
+
+  const handleOpenDialog = (id: number) => {
+    setOpenDialogId(id);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialogId(null);
+  };
 
   const menuItems = [
     { label: "Home", ariaLabel: "Go to home page", link: "/" },
@@ -37,25 +49,6 @@ export default function About() {
     { label: "GitHub", link: "https://github.com" },
     { label: "LinkedIn", link: "https://linkedin.com" },
   ];
-
-  // Function to close StaggeredMenu when dialog opens
-  const closeStaggeredMenu = () => {
-    const menuButton = document.querySelector('.sm-toggle');
-    if (menuButton && menuButton.getAttribute('aria-expanded') === 'true') {
-      (menuButton as HTMLElement).click();
-    }
-  };
-
-  // Function to handle opening a dialog
-  const handleOpenDialog = (cardId: number) => {
-    setOpenDialogId(cardId);
-    closeStaggeredMenu();
-  };
-
-  // Function to handle closing a dialog
-  const handleCloseDialog = () => {
-    setOpenDialogId(null);
-  };
 
   return (
     <PageTransition>
@@ -102,6 +95,7 @@ export default function About() {
                 border="2px solid rgba(255,255,255,0.3)"
                 _hover={{ transform: "scale(1.4)", transition: "0.2s ease-out" }}
                 transition="all 0.2s ease-out"
+                color="white"
               >
                 <CardHeader>
                   <Stack direction="row" gap={4} align="center">
@@ -111,7 +105,7 @@ export default function About() {
                       title={i % 2 === 0 ? 'Available' : 'Not available'}
                     />
                     <Box>
-                      <Heading size="md">Location {i + 1}</Heading>
+                      <Heading size="md" color="white">Location {i + 1}</Heading>
                       <Text fontSize="sm" color="gray.400">Room {100 + i}</Text>
                       <Text fontSize="xs" color={i % 2 === 0 ? 'green.300' : 'red.300'}>
                         {i % 2 === 0 ? 'Available' : 'Not available'}
@@ -132,14 +126,81 @@ export default function About() {
                     variant="outline" 
                     colorScheme="red"
                     onClick={() => handleOpenDialog(i)}
+                    color="white"
+                    borderColor="red.500"
+                    _hover={{ bg: "red.600", color: "white" }}
                   >
                     View
                   </Button>
-                  <Button colorScheme="red">Join</Button>
+                  <Button 
+                    colorScheme="red"
+                    bg="red.600"
+                    color="white"
+                    _hover={{ bg: "red.700" }}
+                  >
+                    Join
+                  </Button>
                 </CardFooter>
               </CardRoot>
             ))}
           </SimpleGrid>
+
+          {/* Dialog for viewing details */}
+          {Array.from({ length: 15 }).map((_, i) => (
+            <DialogRoot
+              key={i}
+              open={openDialogId === i}
+              onOpenChange={(e) => {
+                if (!e.open) handleCloseDialog();
+              }}
+            >
+              <DialogBackdrop 
+                bg="blackAlpha.700"
+                onClick={handleCloseDialog}
+              />
+              <DialogContent
+                maxW="md"
+                bg="gray.800"
+                color="white"
+              >
+                <DialogHeader>
+                  <DialogTitle>Location {i + 1} - Room {100 + i}</DialogTitle>
+                  <DialogCloseTrigger onClick={handleCloseDialog} />
+                </DialogHeader>
+                <DialogBody>
+                  <Stack gap={4}>
+                    <Box>
+                      <Text fontWeight="bold" mb={2}>Status:</Text>
+                      <Text color={i % 2 === 0 ? 'green.300' : 'red.300'}>
+                        {i % 2 === 0 ? 'Available' : 'Not available'}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text fontWeight="bold" mb={2}>Open Hours:</Text>
+                      <Text>8:00 AM - 10:00 PM</Text>
+                    </Box>
+                    <Box>
+                      <Text fontWeight="bold" mb={2}>Description:</Text>
+                      <Text>
+                        This is a cozy study area designed for productivity and focus.
+                        Equipped with fast Wi-Fi, ample outlets, and comfy seating.
+                        Perfect for individual study or small group collaboration.
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text fontWeight="bold" mb={2}>People Currently Here:</Text>
+                      <Text>{Math.floor(Math.random() * 20)} people</Text>
+                    </Box>
+                  </Stack>
+                </DialogBody>
+                <DialogFooter>
+                  <Button colorScheme="red" onClick={handleCloseDialog}>
+                    Close
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </DialogRoot>
+          ))}
         </div>
       </main>
     </PageTransition>

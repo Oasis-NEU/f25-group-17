@@ -2,17 +2,12 @@
 
 import React from "react";
 import '../globals.css'
-import StaggeredMenu from '../../components/StaggeredMenu';
 import {Input} from '@chakra-ui/react'
 import Button from '../../components/button'
 import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const router = useRouter()
-
-  const Demo = () => {
-  return <Input placeholder="Enter your email" />
-  }
 
   return (
     <main className="flex flex-col items-center justify-start bg-gray-900 m-0 p-0">

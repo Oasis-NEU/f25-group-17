@@ -8,14 +8,13 @@ interface PageTransitionProps {
 }
 
 export default function PageTransition({ children }: PageTransitionProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
 
   useEffect(() => {
-    // Reset animation state when pathname changes
+    // Only animate on route changes after initial mount
     setIsVisible(false);
     
-    // Trigger enter animation after a brief delay
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 50);
@@ -30,6 +29,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
           ? 'opacity-100 translate-y-0' 
           : 'opacity-0 translate-y-4'
       }`}
+      suppressHydrationWarning
     >
       {children}
     </div>
