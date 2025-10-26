@@ -56,9 +56,9 @@ export default function Home() {
                   "Real-time availability for every study spot.",
                   "Never waste time searching for space again."
                 ]}
-                typingSpeed={80}
-                deletingSpeed={40}
-                pauseDuration={2500}
+                typingSpeed={50}
+                deletingSpeed={80}
+                pauseDuration={200}
               />
             </h2>
                     <div className="pt-6">

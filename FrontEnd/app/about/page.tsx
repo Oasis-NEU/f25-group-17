@@ -150,7 +150,7 @@ export default function About() {
           <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-4" />
 
           {/* ============ SECTION 2: STUDY SPACES ============ */}
-          <div ref={cardSectionRef} className="w-full relative transition-all duration-700" style={{ minHeight: '850px', paddingBottom: '75px', marginBottom: '80px' }}>
+          <div ref={cardSectionRef} className="w-full relative transition-all duration-300" style={{ minHeight: '850px', paddingBottom: '75px', marginBottom: '80px' }}>
             {/* Two Column Layout */}
             <div className="grid grid-cols-5 gap-12 pt-8" style={{ minHeight: '750px' }}>
               {/* Left Side Text - Takes 2 columns */}
@@ -198,12 +198,11 @@ export default function About() {
                   <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-60"
-                      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop)" }}
+                      style={{ backgroundImage: "url(https://www.dimellashaffer.com/wp-content/uploads/2017/08/DS_Northeastern_EastVillage_30_v1_current-e1581529655701.jpg?w=1200&h=800&fit=crop)" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-3 mb-3">
-                        <span className="text-4xl">🏢</span>
                         <h3 className="text-3xl font-black text-white">East Village</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
@@ -217,12 +216,11 @@ export default function About() {
                   <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-60"
-                      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=800&fit=crop)" }}
+                      style={{ backgroundImage: "url(https://janeyco.com/wp-content/uploads/2019/05/international-village-3.jpg?w=1200&h=800&fit=crop)" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-3 mb-3">
-                        <span className="text-4xl">🌍</span>
                         <h3 className="text-3xl font-black text-white">International Village</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
@@ -236,13 +234,12 @@ export default function About() {
                   <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-60"
-                      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1200&h=800&fit=crop)" }}
+                      style={{ backgroundImage: "url(https://coe.northeastern.edu/wp-content/uploads/facilities-isec.jpg?w=1200&h=800&fit=crop)" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-3 mb-3">
-                        <span className="text-4xl">📚</span>
-                        <h3 className="text-3xl font-black text-white">Snell Library</h3>
+                        <h3 className="text-3xl font-black text-white">Northeastern University Interdisciplinary Science and Engineering Complex</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
                         The heart of campus studying with multiple floors, private rooms, and extensive resources.
@@ -255,13 +252,12 @@ export default function About() {
                   <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-60"
-                      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1559223607-ce8d67e8c25f?w=1200&h=800&fit=crop)" }}
+                      style={{ backgroundImage: "url(https://commodorebuilders.com/wp-content/uploads/2020/10/MG_5981.jpg?w=1200&h=800&fit=crop)" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-3 mb-3">
-                        <span className="text-4xl">☕</span>
-                        <h3 className="text-3xl font-black text-white">Curry Student Center</h3>
+                        <h3 className="text-3xl font-black text-white">Chirchill Hall</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
                         Flexible seating, study pods, café access, and a vibrant atmosphere for productivity.
@@ -274,13 +270,12 @@ export default function About() {
                   <div className="w-full h-full relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800">
                     <div 
                       className="absolute inset-0 bg-cover bg-center opacity-60"
-                      style={{ backgroundImage: "url(https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1200&h=800&fit=crop)" }}
+                      style={{ backgroundImage: "url(https://cos.northeastern.edu/wp-content/uploads/2025/05/DSC03529.jpg?w=1200&h=800&fit=crop)" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-3 mb-3">
-                        <span className="text-4xl">💪</span>
-                        <h3 className="text-3xl font-black text-white">Marino Recreation</h3>
+                        <h3 className="text-3xl font-black text-white">Richards Hall</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
                         Quiet study zones near fitness facilities for those who balance work and wellness.
