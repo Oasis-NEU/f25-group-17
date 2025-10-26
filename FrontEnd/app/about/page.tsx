@@ -9,7 +9,7 @@ export default function about() {
   { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
   { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
   { label: 'Study', ariaLabel: 'View our services', link: '/study' },
-  { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' }
+  { label: 'Profile', ariaLabel: 'View your profile', link: '/profile' }
   ];
 
   const socialItems = [
