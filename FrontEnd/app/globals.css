@@ -5,6 +5,21 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(40px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
 @keyframes pageEnter {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -15,8 +30,23 @@
   to { opacity: 0; transform: translateY(-20px); }
 }
 
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translateY(-100px) translateX(50px);
+    opacity: 0.6;
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 10s ease-in-out infinite;
 }
 
 .page-enter {
@@ -36,4 +66,41 @@ html, body {
 /* Smooth transitions for all elements */
 * {
   transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* StarBorder animations */
+@keyframes star-movement-bottom {
+  0% { transform: translate(0%, 0%); opacity: 1; }
+  100% { transform: translate(-100%, 0%); opacity: 0; }
+}
+
+@keyframes star-movement-top {
+  0% { transform: translate(0%, 0%); opacity: 1; }
+  100% { transform: translate(100%, 0%); opacity: 0; }
+}
+
+@keyframes star-movement-secondary-left {
+  0% { transform: translate(0%, 0%); opacity: 0.5; }
+  100% { transform: translate(100%, 0%); opacity: 0; }
+}
+
+@keyframes star-movement-secondary-right {
+  0% { transform: translate(0%, 0%); opacity: 0.5; }
+  100% { transform: translate(-100%, 0%); opacity: 0; }
+}
+
+.animate-star-movement-bottom {
+  animation: star-movement-bottom linear infinite alternate;
+}
+
+.animate-star-movement-top {
+  animation: star-movement-top linear infinite alternate;
+}
+
+.animate-star-movement-secondary-left {
+  animation: star-movement-secondary-left linear infinite alternate;
+}
+
+.animate-star-movement-secondary-right {
+  animation: star-movement-secondary-right linear infinite alternate;
 }
