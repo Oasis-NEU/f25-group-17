@@ -133,15 +133,36 @@ export default function Signup() {
         }
       })
 
-      if (authError) throw authError
+      if (authError) {
+        // Handle specific error cases
+        if (authError.message.includes('already registered') || 
+            authError.message.includes('already exists') ||
+            authError.message.includes('User already registered')) {
+          throw new Error('This email is already registered. Please use a different email or try logging in.')
+        }
+        throw authError
+      }
 
       if (authData.user) {
+        // Check if user was actually created (identities array empty = duplicate)
+        if (authData.user.identities && authData.user.identities.length === 0) {
+          throw new Error('This email is already registered. Please use a different email or try logging in.')
+        }
+        
         // Success! Redirect to login
         alert('Account created successfully! Please check your email to verify your account.')
         router.push('/login')
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred during signup')
+      const errorMessage = err.message || 'An error occurred during signup'
+      setError(errorMessage)
+      
+      // Also set error on email field if it's a duplicate email error
+      if (errorMessage.toLowerCase().includes('email') && 
+          (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('registered'))) {
+        setErrors(prev => ({ ...prev, email: 'This email is already in use' }))
+      }
+      
       console.error('Signup error:', err)
     } finally {
       setIsLoading(false)
@@ -221,7 +242,16 @@ export default function Signup() {
                   type="email" 
                   size="lg"
                   value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => {
+                    setFormData(prev => ({ ...prev, email: e.target.value }))
+                    // Clear email error when user starts typing
+                    if (errors.email) {
+                      setErrors(prev => ({ ...prev, email: '' }))
+                    }
+                    if (error && error.toLowerCase().includes('email')) {
+                      setError('')
+                    }
+                  }}
                   className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: 'rgba(220,20,60,0.3)'

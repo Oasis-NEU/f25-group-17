@@ -135,13 +135,13 @@ export default function About() {
                 </Heading>
                 <Text fontSize="2xl" color="gray.300" lineHeight="tall" textAlign="center" mb={6}>
                   EMPTY NEU was born from a simple frustration: wasting time searching for study spaces. 
-                  We're a team of Northeastern students who believe that finding the perfect place to study 
-                  shouldn't be a challenge—it should be effortless.
+                  We&apos;re a team of Northeastern students who believe that finding the perfect place to study 
+                  shouldn&apos;t be a challenge—it should be effortless.
                 </Text>
                 <Text fontSize="2xl" color="gray.300" lineHeight="tall" textAlign="center">
                   Our platform provides real-time information about study spaces across campus, helping you 
                   make informed decisions about where to study, collaborate, and succeed. Whether you need 
-                  a quiet corner for focused work or a collaborative space for group projects, we've got you covered.
+                  a quiet corner for focused work or a collaborative space for group projects, we&apos;ve got you covered.
                 </Text>
               </Box>
             </Box>
@@ -363,7 +363,7 @@ export default function About() {
               </Text>
               <Heading size="5xl" mb={6} color="white" fontWeight="black">Ready to Find Your Spot?</Heading>
               <Text fontSize="2xl" color="gray.300" mb={4} fontWeight="medium">
-                Join hundreds of Northeastern students who've already discovered their perfect study space.
+                Join hundreds of Northeastern students who&apos;ve already discovered their perfect study space.
               </Text>
               <Text fontSize="xl" color="gray.400" mb={8} maxW="2xl" mx="auto">
                 Experience the convenience of real-time availability, smart filtering, and community-driven updates. 
