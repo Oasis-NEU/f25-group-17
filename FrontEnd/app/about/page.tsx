@@ -150,7 +150,7 @@ export default function About() {
           <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-4" />
 
           {/* ============ SECTION 2: STUDY SPACES ============ */}
-          <div ref={cardSectionRef} className="w-full relative transition-all duration-300" style={{ minHeight: '850px', paddingBottom: '50px', marginBottom: '10px' }}>
+          <div ref={cardSectionRef} className="w-full relative transition-all duration-300" style={{ minHeight: '850px', paddingBottom: '75px', marginBottom: '20px' }}>
             {/* Two Column Layout */}
             <div className="grid grid-cols-5 gap-12 pt-8" style={{ minHeight: '750px' }}>
               {/* Left Side Text - Takes 2 columns */}
@@ -290,7 +290,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-4" />
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-8" />
 
           {/* ============ SECTION 3: STUDENT REVIEWS ============ */}
           <div ref={featuresRef} className="w-full mb-24 pt-8 transition-all duration-700">
