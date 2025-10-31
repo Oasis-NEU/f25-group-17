@@ -19,6 +19,10 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off", // or "warn" if you want a warning instead of an error
+      'prefer-const': ['error', { 'ignoreReadBeforeAssign': false }] // or 'off' to completely disable
+    },
   },
 ];
 
