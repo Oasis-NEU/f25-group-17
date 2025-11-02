@@ -57,9 +57,9 @@ async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20)
   // console.log(searchResp.headers)
   // console.log(searchJson)
 
-  const instrResp = await fetch(`${base}/searchResults/getFacultyMeetingTimes?term=${termCode}&courseReferenceNumber=10002`)
+  const instrResp = await fetch(`${base}/searchResults/getFacultyMeetingTimes?term=${termCode}&courseReferenceNumber=18390`)
   let fmtjson = await instrResp.json()
-  console.log(fmtjson.fmt)
+  console.log(fmtjson.fmt.map(fmt => fmt.faculty))
 
   return {
     subjects: subjList,
