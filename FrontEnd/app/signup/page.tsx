@@ -19,7 +19,7 @@ const MAJORS = [
   "Information Science", "International Affairs", "Journalism", "Landscape Architecture",
   "Mathematics", "Mechanical Engineering", "Media Arts", "Music", "Nursing",
   "Pharmaceutical Sciences", "Philosophy", "Physics", "Political Science",
-  "Psychology", "Public Health", "Sociology", "Theatre", "Undeclared"
+  "Psychology", "Public Health", "Sociology", "Theatre","International Business", "Undeclared"
 ];
 
 const YEARS = [
@@ -114,7 +114,7 @@ export default function Signup() {
     const newErrors: {[key: string]: string} = {}
 
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required'
+      newErrors.username = 'Name is required'
     }
 
     if (!formData.email.trim()) {
@@ -246,10 +246,10 @@ export default function Signup() {
               {/* Username */}
               <div className="relative group">
                 <label className="block text-red-400 text-sm font-semibold mb-2">
-                  Username
+                  Name
                 </label>
                 <Input 
-                  placeholder="Enter your username" 
+                  placeholder="Enter your first name and last name" 
                   size="lg"
                   value={formData.username}
                   onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
@@ -480,6 +480,24 @@ export default function Signup() {
                   <p className="text-red-400 text-xs mt-1">{errors.major}</p>
                 )}
               </div>
+
+              {
+              // CURRENTLY WORKING ON THIS
+              <div>
+                  <label className="block text-red-400 text-sm font-semibold mb-2">
+                    Courses
+                  </label>
+
+                  <Link href="/onboarding/courses">
+                    <div
+                      className="
+                        w-full h-12 rounded-md bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 flex items-center justify-center text-gray-300 font-semibold tracking-wide cursor-pointer transition-all hover:border-red-500/70 hover:text-white hover:bg-gray-900/70 backdrop-blur-sm
+                      "
+                    >
+                      Add Course
+                    </div>
+                  </Link>
+              </div>}
             </div>
 
             {/* Error Message */}
