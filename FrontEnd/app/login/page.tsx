@@ -23,7 +23,6 @@ export default function Login() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev }
