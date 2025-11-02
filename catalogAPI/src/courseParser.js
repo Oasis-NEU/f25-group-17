@@ -1,14 +1,13 @@
 import { bannerURL } from "./constants.js";
 import Cache from "./cache.js";
 
-const currentTermsCacheFilepath = "currentTerms.json";
-
 class CourseParser {
     constructor(term) {
         if(!(typeof term === 'string' || term instanceof String && term.length == 6)) {
             throw new Error(`Term ${term} is not valid!`);
         }
         this.term = term;
+        this.cacheRawCourses = new Cache(`coursesRaw${term}.json`);
     }
 
     async postTerm() {
@@ -42,8 +41,17 @@ class CourseParser {
         }
     }
 
-    async getCourses(pageOffset, pageMaxSize) {
-        const coursesResp = await fetch(`${bannerURL}/searchResults/searchResults?txt_subject=&txt_courseNumber=&txt_term=${this.term}&startDatepicker=&endDatepicker=&pageOffset=${pageOffset}&pageMaxSize=${pageMaxSize}&sortColumn=courseReferenceNumber&sortDirection=asc`, {
+    async searchCourses(pageOffset, pageMaxSize) {
+        const searchURL = new URL(`${bannerURL}/searchResults/searchResults`);
+        // searchURL.searchParams.append("txt_subject", "")
+        searchURL.searchParams.append("txt_term", this.term);
+        // searchURL.searchParams.append("startDatepicker", "");
+        // searchURL.searchParams.append("endDatepicker", "");
+        searchURL.searchParams.append("pageOffset", pageOffset);
+        searchURL.searchParams.append("pageMaxSize", pageMaxSize);
+        searchURL.searchParams.append("sortColumn", "courseReferenceNumber");
+        searchURL.searchParams.append("sortDirection", "asc");
+        const coursesResp = await fetch(searchURL.toString(), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -55,63 +63,91 @@ class CourseParser {
             throw new Error("Failed to get courses")
         }
         // let result = searchJson.data.map(course => {
-        //     return {CRN: course.courseReferenceNumber, FMT: course.meetingsFaculty.map(mf => mf.meetingTime)}
+        //     return {CRN: course.courseReferenceNumber, CT: course.courseTitle, SD: course.subjectDescription, SC: course.subjectCourse, FMT: course.meetingsFaculty.map(mf => {
+        //         return course.campusDescription != "Boston" ? "Not on boston campus" : {
+        //             "beginTime": mf.meetingTime.beginTime,
+        //             "building": mf.meetingTime.building,
+        //             "buildingDescription": mf.meetingTime.buildingDescription,
+        //             "creditHourSession": mf.meetingTime.creditHourSession,
+        //             "endDate": mf.meetingTime.endDate,
+        //             "endTime": mf.meetingTime.endTime,
+        //             "hoursWeek": mf.meetingTime.hoursWeek,
+        //             "meetingScheduleType": mf.meetingTime.meetingScheduleType,
+        //             "meetingType": mf.meetingTime.meetingType,
+        //             "room": mf.meetingTime.room,
+        //             "startDate": mf.meetingTime.startDate,
+        //             "term": mf.meetingTime.term
+        //         }
+        //     })}
         // });
-        let result = searchJson.data.map(course => course);
+        const result = searchJson.data;
         return result;
     }
-}
 
-let instance = new CourseParser("202610");
-await instance.postTerm();
+    async searchCoursePagesSequential(pageStart, pageEnd, pageSize, result) {
+        console.log(`Searching course pages ${pageStart} to ${pageEnd} with page size ${pageSize}...`);
 
-let result = [];
+        let done = false;
+        let offset = (pageStart - 1) * pageSize;
 
-async function getCRNS(pageStart, pageEnd, pageSize, result, done = false) {
-    let offset = (pageStart - 1) * pageSize;
-    while(!done) {
-        console.log(`Getting CRNs on page ${offset / pageSize + 1} with page size ${pageSize}, current result length is ${result.length}, latest result is ${result[result.length - 1]}`)
-        let queryResult = await instance.getCourses(offset, pageSize);
-        if(queryResult.length == 0) {
-            console.log(`Finished fetching CRNs! Current result length is ${result.length}`);
-            done = true;
-        } else {
-            console.log(`Result for page ${offset / pageSize}: ${queryResult}\n`)
-            result.push(...queryResult);
-            // console.log(`pending result: ${result}`)
-            offset += pageSize;
-            if(pageEnd != -1 && offset / pageSize == pageEnd) {
-                console.log(`Finished fetching CRNs! Current result length is ${result.length}`);
+        while(!done) {
+            // console.log(`Getting courses on page ${offset / pageSize + 1} with page size ${pageSize}, current result length is ${result.length}, latest result is ${result[result.length - 1]}`)
+            const queryResult = await this.searchCourses(offset, pageSize);
+            if(queryResult.length == 0) {
+                console.log(`Finished fetching courses from pages ${pageStart} to ${pageEnd}! Current result length is ${result.length}`);
                 done = true;
+            } else {
+                console.log(`Result for page ${offset / pageSize}: ${queryResult}\n`)
+                result.push(...queryResult);
+                offset += pageSize;
+                if(pageEnd != -1 && offset / pageSize == pageEnd) {
+                    console.log(`Finished fetching courses from pages ${pageStart} to ${pageEnd}! Current result length is ${result.length}`);
+                    done = true;
+                }
             }
         }
     }
-}
 
-let totalCourseRequests = 10000; // number of total courses to get from
-let pageSize = 25; // number of courses per page (per http get request)
-let pagesPerGetCRNRequest = 10; // number of requests per single parallel run
-let promises = [];
-for(let i = 0; i < totalCourseRequests / pageSize / pagesPerGetCRNRequest; i++) {
-    // console.log([i * pageRange + 1, (i + 1) * pageRange])
-    // finishedArr.push(false)
-    promises.push(getCRNS(i * pagesPerGetCRNRequest + 1, (i + 1) * pagesPerGetCRNRequest, pageSize, result));
+    async searchCoursesPagesParallel(totalCourseRequests, pageSize, pagesPerSequentialRequest) {
+        const result = [];
+        const promises = [];
+        for(let i = 0; i < totalCourseRequests / pageSize / pagesPerSequentialRequest; i++) {
+            promises.push(this.searchCoursePagesSequential(
+                i * pagesPerSequentialRequest + 1,
+                (i + 1) * pagesPerSequentialRequest,
+                pageSize,
+                result
+            ));
+        }
+        await Promise.all(promises);
+        return result;
+    }
+
+    async updateRawCache({
+        totalCourseRequests = 10000,
+        pageSize = 20,
+        pagesPerSequentialRequest = 5} = {}
+    ) {
+        console.log("Updating courses cache...");
+        if(this.cookieString === undefined) {
+            await this.postTerm();
+        }
+        this.cacheRawCourses.update(await this.searchCoursesPagesParallel(
+            totalCourseRequests,
+            pageSize,
+            pagesPerSequentialRequest
+        ));
+        this.cacheRawCourses.update(this.cacheRawCourses.read().sort((a, b) => a.courseReferenceNumber - b.courseReferenceNumber));
+    }
 }
-await Promise.all(promises);
-// let cache = new Cache("coursesmeeting.json");
-let cache = new Cache("courses.json");
-console.log(result);
-cache.update(result)
 
 function generateInstances(terms) {
     if(!Array.isArray(terms)) {
         throw new Error("Could not generate terms from terms because it is not an array.");
     }
-    let instances = [];
-    for(let term in terms) {
-        
-    }
+    const instances = [];
+    terms.forEach(term => instances.push(new CourseParser(term)));
+    return instances;
 }
-
 
 export default generateInstances;
