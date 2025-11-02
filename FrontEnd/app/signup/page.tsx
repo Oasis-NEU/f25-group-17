@@ -22,6 +22,10 @@ const MAJORS = [
   "Psychology", "Public Health", "Sociology", "Theatre","International Business", "Undeclared"
 ];
 
+const YEARS = [
+  "Freshmen", "Sophmore", "Junior", "Senior", "Fifth Year", "Graduate Student"
+]
+
 export default function Signup() {
   const router = useRouter()
   
@@ -44,9 +48,16 @@ export default function Signup() {
   const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [yearSearch, setYearSearch] = useState('')
+  const [showYearDropdown, setShowYearDropdown] = useState(false)
+  const [isSelectingYear, setIsSelectingYear] = useState(false)
 
   const filteredMajors = MAJORS.filter(major => 
     major.toLowerCase().includes(majorSearch.toLowerCase())
+  )
+
+  const filteredYears = YEARS.filter(year => 
+  year.toLowerCase().includes(yearSearch.toLowerCase())
   )
 
   const handleMajorSelect = (major: string) => {
@@ -71,6 +82,31 @@ export default function Signup() {
       }
       setShowMajorDropdown(false)
       setIsSelectingFromDropdown(false)
+    }, 150)
+  }
+
+    const handleYearSelect = (year: string) => {
+    setIsSelectingYear(true)
+    setYearSearch(year)
+    setFormData(prev => ({ ...prev, year }))
+    setShowYearDropdown(false)
+  }
+
+  const handleYearFocus = () => {
+    setYearSearch('')
+    setFormData(prev => ({ ...prev, year: '' }))
+    setShowYearDropdown(true)
+    setIsSelectingYear(false)
+  }
+
+  const handleYearBlur = () => {
+    setTimeout(() => {
+      if (!isSelectingYear && yearSearch && filteredYears.length > 0 && yearSearch !== formData.year) {
+        setYearSearch(filteredYears[0])
+        setFormData(prev => ({ ...prev, year: filteredYears[0] }))
+      }
+      setShowYearDropdown(false)
+      setIsSelectingYear(false)
     }, 150)
   }
 
@@ -356,27 +392,49 @@ export default function Signup() {
               </div>
               
               {/* Year */}
-              <div className="relative group">
+              <div className="relative group year-dropdown-container">
                 <label className="block text-red-400 text-sm font-semibold mb-2">
                   Year
                 </label>
-                <select 
-                  className="w-full h-12 px-4 rounded-md bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white transition-all backdrop-blur-sm hover:border-red-600/30 focus:border-red-600/80 focus:outline-none focus:shadow-[0_0_20px_rgba(220,20,60,0.2)]"
-                  value={formData.year}
-                  onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
-                >
-                  <option value="" disabled>Select Your Year</option>
-                  <option value="Freshman">Freshman</option>
-                  <option value="Sophomore">Sophomore</option>
-                  <option value="Junior">Junior</option>
-                  <option value="Senior">Senior</option>
-                  <option value="Super Senior">Super Senior</option>
-                  <option value="Graduate">Graduate Student</option>
-                </select>
+                <Input 
+                  placeholder="Search your year" 
+                  size="lg"
+                  value={yearSearch}
+                  onChange={(e) => setYearSearch(e.target.value)}
+                  onFocus={handleYearFocus}
+                  onBlur={handleYearBlur}
+                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  _hover={{
+                    borderColor: 'rgba(220,20,60,0.3)'
+                  }}
+                  _focus={{ 
+                    borderColor: 'rgba(220,20,60,0.8)',
+                    boxShadow: '0 0 20px rgba(220,20,60,0.2)',
+                    background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))'
+                  }}
+                />
+
+                {/* Dropdown list */}
+                {showYearDropdown && filteredYears.length > 0 && (
+                  <div className="absolute z-50 w-full mt-2 max-h-60 overflow-y-auto bg-gray-900/95 border border-red-600/30 rounded-lg shadow-[0_0_30px_rgba(220,20,60,0.2)] backdrop-blur-md">
+                    {filteredYears.map((year) => (
+                      <div
+                        key={year}
+                        onMouseDown={(e) => {
+                          e.preventDefault()
+                          handleYearSelect(year)
+                        }}
+                        className="px-4 py-3 text-white hover:bg-red-600/20 cursor-pointer transition-colors border-b border-gray-800/50 last:border-b-0"
+                      >
+                        {year}
+                      </div>
+                    ))}
+                  </div>
+                )}
                 {errors.year && (
                   <p className="text-red-400 text-xs mt-1">{errors.year}</p>
                 )}
-              </div>
+              </div>            
               
               {/* Major */}
               <div className="relative group major-dropdown-container">
