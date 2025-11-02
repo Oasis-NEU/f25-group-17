@@ -21,7 +21,14 @@ const eslintConfig = [
     ],
     rules: {
       "@typescript-eslint/no-explicit-any": "off", // or "warn" if you want a warning instead of an error
-      'prefer-const': ['error', { 'ignoreReadBeforeAssign': false }] // or 'off' to completely disable
+      'prefer-const': ['error', { 'ignoreReadBeforeAssign': false }], // or 'off' to completely disable
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/quotes": "off",
+      "quotes": [0],
+      "avoidEscape": 0,
+      "allowTemplateLiterals": 0,
+      "no-useless-escape": 0,
+      "extends": "next/core-web-vitals"
     },
   },
 ];
