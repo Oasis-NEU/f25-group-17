@@ -62,24 +62,6 @@ class CourseParser {
         if(!Array.isArray(searchJson.data)) {
             throw new Error("Failed to get courses")
         }
-        // let result = searchJson.data.map(course => {
-        //     return {CRN: course.courseReferenceNumber, CT: course.courseTitle, SD: course.subjectDescription, SC: course.subjectCourse, FMT: course.meetingsFaculty.map(mf => {
-        //         return course.campusDescription != "Boston" ? "Not on boston campus" : {
-        //             "beginTime": mf.meetingTime.beginTime,
-        //             "building": mf.meetingTime.building,
-        //             "buildingDescription": mf.meetingTime.buildingDescription,
-        //             "creditHourSession": mf.meetingTime.creditHourSession,
-        //             "endDate": mf.meetingTime.endDate,
-        //             "endTime": mf.meetingTime.endTime,
-        //             "hoursWeek": mf.meetingTime.hoursWeek,
-        //             "meetingScheduleType": mf.meetingTime.meetingScheduleType,
-        //             "meetingType": mf.meetingTime.meetingType,
-        //             "room": mf.meetingTime.room,
-        //             "startDate": mf.meetingTime.startDate,
-        //             "term": mf.meetingTime.term
-        //         }
-        //     })}
-        // });
         const result = searchJson.data;
         return result;
     }
