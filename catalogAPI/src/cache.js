@@ -39,11 +39,11 @@ class Cache {
     }
 
     isEmpty() {
-        return this.loaded && fs.readFileSync(this.filepath, "utf-8") == ""
+        return this.loaded && fs.readFileSync(this.filepath, "utf-8") == "";
     }
 
     read() {
-        return fs.readFileSync(this.filepath, "utf-8")
+        return JSON.parse(fs.readFileSync(this.filepath, "utf-8"));
     }
 
     update(data) {
