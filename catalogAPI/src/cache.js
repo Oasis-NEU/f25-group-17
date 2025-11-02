@@ -12,15 +12,19 @@ class Cache {
     }
 
     loadCacheDir() {
-        if(!fs.existsSync(cacheDirPath)) {
-            console.log(`Creating cache directory ${cacheDirPath} since it does not exist`)
-            fs.mkdir(cacheDirPath, { recursive: true }, mkdirErr => {
-                if(mkdirErr) {
-                    console.log("Error creating the directory: ", mkdirErr);
-                } else {
-                    console.log(`Cache directory created at ${cacheDirPath}`);
-                }
-            })
+        const dirs = this.filepath.split("\\");
+        for(let i = 1; i < dirs.length - 1; i++) {
+            const dir = dirs.slice(0, i + 1).join("/");
+            if(!fs.existsSync(dir)) {
+                console.log(`Creating cache directory ${dir} since it does not exist`)
+                fs.mkdir(dir, { recursive: true }, mkdirErr => {
+                    if(mkdirErr) {
+                        console.log("Error creating the directory: ", mkdirErr);
+                    } else {
+                        console.log(`Cache directory created at ${dir}`);
+                    }
+                })
+            }
         }
     }
 
