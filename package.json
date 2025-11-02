@@ -1,6 +1,7 @@
 {
   "name": "f25-group-17",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "cd FrontEnd && next dev --turbopack",
