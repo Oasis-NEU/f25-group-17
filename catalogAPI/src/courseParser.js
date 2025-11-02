@@ -1,13 +1,15 @@
 import { bannerURL } from "./constants.js";
 import Cache from "./cache.js";
 
+const coursesRawCacheFilepath = "coursesRaw.json";
+
 class CourseParser {
     constructor(term) {
         if(!(typeof term === 'string' || term instanceof String && term.length == 6)) {
             throw new Error(`Term ${term} is not valid!`);
         }
         this.term = term;
-        this.cacheRawCourses = new Cache(`coursesRaw${term}.json`);
+        this.cacheRawCourses = new Cache(`${term}/${coursesRawCacheFilepath}`);
     }
 
     async postTerm() {
