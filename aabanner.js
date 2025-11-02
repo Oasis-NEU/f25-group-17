@@ -1,3 +1,5 @@
+const cookieString = "JSESSIONID=704C3985632589BC5307C8CDDF332048; nubanner-cookie=2384404891.36895.0000;"
+
 async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20) {
   const base = "https://nubanner.neu.edu/StudentRegistrationSsb/ssb";
 
@@ -7,12 +9,11 @@ async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20)
     credentials: 'include',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      'Cookie': 'JSESSIONID=3034F280510B3C8CEEF4B9A5A08C5D9F; nubanner-cookie=2636063131.36895.0000;'
+      'Cookie': cookieString
     },
     body: `term=${termCode}&studyPath=&studyPathText=&startDatepicker=&endDatepicker=`
   });
   const termJson = await termResp.json();
-  console.log(termJson)
   if (!termResp.ok || !termJson.fwdURL) {
     throw new Error("Failed to declare term: " + JSON.stringify(termJson));
   }
@@ -35,31 +36,25 @@ async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20)
   if (subjList.length === 0) {
     return { subjects: subjList, classes: [] };
   }
-  const subj = "CS";
+  const subj = subjList[0].code;
 
   // 4) Search results
   const searchUrl = new URL(`${base}/searchResults/searchResults`);
-  searchUrl.searchParams.set('txt_term', termCode);
-  searchUrl.searchParams.set('txt_subject', "CS");
+//   searchUrl.searchParams.set('term', termCode);
+//   searchUrl.searchParams.set('subject', subj);
 //   searchUrl.searchParams.set('offset', offset);
 //   searchUrl.searchParams.set('max', max);
   // possibly other filters: courseNbr, scheduleType, etc.
-//   console.log(searchUrl.toString());
+  console.log(searchUrl.toString())
 
-  const searchResp = await fetch(`${base}/searchResults/searchResults?txt_subject=&txt_courseNumber=&txt_term=${termCode}&startDatepicker=&endDatepicker=&pageOffset=0&pageMaxSize=1&sortColumn=subjectDescription&sortDirection=asc`, {
+  const searchResp = await fetch(`${base}/searchResults/searchResults?txt_subject=&txt_courseNumber=&txt_term=${termCode}&startDatepicker=&endDatepicker=&pageOffset=0&pageMaxSize=2&sortColumn=&sortDirection=`, {
     method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Cookie': 'JSESSIONID=3034F280510B3C8CEEF4B9A5A08C5D9F; nubanner-cookie=2636063131.36895.0000;'
-    }
+    headers: {'Cookie': cookieString},
+    credentials: 'include'
   });
+  console.log(termResp.headers)
+  console.log(searchResp.headers)
   const searchJson = await searchResp.json();
-  // console.log(searchResp.headers)
-  // console.log(searchJson)
-
-  const instrResp = await fetch(`${base}/searchResults/getFacultyMeetingTimes?term=${termCode}&courseReferenceNumber=10002`)
-  let fmtjson = await instrResp.json()
-  console.log(fmtjson.fmt)
 
   return {
     subjects: subjList,
@@ -71,11 +66,8 @@ async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20)
 searchClasses("202610", "")
   .then(res => {
     // console.log("Subjects:", res.subjects);
-    // console.log("Classes:", res.classes.data[0]);
-    // console.log("Classes:", res.classes);
+    console.log("Classes:", res.classes.data);
   })
   .catch(err => {
     console.error("Error:", err);
   });
-
-
