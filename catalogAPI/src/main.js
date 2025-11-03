@@ -10,10 +10,17 @@ async function updateCache() {
 }
 
 async function getCourseMeetingTimes() {
-    return currentCourseParsers.forEach(courseParser => courseParser.getCourseMeetingTimes());
+    const promises = [];
+    const courseMeetingTimes = [];
+    currentCourseParsers.forEach(courseParser => promises.push(
+        courseParser.getCourseMeetingTimes().then(courseMeetingTime => courseMeetingTimes.push(courseMeetingTime))
+    ));
+    await Promise.all(promises);
+    return courseMeetingTimes;
 }
 
-updateCache();
-console.log(getCourseMeetingTimes());
+// await updateCache();
+// console.log(await getCourseMeetingTimes());
+// console.log(currentCourseParsers.map(courseParser => courseParser.term))
 
 export default {updateCache: updateCache, getCourseMeetingTimes: getCourseMeetingTimes};
