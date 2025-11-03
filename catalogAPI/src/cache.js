@@ -41,7 +41,7 @@ class Cache {
     }
 
     isEmpty() {
-        return fs.existsSync(this.filepath) || fs.readFileSync(this.filepath, "utf-8") == "";
+        return !fs.existsSync(this.filepath) || fs.readFileSync(this.filepath, "utf-8") == "";
     }
 
     read() {
