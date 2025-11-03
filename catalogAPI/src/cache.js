@@ -5,10 +5,8 @@ const cacheDirPath = "../cache";
 
 class Cache {
     constructor(filepath) {
-        this.loaded = false;
         this.filepath = path.join(cacheDirPath, filepath);
         this.load();
-        this.loaded = true;
     }
 
     loadCacheDir() {
@@ -43,11 +41,11 @@ class Cache {
     }
 
     isEmpty() {
-        return this.loaded && fs.readFileSync(this.filepath, "utf-8") == "";
+        return fs.existsSync(this.filepath) || fs.readFileSync(this.filepath, "utf-8") == "";
     }
 
     read() {
-        return JSON.parse(fs.readFileSync(this.filepath, "utf-8"));
+        return fs.readFileSync(this.filepath, "utf-8") == "" ? {} : JSON.parse(fs.readFileSync(this.filepath, "utf-8"));
     }
 
     update(data) {
