@@ -30,13 +30,15 @@ class TermParser {
         return currentTerms;
     }
 
-    async getCurrentTerms() {
+    async getCurrentTerms(updateCache = true) {
         // May cause future errors since not sure if cache loads properly (sync/async wise)
         if(this.cache.isEmpty()) {
-            return await this.fetchCurrentTerms();
-        } else {
-            return this.cache.read();
+            if(!updateCache) {
+                return await this.fetchCurrentTerms();
+            }
+            await this.updateCache();
         }
+        return this.cache.read();
     }
 
     async updateCache() {
