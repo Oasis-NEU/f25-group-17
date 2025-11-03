@@ -4,6 +4,8 @@ import * as path from "path";
 const cacheDirPath = "../cache";
 
 class Cache {
+    verbosity = 0;
+
     constructor(filepath) {
         this.filepath = path.join(cacheDirPath, filepath);
         this.load();
@@ -14,11 +16,11 @@ class Cache {
         for(let i = 1; i < dirs.length - 1; i++) {
             const dir = dirs.slice(0, i + 1).join("/");
             if(!fs.existsSync(dir)) {
-                console.log(`Creating cache directory ${dir} since it does not exist`)
+                if(this.verbosity >= 1) console.log(`Creating cache directory ${dir} since it does not exist`);
                 fs.mkdir(dir, { recursive: true }, mkdirErr => {
                     if(mkdirErr) {
                         console.log("Error creating the directory: ", mkdirErr);
-                    } else {
+                    } else if(this.verbosity >= 2) {
                         console.log(`Cache directory created at ${dir}`);
                     }
                 })
@@ -33,8 +35,8 @@ class Cache {
             fs.writeFile(`${this.filepath}`, "", writeErr => {
                 if(writeErr) {
                     console.log("Error creating the file: ", writeErr);
-                } else {
-                    console.log(`File created at ${this.filepath}`);
+                } else if(this.verbosity >= 2) {
+                    console.log(`Cache file created at ${this.filepath}`);
                 }
             })
         }
