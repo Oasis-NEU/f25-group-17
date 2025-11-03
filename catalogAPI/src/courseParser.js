@@ -4,6 +4,8 @@ import Cache from "./cache.js";
 const coursesRawCacheFilepath = "coursesRaw.json";
 
 class CourseParser {
+    verbosity = 0;
+
     constructor(term) {
         if(!(typeof term === 'string' || term instanceof String && term.length == 6)) {
             throw new Error(`Term ${term} is not valid!`);
@@ -22,7 +24,7 @@ class CourseParser {
             {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
                 'Cookie': this.cookieString
-            }
+            };
         const termResp = await fetch(postTermURL.toString(), {
             method: 'POST',
             credentials: 'include',
@@ -62,57 +64,77 @@ class CourseParser {
         });
         const searchJson = await coursesResp.json();
         if(!Array.isArray(searchJson.data)) {
-            throw new Error("Failed to get courses")
+            throw new Error("Failed to get courses");
         }
         const result = searchJson.data;
         return result;
     }
 
     async searchCoursePagesSequential(pageStart, pageEnd, pageSize, result) {
-        console.log(`Searching course pages ${pageStart} to ${pageEnd} with page size ${pageSize}...`);
+        if(this.verbosity >= 2) console.log(`Searching course pages ${pageStart} to ${pageEnd} with page size ${pageSize} for term ${this.term}...`);
 
         let done = false;
         let offset = (pageStart - 1) * pageSize;
 
         while(!done) {
-            // console.log(`Getting courses on page ${offset / pageSize + 1} with page size ${pageSize}, current result length is ${result.length}, latest result is ${result[result.length - 1]}`)
+            if(this.verbosity >= 4) console.log(`Getting courses on page ${offset / pageSize + 1} with page size ${pageSize}, current result length is ${result.length}, latest result is ${result[result.length - 1]}`);
             const queryResult = await this.searchCourses(offset, pageSize);
             if(queryResult.length == 0) {
-                console.log(`Finished fetching courses from pages ${pageStart} to ${pageEnd}! Current result length is ${result.length}`);
+                if(this.verbosity >= 1) console.log(`Finished fetching courses from pages ${pageStart} to ${pageEnd} for term ${this.term}! Current result length is ${result.length}`);
                 done = true;
+                return true;
             } else {
-                console.log(`Result for page ${offset / pageSize}: ${queryResult}\n`)
+                if(this.verbosity >= 3) console.log(`Result for page ${offset / pageSize}: ${queryResult}\n`);
                 result.push(...queryResult);
                 offset += pageSize;
                 if(pageEnd != -1 && offset / pageSize == pageEnd) {
-                    console.log(`Finished fetching courses from pages ${pageStart} to ${pageEnd}! Current result length is ${result.length}`);
+                    if(this.verbosity >= 1) console.log(`Finished fetching courses from pages ${pageStart} to ${pageEnd} for term ${this.term}! Current result length is ${result.length}`);
                     done = true;
                 }
             }
         }
+        return false;
     }
 
-    async searchCoursesPagesParallel(totalCourseRequests, pageSize, pagesPerSequentialRequest) {
+    async searchCoursesPagesParallel(maxTotalCourseRequests, pageSize, pagesPerSequentialRequest) {
         const result = [];
         const promises = [];
-        for(let i = 0; i < totalCourseRequests / pageSize / pagesPerSequentialRequest; i++) {
+        const sleepBetweenParallelMs = 75;
+        let emptyResultFound = false;
+        let extraRequests = 0;
+        for(let i = 0; i < maxTotalCourseRequests / pageSize / pagesPerSequentialRequest; i++) {
             promises.push(this.searchCoursePagesSequential(
                 i * pagesPerSequentialRequest + 1,
                 (i + 1) * pagesPerSequentialRequest,
                 pageSize,
                 result
             ));
+
+            promises[promises.length - 1].then(isEmpty => {
+                if(isEmpty) {
+                    if(emptyResultFound) {
+                        extraRequests++;
+                    } else {
+                        emptyResultFound = true;
+                    }
+                }
+            });
+            if(emptyResultFound) break;
+
+            // Allow empty results check to finish and prevent spam requests by sleeping
+            await new Promise(resolve => setTimeout(resolve, sleepBetweenParallelMs));
         }
         await Promise.all(promises);
+        console.log(`Finished fetching courses for term ${this.term} with ${extraRequests} extra empty requests made.`);
         return result;
     }
 
     async updateRawCache({
-        totalCourseRequests = 10000,
+        totalCourseRequests = 100000,
         pageSize = 20,
         pagesPerSequentialRequest = 5} = {}
     ) {
-        console.log("Updating courses cache...");
+        console.log(`Updating courses cache for term ${this.term}...`);
         if(this.cookieString === undefined) {
             await this.postTerm();
         }
