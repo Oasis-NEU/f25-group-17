@@ -1,12 +1,19 @@
 import termParser from "./termParser.js";
 import generateCourseParsers from "./courseParser.js"
 
-const updateTermCache = false;
-if(updateTermCache) {
-    await termParser.updateCache();
+const currentCourseParsers = await termParser.getCurrentTerms()
+    .then(currentTerms => currentTerms.map(term => term.code))
+    .then(currentTermCodes => generateCourseParsers(currentTermCodes));
+
+async function updateCache() {
+    currentCourseParsers.forEach(courseParser => (courseParser.updateCourseMeetingTimes()));
 }
-// console.log(await termParser.getCurrentTerms());
-const currentTerms = await termParser.getCurrentTerms();
-const currentTermCodes = currentTerms.map(term => term.code);
-const courseParsers = generateCourseParsers(currentTermCodes);
-courseParsers.forEach(courseParser => courseParser.updateCourseMeetingTimes());
+
+async function getCourseMeetingTimes() {
+    return currentCourseParsers.forEach(courseParser => courseParser.getCourseMeetingTimes());
+}
+
+updateCache();
+console.log(getCourseMeetingTimes());
+
+export default {updateCache: updateCache, getCourseMeetingTimes: getCourseMeetingTimes};
