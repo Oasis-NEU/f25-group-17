@@ -14,3 +14,7 @@ each room will be an object with time (un/)availability field(s) based on above 
 
 
 make system for student-reported time for when room door locks
+
+also *need* system for knowing room is what type--as in getting info like size, tech available inside, etc.--
+especially for knowing what rooms are rooms like science labs (and thus not a "study spot" for general use)
+--> either exploration time!!! and/or get user input/data/consensus once website is published
