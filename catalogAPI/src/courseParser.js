@@ -2,6 +2,7 @@ import { bannerURL } from "./constants.js";
 import Cache from "./cache.js";
 
 const coursesRawCacheFilepath = "coursesRaw.json";
+const courseMeetingTimesCacheFilepath = "courseMeetingTimes.json";
 
 class CourseParser {
     verbosity = 0;
@@ -12,6 +13,7 @@ class CourseParser {
         }
         this.term = term;
         this.cacheRawCourses = new Cache(`${term}/${coursesRawCacheFilepath}`);
+        this.cacheCourseMeetingTimes = new Cache(`${term}/${courseMeetingTimesCacheFilepath}`);
     }
 
     async postTerm() {
@@ -129,21 +131,171 @@ class CourseParser {
         return result;
     }
 
-    async updateRawCache({
+    async fetchRawCourses({
         totalCourseRequests = 100000,
         pageSize = 20,
         pagesPerSequentialRequest = 5} = {}
     ) {
-        console.log(`Updating courses cache for term ${this.term}...`);
         if(this.cookieString === undefined) {
             await this.postTerm();
         }
-        this.cacheRawCourses.update(await this.searchCoursesPagesParallel(
+        return await this.searchCoursesPagesParallel(
             totalCourseRequests,
             pageSize,
             pagesPerSequentialRequest
-        ));
+        );
+    }
+
+    async updateRawCache() {
+        console.log(`Updating courses cache for term ${this.term}...`);
+        this.cacheRawCourses.update(await this.fetchRawCourses());
         this.cacheRawCourses.update(this.cacheRawCourses.read().sort((a, b) => a.courseReferenceNumber - b.courseReferenceNumber));
+    }
+
+    async getRawCourses(updateCache = true) {
+        // May cause future errors since not sure if cache loads properly (sync/async wise)
+        if(this.cacheRawCourses.isEmpty()) {
+            if(!updateCache) {
+                return await this.fetchRawCourses()
+            }
+            await this.updateRawCache();
+        }
+        return this.cacheRawCourses.read();
+    }
+
+    async updateCourseMeetingTimes({ allowCacheUse = true, updateRawCache = true } = {}) {
+        const rawCourseData = await (allowCacheUse ? this.getRawCourses(updateRawCache) : this.fetchRawCourses());
+        const filteredCourseData = rawCourseData.filter(course => course.campusDescription == "Boston");
+        filteredCourseData.forEach(course => course.meetingsFaculty = course.meetingsFaculty.filter(
+            fmt => fmt.meetingTime.building != null && fmt.meetingTime.beginTime != null
+        ));
+        filteredCourseData.forEach(course => {
+            course.CRN = course.courseReferenceNumber;
+            course.courseName = course.courseTitle;
+            course.courseCode = course.subjectCourse;
+            const courseNumber = course.courseNumber;
+            const subject = course.subject;
+            delete course.id;
+            delete course.term;
+            delete course.termDesc;
+            delete course.courseReferenceNumber;
+            delete course.partOfTerm;
+            delete course.courseNumber;
+            delete course.subject;
+            delete course.subjectDescription;
+            delete course.sequenceNumber;
+            delete course.campusDescription;
+            delete course.scheduleTypeDescription;
+            delete course.courseTitle;
+            delete course.creditHours;
+            delete course.maximumEnrollment;
+            delete course.enrollment;
+            delete course.seatsAvailable;
+            delete course.waitCapacity;
+            delete course.waitCount;
+            delete course.waitAvailable;
+            delete course.crossList;
+            delete course.crossListCapacity;
+            delete course.crossListCount;
+            delete course.crossListAvailable;
+            delete course.creditHourHigh;
+            delete course.creditHourLow;
+            delete course.creditHourIndicator;
+            delete course.openSection;
+            delete course.linkIdentifier;
+            delete course.isSectionLinked;
+            delete course.subjectCourse;
+            delete course.faculty;
+            delete course.reservedSeatSummary;
+            delete course.sectionAttributes;
+            delete course.instructionalMethod;
+            delete course.instructionalMethodDescription;
+            course.subject = subject;
+            course.courseNumber = courseNumber;
+        });
+        filteredCourseData.forEach(course => {
+            course.meetingTimes = course.meetingsFaculty.map(meeting => meeting.meetingTime);
+            delete course.meetingsFaculty;
+            course.meetingTimes.forEach(meetingTime => {
+                const sunday = meetingTime.sunday;
+                const monday = meetingTime.monday;
+                const tuesday = meetingTime.tuesday;
+                const wednesday = meetingTime.wednesday;
+                const thursday = meetingTime.thursday;
+                const friday = meetingTime.friday;
+                const saturday = meetingTime.saturday;
+
+                const startDateObj = new Date(meetingTime.startDate);
+                const endDateObj = new Date(meetingTime.endDate);
+                const startDate = {
+                    year: startDateObj.getFullYear(),
+                    month: startDateObj.getMonth() + 1,
+                    day: startDateObj.getDate()
+                };
+                const endDate = {
+                    year: endDateObj.getFullYear(),
+                    month: endDateObj.getMonth() + 1,
+                    day: endDateObj.getDate()
+                };
+                const beginTime = {
+                    hour: meetingTime.beginTime.slice(0, 2),
+                    minute: meetingTime.beginTime.slice(2, 4)
+                };
+                const endTime = {
+                    hour: meetingTime.endTime.slice(0, 2),
+                    minute: meetingTime.endTime.slice(2, 4)
+                };
+                if(beginTime == null || endTime == null) {
+                    console.log(course.CRN);
+                }
+                const building = meetingTime.buildingDescription;
+                const buildingCode = meetingTime.building;
+                const room = meetingTime.room;
+
+                delete meetingTime.beginTime;
+                delete meetingTime.building;
+                delete meetingTime.buildingDescription;
+                delete meetingTime.campus;
+                delete meetingTime.campusDescription;
+                delete meetingTime.category;
+                delete meetingTime.class;
+                delete meetingTime.courseReferenceNumber;
+                delete meetingTime.creditHourSession;
+                delete meetingTime.endDate;
+                delete meetingTime.endTime;
+                delete meetingTime.friday;
+                delete meetingTime.hoursWeek;
+                delete meetingTime.meetingScheduleType;
+                delete meetingTime.meetingType;
+                delete meetingTime.meetingTypeDescription;
+                delete meetingTime.monday;
+                delete meetingTime.room;
+                delete meetingTime.saturday;
+                delete meetingTime.startDate;
+                delete meetingTime.sunday;
+                delete meetingTime.term;
+                delete meetingTime.thursday;
+                delete meetingTime.tuesday;
+                delete meetingTime.wednesday;
+
+                meetingTime.beginTime = beginTime;
+                meetingTime.endTime = endTime;
+                meetingTime.startDate = startDate;
+                meetingTime.endDate = endDate;
+                meetingTime.building = building;
+                meetingTime.buildingCode = buildingCode;
+                meetingTime.room = room;
+
+                meetingTime.sunday = sunday;
+                meetingTime.monday = monday;
+                meetingTime.tuesday = tuesday;
+                meetingTime.wednesday = wednesday;
+                meetingTime.thursday = thursday;
+                meetingTime.friday = friday;
+                meetingTime.saturday = saturday;
+            });
+        });
+        this.cacheCourseMeetingTimes.update(filteredCourseData);
     }
 }
 

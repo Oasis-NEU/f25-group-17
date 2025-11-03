@@ -9,5 +9,4 @@ if(updateTermCache) {
 const currentTerms = await termParser.getCurrentTerms();
 const currentTermCodes = currentTerms.map(term => term.code);
 const courseParsers = generateCourseParsers(currentTermCodes);
-// console.log(courseParsers);
-courseParsers.forEach(courseParser => courseParser.updateRawCache());
+courseParsers.forEach(courseParser => courseParser.updateCourseMeetingTimes());
