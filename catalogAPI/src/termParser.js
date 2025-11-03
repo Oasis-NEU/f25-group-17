@@ -33,7 +33,7 @@ class TermParser {
     async getCurrentTerms() {
         // May cause future errors since not sure if cache loads properly (sync/async wise)
         if(this.cache.isEmpty()) {
-            return await this.fetchCurrentTerms(); // TODO: be consistent about if return promise or file contents
+            return await this.fetchCurrentTerms();
         } else {
             return this.cache.read();
         }
