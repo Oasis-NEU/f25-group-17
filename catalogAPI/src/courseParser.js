@@ -147,7 +147,7 @@ class CourseParser {
     }
 
     async updateRawCache() {
-        console.log(`Updating courses cache for term ${this.term}...`);
+        console.log(`Updating raw courses cache for term ${this.term}...`);
         this.cacheRawCourses.update(await this.fetchRawCourses());
         this.cacheRawCourses.update(this.cacheRawCourses.read().sort((a, b) => a.courseReferenceNumber - b.courseReferenceNumber));
     }
@@ -156,14 +156,14 @@ class CourseParser {
         // May cause future errors since not sure if cache loads properly (sync/async wise)
         if(this.cacheRawCourses.isEmpty()) {
             if(!updateCache) {
-                return await this.fetchRawCourses()
+                return await this.fetchRawCourses();
             }
             await this.updateRawCache();
         }
         return this.cacheRawCourses.read();
     }
 
-    async updateCourseMeetingTimes({ allowCacheUse = true, updateRawCache = true } = {}) {
+    async fetchCourseMeetingTimes({ allowCacheUse = true, updateRawCache = true } = {}) {
         const rawCourseData = await (allowCacheUse ? this.getRawCourses(updateRawCache) : this.fetchRawCourses());
         const filteredCourseData = rawCourseData.filter(course => course.campusDescription == "Boston");
         filteredCourseData.forEach(course => course.meetingsFaculty = course.meetingsFaculty.filter(
@@ -295,7 +295,22 @@ class CourseParser {
                 meetingTime.saturday = saturday;
             });
         });
-        this.cacheCourseMeetingTimes.update(filteredCourseData);
+        return filteredCourseData;
+    }
+
+    async updateCourseMeetingTimes() {
+        console.log(`Updating course meeting times cache for term ${this.term}...`);
+        this.cacheCourseMeetingTimes.update(await this.fetchCourseMeetingTimes());
+    }
+
+    async getCourseMeetingTimes(updateCache = true) {
+        if(this.cacheCourseMeetingTimes.isEmpty()) {
+            if(!updateCache) {
+                return await this.fetchCourseMeetingTimes();
+            }
+            await this.updateCourseMeetingTimes();
+        }
+        return this.cacheCourseMeetingTimes.read();
     }
 }
 
