@@ -1,1 +1,16 @@
-make way of finding and storing information about when rooms are free to use
+make way of finding and storing information about when rooms are free to use...
+current planned process for finding room availability time:
+
+0000, (...[starttime, endtime])*, 2359 as list, sorted in order by starttime
+re group into
+[0000, starttime[0]], [endtime[0], starttime[1]], ... , [endtime[n], 2359]
+
+checking for overlap/back-to-back threshold:
+with threshold = 15 min
+if starttime[n+1] - endtime[n] < {threshold}, instead of [endtime[n], starttime[n+1]], use [endtime[n-1], starttime[n+2]]
+
+each room will be an object with time (un/)availability field(s) based on above approach
+
+
+
+make system for student-reported time for when room door locks
