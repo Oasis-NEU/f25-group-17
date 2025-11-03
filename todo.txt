@@ -1,1 +1,1 @@
-clean course data
+make way of finding and storing information about when rooms are free to use
