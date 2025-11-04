@@ -12,22 +12,16 @@ export default function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Only animate on route changes after initial mount
-    setIsVisible(false);
-    
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 50);
-
-    return () => clearTimeout(timer);
+    // Start page visible to avoid flash
+    setIsVisible(true);
   }, [pathname]);
 
   return (
     <div 
-      className={`transition-all duration-200 ease-out ${
+      className={`transition-opacity duration-300 ease-in-out ${
         isVisible 
-          ? 'opacity-100 translate-y-0' 
-          : 'opacity-0 translate-y-4'
+          ? 'opacity-100' 
+          : 'opacity-0'
       }`}
       suppressHydrationWarning
     >
