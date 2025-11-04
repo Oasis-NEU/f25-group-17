@@ -62,7 +62,7 @@ export default function Home() {
               />
             </h2>
                     <div className="pt-6">
-                      <Button text="Find Now" onClick={() => router.push("/study")} />
+                      <Button text="Find Now" onClick={() => router.push("/login")} />
                     </div>
           </div>
         </div>

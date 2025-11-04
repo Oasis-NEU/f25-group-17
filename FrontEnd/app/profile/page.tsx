@@ -11,12 +11,8 @@ export default function Profile() {
   const [fullName, setFullName] = React.useState("John Doe");
   const [major, setMajor] = React.useState("Computer Science");
   const [email, setEmail] = React.useState("john.doe@northeastern.edu");
-  const [phone, setPhone] = React.useState("+1 (617) 555-0123");
   const [year, setYear] = React.useState("Junior");
   const [studentId, setStudentId] = React.useState("002123456");
-  const [linkedin, setLinkedin] = React.useState("linkedin.com/in/johndoe");
-  const [github, setGithub] = React.useState("github.com/johndoe");
-  const [twitter, setTwitter] = React.useState("twitter.com/johndoe");
 
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
@@ -47,12 +43,7 @@ export default function Profile() {
     setFullName("John Doe");
     setMajor("Computer Science");
     setEmail("john.doe@northeastern.edu");
-    setPhone("+1 (617) 555-0123");
     setYear("Junior");
-    setStudentId("002123456");
-    setLinkedin("linkedin.com/in/johndoe");
-    setGithub("github.com/johndoe");
-    setTwitter("twitter.com/johndoe");
   };
 
   return (
@@ -183,15 +174,15 @@ export default function Profile() {
                         cursor={!isEditing ? "default" : "text"}
                       />
                     </Box>
-
+                    
+                    {/* The display of the year */}
                     <Box>
                       <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={1}>
-                        PHONE
+                        YEAR
                       </Text>
                       <Input
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        type="tel"
+                        value={year}
+                        onChange={(e) => setYear(e.target.value)}
                         variant="outline"
                         bg="rgba(0,0,0,0.3)"
                         color="white"
@@ -243,178 +234,10 @@ export default function Profile() {
                         cursor={!isEditing ? "default" : "text"}
                       />
                     </Box>
-
-                    <Box>
-                      <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={1}>
-                        YEAR
-                      </Text>
-                      <Input
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                        variant="outline"
-                        bg="rgba(0,0,0,0.3)"
-                        color="white"
-                        border="1px solid rgba(255,255,255,0.1)"
-                        _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                        _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                        size="md"
-                        readOnly={!isEditing}
-                        cursor={!isEditing ? "default" : "text"}
-                      />
-                    </Box>
-
-                    <Box>
-                      <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={1}>
-                        STUDENT ID
-                      </Text>
-                      <Input
-                        value={studentId}
-                        onChange={(e) => setStudentId(e.target.value)}
-                        variant="outline"
-                        bg="rgba(0,0,0,0.3)"
-                        color="white"
-                        border="1px solid rgba(255,255,255,0.1)"
-                        _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                        _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                        size="md"
-                        readOnly={!isEditing}
-                        cursor={!isEditing ? "default" : "text"}
-                      />
-                    </Box>
                   </Stack>
                 </CardBody>
               </CardRoot>
             </SimpleGrid>
-
-            {/* Social Links Card */}
-            <CardRoot
-              mt={6}
-              bg="rgba(17, 24, 39, 0.9)"
-              backdropFilter="blur(20px)"
-              shadow="lg"
-              rounded="xl"
-              border="1px solid rgba(255,255,255,0.2)"
-              color="white"
-            >
-              <CardBody p={6}>
-                <Stack direction="row" justify="space-between" align="center" mb={6}>
-                  <Heading size="lg" color="white">Social Links</Heading>
-                  {isEditing && (
-                    <Text fontSize="sm" color="red.400">● Editing</Text>
-                  )}
-                </Stack>
-
-                <SimpleGrid columns={[1, 2, 3]} gap={6}>
-                  {/* LinkedIn */}
-                  <Box>
-                    <Stack direction="row" align="center" gap={2} mb={2}>
-                      <Box
-                        w="32px"
-                        h="32px"
-                        bg="blue.600"
-                        rounded="md"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        fontSize="lg"
-                        fontWeight="bold"
-                      >
-                        in
-                      </Box>
-                      <Text fontSize="xs" fontWeight="bold" color="gray.400">
-                        LINKEDIN
-                      </Text>
-                    </Stack>
-                    <Input
-                      value={linkedin}
-                      onChange={(e) => setLinkedin(e.target.value)}
-                      variant="outline"
-                      bg="rgba(0,0,0,0.3)"
-                      color="white"
-                      border="1px solid rgba(255,255,255,0.1)"
-                      _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                      _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                      size="md"
-                      readOnly={!isEditing}
-                      cursor={!isEditing ? "default" : "text"}
-                      placeholder="linkedin.com/in/username"
-                    />
-                  </Box>
-
-                  {/* GitHub */}
-                  <Box>
-                    <Stack direction="row" align="center" gap={2} mb={2}>
-                      <Box
-                        w="32px"
-                        h="32px"
-                        bg="gray.700"
-                        rounded="md"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        fontSize="lg"
-                        fontWeight="bold"
-                      >
-                        GH
-                      </Box>
-                      <Text fontSize="xs" fontWeight="bold" color="gray.400">
-                        GITHUB
-                      </Text>
-                    </Stack>
-                    <Input
-                      value={github}
-                      onChange={(e) => setGithub(e.target.value)}
-                      variant="outline"
-                      bg="rgba(0,0,0,0.3)"
-                      color="white"
-                      border="1px solid rgba(255,255,255,0.1)"
-                      _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                      _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                      size="md"
-                      readOnly={!isEditing}
-                      cursor={!isEditing ? "default" : "text"}
-                      placeholder="github.com/username"
-                    />
-                  </Box>
-
-                  {/* Twitter */}
-                  <Box>
-                    <Stack direction="row" align="center" gap={2} mb={2}>
-                      <Box
-                        w="32px"
-                        h="32px"
-                        bg="blue.400"
-                        rounded="md"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        fontSize="lg"
-                        fontWeight="bold"
-                      >
-                        𝕏
-                      </Box>
-                      <Text fontSize="xs" fontWeight="bold" color="gray.400">
-                        TWITTER
-                      </Text>
-                    </Stack>
-                    <Input
-                      value={twitter}
-                      onChange={(e) => setTwitter(e.target.value)}
-                      variant="outline"
-                      bg="rgba(0,0,0,0.3)"
-                      color="white"
-                      border="1px solid rgba(255,255,255,0.1)"
-                      _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                      _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                      size="md"
-                      readOnly={!isEditing}
-                      cursor={!isEditing ? "default" : "text"}
-                      placeholder="twitter.com/username"
-                    />
-                  </Box>
-                </SimpleGrid>
-              </CardBody>
-            </CardRoot>
 
             {/* Action Buttons - Single location for all edits */}
             {isEditing && (

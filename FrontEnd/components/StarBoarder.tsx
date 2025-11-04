@@ -5,20 +5,16 @@ type StarBorderProps<T extends React.ElementType> = React.ComponentPropsWithoutR
   className?: string;
   children?: React.ReactNode;
   color?: string;
-  secondaryColor?: string;
   speed?: React.CSSProperties['animationDuration'];
   thickness?: number;
-  buttonColor?: string;
 };
 
 const StarBorder = <T extends React.ElementType = 'button'>({
   as,
   className = '',
   color = 'white',
-  secondaryColor,
   speed = '6s',
   thickness = 1,
-  buttonColor,
   children,
   ...rest
 }: StarBorderProps<T>) => {
@@ -47,13 +43,7 @@ const StarBorder = <T extends React.ElementType = 'button'>({
           animationDuration: speed
         }}
       ></div>
-      <div 
-        className="relative z-1 border-2 text-white text-center text-[16px] py-[16px] px-[26px] rounded-[20px]"
-        style={{
-          background: buttonColor || 'linear-gradient(to bottom, black, rgb(17, 24, 39))',
-          borderColor: 'rgb(220, 20, 60)'
-        }}
-      >
+      <div className="relative z-1 bg-gradient-to-b from-black to-gray-900 border border-gray-800 text-white text-center text-[16px] py-[16px] px-[26px] rounded-[20px]">
         {children}
       </div>
     </Component>

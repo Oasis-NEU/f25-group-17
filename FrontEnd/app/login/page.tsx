@@ -88,8 +88,8 @@ export default function Login() {
               <div className="inline-block mb-4">
                 <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full"></div>
               </div>
-              <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-white mb-3">
-                Welcome Back
+              <h1 className="text-5xl font-black text-white bg-clip-text bg-gradient-to-r from-white via-gray-100 to-white mb-3">
+                EmptyNEU 
               </h1>
               <p className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-red-400 to-gray-400 text-sm font-medium">
                 Sign in to continue your journey
@@ -195,7 +195,7 @@ export default function Login() {
             {/* Sign up link */}
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-sm">
-                Don't have an account?{`'`}
+                Don't have an account? {}
                 <Link href="/signup" className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600 font-semibold hover:from-red-300 hover:to-red-500 transition-all">
                   Sign Up
                 </Link>
