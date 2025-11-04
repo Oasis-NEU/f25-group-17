@@ -1,5 +1,6 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { useRouter } from 'next/navigation';
 
 export interface StaggeredMenuItem {
   label: string;
@@ -70,6 +71,30 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const busyRef = useRef(false);
 
   const itemEntranceTweenRef = useRef<gsap.core.Tween | null>(null);
+
+  const router = useRouter();
+
+  // Lock/unlock body scroll when menu opens/closes
+  useEffect(() => {
+    if (open) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+  }, [open]);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -344,6 +369,15 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     animateText(target);
   }, [playOpen, playClose, animateIcon, animateColor, animateText, onMenuOpen, onMenuClose]);
 
+  const handleNavigate = useCallback((link: string) => {
+    // Close menu first with animation
+    toggleMenu();
+    // Wait for close animation to complete before navigating
+    setTimeout(() => {
+      router.push(link);
+    }, 350); // Slightly shorter delay for smoother feel
+  }, [router, toggleMenu]);
+
   return (
     <div
       className={`sm-scope z-40 w-full h-full`}
@@ -354,6 +388,15 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         data-position={position}
         data-open={open || undefined}
       >
+        {/* Dark backdrop overlay when menu is open */}
+        {open && (
+          <div
+            className="sm-backdrop fixed inset-0 bg-[#1a1a2e] opacity-80 z-[1]"
+            onClick={toggleMenu}
+            aria-hidden="true"
+          />
+        )}
+
         <div
           ref={preLayersRef}
           className="sm-prelayers absolute top-0 right-0 bottom-0 pointer-events-none z-[5]"
@@ -449,16 +492,16 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               {items && items.length ? (
                 items.map((it, idx) => (
                   <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
-                    <a
-                      className="sm-panel-item relative text-black font-semibold text-[4.5rem] cursor-pointer leading-none tracking-[-1px] transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
-                      href={it.link}
+                    <button
+                      className="sm-panel-item relative text-black font-semibold text-[4.5rem] cursor-pointer leading-none tracking-[-1px] transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em] w-full text-left border-0 bg-transparent"
                       aria-label={it.ariaLabel}
                       data-index={idx + 1}
+                      onClick={() => handleNavigate(it.link)}
                     >
                       <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
                         {it.label}
                       </span>
-                    </a>
+                    </button>
                   </li>
                 ))
               ) : (

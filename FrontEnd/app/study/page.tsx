@@ -64,10 +64,10 @@ export default function About() {
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0" />
 
           {/* Staggered Menu */}
-          <div className="absolute top-0 left-0">
+          <div className="position-sticky absolute top-0 left-0">
             <div style={{ height: '100vh', background: '#1a1a1a' }}>
               <StaggeredMenu
-                isFixed={true}
+                isFixed={false}
                 position="left"
                 items={menuItems}
                 socialItems={socialItems}
