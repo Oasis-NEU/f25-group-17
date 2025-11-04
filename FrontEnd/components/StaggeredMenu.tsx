@@ -370,12 +370,12 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   }, [playOpen, playClose, animateIcon, animateColor, animateText, onMenuOpen, onMenuClose]);
 
   const handleNavigate = useCallback((link: string) => {
-    // Close menu first with animation
+    // Close menu with animation
     toggleMenu();
-    // Wait for close animation to complete before navigating
+    // Navigate immediately - Next.js handles it smoothly
     setTimeout(() => {
       router.push(link);
-    }, 350); // Slightly shorter delay for smoother feel
+    }, 200); // Minimal delay for menu to start closing
   }, [router, toggleMenu]);
 
   return (

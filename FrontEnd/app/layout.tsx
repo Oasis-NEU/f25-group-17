@@ -14,8 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EMPTY NEU",
-  description: "Our Oasis Project",
+  title: "EmptyNEU",
+  description: "Find open study spaces at Northeastern University",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
+    ],
+  },
 };
 
 
