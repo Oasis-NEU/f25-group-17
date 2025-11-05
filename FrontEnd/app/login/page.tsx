@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../globals.css'
 import { Input } from '@chakra-ui/react'
 import Button from '../../components/button'
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../../supabase/lib/supabase";
+import Script from "next/script";
+
 
 export default function Login() {
   const router = useRouter()
@@ -22,6 +24,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [showMagicLinkInput, setShowMagicLinkInput] = useState(false)
   const [magicLinkEmail, setMagicLinkEmail] = useState('')
+  const [captchaToken, setCaptchaToken] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -53,6 +56,19 @@ export default function Login() {
     return Object.keys(newErrors).length === 0
   }
 
+  useEffect(() => {
+      // @ts-ignore
+      window.onTurnstileLoad = () => {
+        // @ts-ignore
+        window.turnstile.render('#turnstile-widget', {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+          callback: (token: string) => {
+            setCaptchaToken(token);
+          },
+        });
+      };
+    }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -69,7 +85,8 @@ export default function Login() {
       // Sign in with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: cleanEmail,
-        password: formData.password
+        password: formData.password,
+        options: {captchaToken},
       })
 
       if (authError) {
@@ -259,7 +276,7 @@ export default function Login() {
                   onClick={() => setShowMagicLinkInput(!showMagicLinkInput)}
                   className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95"
                 >
-                  📧 Login with Email
+                  Login with Email
                 </button>
               </div>
 
@@ -300,6 +317,14 @@ export default function Login() {
               )}
             </form>
 
+            {/* Cloudflare Turnstile Captcha */}
+            <div className="flex justify-center items-center mt-12 mb-6">
+              <div 
+                id="turnstile-widget" 
+                style={{ transform: 'scale(1.5)', transformOrigin: 'center' }}
+              ></div>
+            </div>
+            
             {/* Sign up link */}
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-sm">
@@ -323,6 +348,16 @@ export default function Login() {
         <div className="absolute top-0 left-0 ">
           <div style={{ height: '100vh', background: '#1a1a1a' }}>
           </div>
+          
+        {/* Cloudflare Captcha */}
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          onLoad={() => {
+          // @ts-ignore
+          if (window.onTurnstileLoad) window.onTurnstileLoad();
+          }}
+        />
+
         </div>
       </div>
     </main>
