@@ -6,6 +6,7 @@ import { Input } from '@chakra-ui/react'
 import Button from '../../components/button'
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { supabase } from "../../../supabase/lib/supabase";
 
 export default function Login() {
   const router = useRouter()
@@ -61,10 +62,22 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      // For now, just simulate login and redirect
-      // You can add Supabase auth later
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      router.push('/study')
+      const cleanEmail = formData.email.trim().toLowerCase()
+
+      // Sign in with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password: formData.password
+      })
+
+      if (authError) {
+        throw new Error(authError.message || 'Invalid email or password')
+      }
+
+      if (authData.user) {
+        // Login successful - redirect to study page
+        router.push('/study')
+      }
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred during login'
       setError(errorMessage)
@@ -73,7 +86,6 @@ export default function Login() {
       setIsLoading(false)
     }
   }
-
   return (
     <main className="flex flex-col items-center justify-center bg-gray-900 m-0 p-0 min-h-screen">
       <div className="w-screen min-h-screen flex items-center justify-center py-20 px-6
