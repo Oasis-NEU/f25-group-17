@@ -185,7 +185,7 @@ export default function Signup() {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        //options: { captchaToken, },
+        options: { captchaToken, },
       });
 
       if (authError) {
