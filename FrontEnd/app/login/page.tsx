@@ -122,6 +122,18 @@ export default function Login() {
       const errorMessage = err.message || 'An error occurred during login'
       setError(errorMessage)
       console.error('Login error:', err)
+      
+      // Reset captcha token on failed login so user can try again
+      setCaptchaToken('')
+      // Reset captcha widget
+      const el = document.getElementById("turnstile-widget")
+      if (el && window.turnstile) {
+        el.innerHTML = ""
+        window.turnstile.render("#turnstile-widget", {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+          callback: (token: string) => setCaptchaToken(token),
+        })
+      }
     } finally {
       setIsLoading(false)
     }
