@@ -8,6 +8,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from '../../../supabase/lib/supabase'
 import Script from "next/script";
+import { usePathname } from "next/navigation";
+
+declare global {
+  interface Window {
+    turnstile?: any;
+    onTurnstileLoad?: () => void;
+  }
+} 
 
 const MAJORS = [
   "Accounting", "Architectural Studies", "Architecture", "Behavioral Neuroscience",
@@ -29,6 +37,8 @@ const YEARS = [
 
 export default function Signup() {
   const router = useRouter()
+  const widgetRendered = React.useRef(false)
+  const pathname = usePathname();
   
   // Form state
   const [formData, setFormData] = useState({
@@ -153,17 +163,45 @@ export default function Signup() {
   }
 
   useEffect(() => {
-    // @ts-ignore
-    window.onTurnstileLoad = () => {
+    // Dynamically load and initialize Turnstile
+    const loadTurnstile = () => {
       // @ts-ignore
-      window.turnstile.render('#turnstile-widget', {
-        sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-        callback: (token: string) => {
-          setCaptchaToken(token);
-        },
-      });
-    };
-  }, []);
+      if (window.turnstile && !widgetRendered.current) {
+        widgetRendered.current = true
+        // @ts-ignore
+        window.turnstile.render('#turnstile-widget', {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
+          callback: (token: string) => {
+            setCaptchaToken(token)
+          },
+          'error-callback': () => {
+            try {
+              console.warn('Captcha error occurred')
+            } catch (e) {
+              // Silently ignore
+            }
+          }
+        })
+      }
+    }
+
+    // Check if script is already loaded
+    // @ts-ignore
+    if (window.turnstile) {
+      loadTurnstile()
+    } else {
+      // Wait for script to load
+      const checkInterval = setInterval(() => {
+        // @ts-ignore
+        if (window.turnstile) {
+          clearInterval(checkInterval)
+          loadTurnstile()
+        }
+      }, 100)
+
+      return () => clearInterval(checkInterval)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -262,6 +300,32 @@ export default function Signup() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  // Cleanup: destroy all Turnstile widgets when component unmounts (leaving page)
+  React.useEffect(() => {
+    return () => {
+      try {
+        // @ts-ignore
+        if (window.turnstile && window.turnstile._widgetMap) {
+          // @ts-ignore
+          const widgets = window.turnstile._widgetMap
+          Object.keys(widgets).forEach(key => {
+            try {
+              // @ts-ignore
+              window.turnstile.remove(key)
+            } catch (e) {
+              console.warn(`Failed to remove widget ${key}:`, e)
+            }
+          })
+        }
+      } catch (e) {
+        console.warn('Error cleaning up Turnstile widgets:', e)
+      }
+    }
+  }, [])
+
+  // Prevent rendering duplicate widgets
+  if (widgetRendered.current) return
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-900 m-0 p-0 min-h-screen">
@@ -616,12 +680,13 @@ export default function Signup() {
           </div>
         </div>
 
-        {/* Turnstile script */}
+        {/* Cloudflare Captcha */}
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
           onLoad={() => {
-            // @ts-ignore
-            if (window.onTurnstileLoad) window.onTurnstileLoad();
+          // @ts-ignore
+          if (window.onTurnstileLoad) window.onTurnstileLoad();
           }}
         />
       </div>

@@ -8,9 +8,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../../supabase/lib/supabase";
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
+
+declare global {
+  interface Window {
+    turnstile?: any;
+    onTurnstileLoad?: () => void;
+  }
+} 
 
 export default function Login() {
+
   const router = useRouter()
   
   const [formData, setFormData] = useState({
@@ -56,18 +65,30 @@ export default function Login() {
     return Object.keys(newErrors).length === 0
   }
 
-  useEffect(() => {
-      // @ts-ignore
-      window.onTurnstileLoad = () => {
-        // @ts-ignore
-        window.turnstile.render('#turnstile-widget', {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-          callback: (token: string) => {
-            setCaptchaToken(token);
-          },
-        });
+    const pathname = usePathname();
+
+    useEffect(() => {
+      const renderCaptcha = () => {
+        const el = document.getElementById("turnstile-widget");
+        if (window.turnstile && el) {
+          el.innerHTML = ""; // prevent duplicates
+          window.turnstile.render("#turnstile-widget", {
+            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+            callback: (token: string) => setCaptchaToken(token),
+          });
+        }
       };
-    }, []);
+
+      window.onTurnstileLoad = renderCaptcha;
+
+      // Render immediately if Turnstile is already loaded
+      if (window.turnstile) renderCaptcha();
+
+      return () => {
+        const el = document.getElementById("turnstile-widget");
+        if (el) el.innerHTML = "";
+      };
+    }, [pathname]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -348,10 +369,11 @@ export default function Login() {
         <div className="absolute top-0 left-0 ">
           <div style={{ height: '100vh', background: '#1a1a1a' }}>
           </div>
-          
+
         {/* Cloudflare Captcha */}
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
           onLoad={() => {
           // @ts-ignore
           if (window.onTurnstileLoad) window.onTurnstileLoad();
