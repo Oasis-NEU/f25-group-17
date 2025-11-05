@@ -173,10 +173,10 @@ export default function Signup() {
       return
     }
 
-    //if (!captchaToken) {
-    //  setError("Please complete the captcha verification");
-    //  return;
-    //}
+    if (!captchaToken) {
+      setError("Please complete the captcha verification");
+      return;
+    }
 
     setIsLoading(true)
 
