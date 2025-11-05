@@ -1,0 +1,1619 @@
+[
+    {
+        "CRN": "20001",
+        "courseName": "Human Experimentation: Methodological Issues Fundamentals",
+        "courseCode": "BTC6210",
+        "subject": "BTC",
+        "courseNumber": "6210",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20002",
+        "courseName": "Human Experimentation: Methodological Issues Fundamentals",
+        "courseCode": "BTC6210",
+        "subject": "BTC",
+        "courseNumber": "6210",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20003",
+        "courseName": "Strategic Communication Management",
+        "courseCode": "CMN6010",
+        "subject": "CMN",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20004",
+        "courseName": "Negotiation, Mediation, and Facilitation",
+        "courseCode": "CMN6060",
+        "subject": "CMN",
+        "courseNumber": "6060",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20009",
+        "courseName": "Visual Communications Foundation",
+        "courseCode": "DGM6105",
+        "subject": "DGM",
+        "courseNumber": "6105",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20010",
+        "courseName": "Programming Foundations for Digital Media",
+        "courseCode": "DGM6108",
+        "subject": "DGM",
+        "courseNumber": "6108",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "13",
+                    "minute": "00"
+                },
+                "endTime": {
+                    "hour": "14",
+                    "minute": "50"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "sunday": false,
+                "monday": false,
+                "tuesday": true,
+                "wednesday": false,
+                "thursday": false,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "20012",
+        "courseName": "Game Design Technology Lab",
+        "courseCode": "DGM6410",
+        "subject": "DGM",
+        "courseNumber": "6410",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20017",
+        "courseName": "Global Literacy, Culture, and Community",
+        "courseCode": "GST6101",
+        "subject": "GST",
+        "courseNumber": "6101",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20019",
+        "courseName": "Conflict and Postconflict Development",
+        "courseCode": "GST6327",
+        "subject": "GST",
+        "courseNumber": "6327",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20020",
+        "courseName": "Information Technology Strategy and Governance",
+        "courseCode": "ITC6010",
+        "subject": "ITC",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20021",
+        "courseName": "Foundations of Information Security",
+        "courseCode": "ITC6300",
+        "subject": "ITC",
+        "courseNumber": "6300",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20023",
+        "courseName": "Developing Your Leadership Capability",
+        "courseCode": "LDR6100",
+        "subject": "LDR",
+        "courseNumber": "6100",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20024",
+        "courseName": "Leading Teams Strategically in a Global Environment",
+        "courseCode": "LDR6110",
+        "subject": "LDR",
+        "courseNumber": "6110",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20032",
+        "courseName": "Fundraising and Development for Organizations",
+        "courseCode": "NPM6130",
+        "subject": "NPM",
+        "courseNumber": "6130",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20033",
+        "courseName": "Project Risk Management",
+        "courseCode": "PJM6015",
+        "subject": "PJM",
+        "courseNumber": "6015",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20035",
+        "courseName": "Pharmaceutical and Medical Device Law: Topics and Cases",
+        "courseCode": "RGA6203",
+        "subject": "RGA",
+        "courseNumber": "6203",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20045",
+        "courseName": "The Employment Contract",
+        "courseCode": "HRM6030",
+        "subject": "HRM",
+        "courseNumber": "6030",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20048",
+        "courseName": "Organizational Culture, Climate, and Communication",
+        "courseCode": "CMN6090",
+        "subject": "CMN",
+        "courseNumber": "6090",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20050",
+        "courseName": "Foundations of Project Management",
+        "courseCode": "PJM5900",
+        "subject": "PJM",
+        "courseNumber": "5900",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20053",
+        "courseName": "Usability and Human Interaction",
+        "courseCode": "DGM6168",
+        "subject": "DGM",
+        "courseNumber": "6168",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "17",
+                    "minute": "50"
+                },
+                "endTime": {
+                    "hour": "19",
+                    "minute": "40"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "sunday": false,
+                "monday": false,
+                "tuesday": true,
+                "wednesday": false,
+                "thursday": false,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "20055",
+        "courseName": "Compositing",
+        "courseCode": "DGM6540",
+        "subject": "DGM",
+        "courseNumber": "6540",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20058",
+        "courseName": "Ethical Leadership",
+        "courseCode": "LDR6135",
+        "subject": "LDR",
+        "courseNumber": "6135",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20071",
+        "courseName": "Foundations of Project Management",
+        "courseCode": "PJM5900",
+        "subject": "PJM",
+        "courseNumber": "5900",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20077",
+        "courseName": "Capstone",
+        "courseCode": "PJM6910",
+        "subject": "PJM",
+        "courseNumber": "6910",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20081",
+        "courseName": "Digital Media Entrepreneurship",
+        "courseCode": "DGM6230",
+        "subject": "DGM",
+        "courseNumber": "6230",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20095",
+        "courseName": "Project Scheduling and Cost Planning",
+        "courseCode": "PJM6025",
+        "subject": "PJM",
+        "courseNumber": "6025",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20096",
+        "courseName": "Communication Networks and Managing Information",
+        "courseCode": "CMN6100",
+        "subject": "CMN",
+        "courseNumber": "6100",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20103",
+        "courseName": "Informatics Capstone",
+        "courseCode": "ITC6040",
+        "subject": "ITC",
+        "courseNumber": "6040",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20107",
+        "courseName": "Peace and Conflict",
+        "courseCode": "GST6320",
+        "subject": "GST",
+        "courseNumber": "6320",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20110",
+        "courseName": "Developing Strategic and Authentic Leadership Communication",
+        "courseCode": "LDR6115",
+        "subject": "LDR",
+        "courseNumber": "6115",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20125",
+        "courseName": "Public Relations Content Development",
+        "courseCode": "PBR6130",
+        "subject": "PBR",
+        "courseNumber": "6130",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20132",
+        "courseName": "Global Corporate Social Responsibility",
+        "courseCode": "GST6102",
+        "subject": "GST",
+        "courseNumber": "6102",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20137",
+        "courseName": "Developing Organizational Success through Leadership Development",
+        "courseCode": "LDR6120",
+        "subject": "LDR",
+        "courseNumber": "6120",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20145",
+        "courseName": "Capstone",
+        "courseCode": "PJM6910",
+        "subject": "PJM",
+        "courseNumber": "6910",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20147",
+        "courseName": "Public Diplomacy",
+        "courseCode": "GST6590",
+        "subject": "GST",
+        "courseNumber": "6590",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20152",
+        "courseName": "IT Infrastructure (Systems, Networks, Telecom)",
+        "courseCode": "ITC6305",
+        "subject": "ITC",
+        "courseNumber": "6305",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20156",
+        "courseName": "Information Systems Design and Development",
+        "courseCode": "ITC6020",
+        "subject": "ITC",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20157",
+        "courseName": "Introduction to Enterprise Analytics",
+        "courseCode": "ALY6050",
+        "subject": "ALY",
+        "courseNumber": "6050",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20174",
+        "courseName": "Leadership and Organization in Sport",
+        "courseCode": "LDR6410",
+        "subject": "LDR",
+        "courseNumber": "6410",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20175",
+        "courseName": "Introduction to Food and Drug Administration (FDA) Pharmaceutical Regulation",
+        "courseCode": "RGA6000",
+        "subject": "RGA",
+        "courseNumber": "6000",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20184",
+        "courseName": "Introduction to Analytics",
+        "courseCode": "ALY6000",
+        "subject": "ALY",
+        "courseNumber": "6000",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20186",
+        "courseName": "Data Mining Applications",
+        "courseCode": "ALY6040",
+        "subject": "ALY",
+        "courseNumber": "6040",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20191",
+        "courseName": "Predictive Analytics",
+        "courseCode": "ALY6020",
+        "subject": "ALY",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20196",
+        "courseName": "Data Warehousing and SQL",
+        "courseCode": "ALY6030",
+        "subject": "ALY",
+        "courseNumber": "6030",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20201",
+        "courseName": "Foundations of Informatics",
+        "courseCode": "ITC6400",
+        "subject": "ITC",
+        "courseNumber": "6400",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20202",
+        "courseName": "Experiential Learning Projects for Professionals",
+        "courseCode": "INT6940",
+        "subject": "INT",
+        "courseNumber": "6940",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20203",
+        "courseName": "Project Quality Management",
+        "courseCode": "PJM6135",
+        "subject": "PJM",
+        "courseNumber": "6135",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20204",
+        "courseName": "Group Dynamics and Interpersonal Conflict: Meeting Management",
+        "courseCode": "CMN6110",
+        "subject": "CMN",
+        "courseNumber": "6110",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20207",
+        "courseName": "Lab for DGM 6108",
+        "courseCode": "DGM6109",
+        "subject": "DGM",
+        "courseNumber": "6109",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "13",
+                    "minute": "30"
+                },
+                "endTime": {
+                    "hour": "15",
+                    "minute": "00"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "sunday": false,
+                "monday": false,
+                "tuesday": false,
+                "wednesday": false,
+                "thursday": true,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "20208",
+        "courseName": "Typography for Interactivity",
+        "courseCode": "DGM6217",
+        "subject": "DGM",
+        "courseNumber": "6217",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20210",
+        "courseName": "Web Creation Boot Camp",
+        "courseCode": "DGM6501",
+        "subject": "DGM",
+        "courseNumber": "6501",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "14",
+                    "minute": "05"
+                },
+                "endTime": {
+                    "hour": "15",
+                    "minute": "45"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 2,
+                    "day": 15
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "109",
+                "sunday": false,
+                "monday": false,
+                "tuesday": false,
+                "wednesday": false,
+                "thursday": true,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "20218",
+        "courseName": "Intermediate Analytics",
+        "courseCode": "ALY6015",
+        "subject": "ALY",
+        "courseNumber": "6015",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20221",
+        "courseName": "Data Management and Big Data",
+        "courseCode": "ALY6110",
+        "subject": "ALY",
+        "courseNumber": "6110",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20223",
+        "courseName": "Introduction to Human Resources Management",
+        "courseCode": "HRM6015",
+        "subject": "HRM",
+        "courseNumber": "6015",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20231",
+        "courseName": "Probability Theory and Introductory Statistics",
+        "courseCode": "ALY6010",
+        "subject": "ALY",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20237",
+        "courseName": "Capstone: Master&rsquo;s Project",
+        "courseCode": "CED6910",
+        "subject": "CED",
+        "courseNumber": "6910",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20241",
+        "courseName": "Validation and Auditing of Clinical Trial Information",
+        "courseCode": "BTC6211",
+        "subject": "BTC",
+        "courseNumber": "6211",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20243",
+        "courseName": "Global Impact of Electronic Common Technical Document (eCTD) Submissions",
+        "courseCode": "RGA6207",
+        "subject": "RGA",
+        "courseNumber": "6207",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20249",
+        "courseName": "Introduction to Regulatory Compliance and Practice",
+        "courseCode": "RGA6002",
+        "subject": "RGA",
+        "courseNumber": "6002",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20251",
+        "courseName": "Projects for Professionals",
+        "courseCode": "CMN6940",
+        "subject": "CMN",
+        "courseNumber": "6940",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20256",
+        "courseName": "Fundamentals of Artificial Intelligence",
+        "courseCode": "EAI6000",
+        "subject": "EAI",
+        "courseNumber": "6000",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20257",
+        "courseName": "Applications of Artificial Intelligence",
+        "courseCode": "EAI6010",
+        "subject": "EAI",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20259",
+        "courseName": "Interactive Marketing Fundamentals",
+        "courseCode": "DGM6285",
+        "subject": "DGM",
+        "courseNumber": "6285",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20262",
+        "courseName": "Introduction to Construction Management",
+        "courseCode": "CMG6400",
+        "subject": "CMG",
+        "courseNumber": "6400",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20271",
+        "courseName": "Applied Microeconomic Theory 1",
+        "courseCode": "CED6010",
+        "subject": "CED",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20272",
+        "courseName": " Mathematical Methods for Economics 1",
+        "courseCode": "CED6030",
+        "subject": "CED",
+        "courseNumber": "6030",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20273",
+        "courseName": "Applied Econometrics 1",
+        "courseCode": "CED6040",
+        "subject": "CED",
+        "courseNumber": "6040",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20274",
+        "courseName": "Commerce and Economic Development",
+        "courseCode": "CED6050",
+        "subject": "CED",
+        "courseNumber": "6050",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20276",
+        "courseName": "Cultural Economic Development",
+        "courseCode": "CED6090",
+        "subject": "CED",
+        "courseNumber": "6090",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20277",
+        "courseName": "International Finance",
+        "courseCode": "CED6220",
+        "subject": "CED",
+        "courseNumber": "6220",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20281",
+        "courseName": "Probability Theory and Introductory Statistics",
+        "courseCode": "ALY6010",
+        "subject": "ALY",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20282",
+        "courseName": "Intermediate Analytics",
+        "courseCode": "ALY6015",
+        "subject": "ALY",
+        "courseNumber": "6015",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20285",
+        "courseName": "Predictive Analytics",
+        "courseCode": "ALY6020",
+        "subject": "ALY",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20288",
+        "courseName": "Introduction to Enterprise Analytics",
+        "courseCode": "ALY6050",
+        "subject": "ALY",
+        "courseNumber": "6050",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20291",
+        "courseName": "Decision Support and Business Intelligence",
+        "courseCode": "ALY6060",
+        "subject": "ALY",
+        "courseNumber": "6060",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20292",
+        "courseName": "Communication and Visualization for Data Analytics",
+        "courseCode": "ALY6070",
+        "subject": "ALY",
+        "courseNumber": "6070",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20293",
+        "courseName": "Communication and Visualization for Data Analytics",
+        "courseCode": "ALY6070",
+        "subject": "ALY",
+        "courseNumber": "6070",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20296",
+        "courseName": "Risk Management for Analytics",
+        "courseCode": "ALY6130",
+        "subject": "ALY",
+        "courseNumber": "6130",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20297",
+        "courseName": "Risk Management for Analytics",
+        "courseCode": "ALY6130",
+        "subject": "ALY",
+        "courseNumber": "6130",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20299",
+        "courseName": "Capstone",
+        "courseCode": "ALY6980",
+        "subject": "ALY",
+        "courseNumber": "6980",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20302",
+        "courseName": "Data Warehousing and SQL",
+        "courseCode": "ALY6030",
+        "subject": "ALY",
+        "courseNumber": "6030",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20304",
+        "courseName": "Data Management and Big Data",
+        "courseCode": "ALY6110",
+        "subject": "ALY",
+        "courseNumber": "6110",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20306",
+        "courseName": "Integrated Experiential Learning",
+        "courseCode": "ALY6080",
+        "subject": "ALY",
+        "courseNumber": "6080",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20309",
+        "courseName": "Research Methods for Global User Experiences",
+        "courseCode": "DGM6525",
+        "subject": "DGM",
+        "courseNumber": "6525",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20313",
+        "courseName": "Game Design Fundamentals",
+        "courseCode": "DGM6400",
+        "subject": "DGM",
+        "courseNumber": "6400",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20314",
+        "courseName": "Interactive Information Design 2",
+        "courseCode": "DGM6463",
+        "subject": "DGM",
+        "courseNumber": "6463",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20317",
+        "courseName": "Project Scheduling and Cost Planning",
+        "courseCode": "PJM6025",
+        "subject": "PJM",
+        "courseNumber": "6025",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20320",
+        "courseName": "Project Scope Management",
+        "courseCode": "PJM6005",
+        "subject": "PJM",
+        "courseNumber": "6005",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20327",
+        "courseName": "Project Scheduling and Cost Planning",
+        "courseCode": "PJM6025",
+        "subject": "PJM",
+        "courseNumber": "6025",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20335",
+        "courseName": "Introduction to Enterprise Analytics",
+        "courseCode": "ALY6050",
+        "subject": "ALY",
+        "courseNumber": "6050",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20338",
+        "courseName": "Python and Analytics Systems Technology",
+        "courseCode": "ALY6140",
+        "subject": "ALY",
+        "courseNumber": "6140",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20341",
+        "courseName": "Applied Macroeconomic Theory 1",
+        "courseCode": "CED6020",
+        "subject": "CED",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20355",
+        "courseName": "U.S. Foreign Policy",
+        "courseCode": "GST6550",
+        "subject": "GST",
+        "courseNumber": "6550",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20369",
+        "courseName": "AI System Technologies",
+        "courseCode": "EAI6020",
+        "subject": "EAI",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20371",
+        "courseName": "Computer Systems and Networks",
+        "courseCode": "ITC6030",
+        "subject": "ITC",
+        "courseNumber": "6030",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20374",
+        "courseName": "Cloud Analytics",
+        "courseCode": "ITC6460",
+        "subject": "ITC",
+        "courseNumber": "6460",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20378",
+        "courseName": "Communication and Visualization for Data Analytics",
+        "courseCode": "ALY6070",
+        "subject": "ALY",
+        "courseNumber": "6070",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20379",
+        "courseName": "Safety, Project Risk, and Quality Management",
+        "courseCode": "CMG6403",
+        "subject": "CMG",
+        "courseNumber": "6403",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20383",
+        "courseName": "Agile Implementation and Governance",
+        "courseCode": "PJM6820",
+        "subject": "PJM",
+        "courseNumber": "6820",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20384",
+        "courseName": "Agile Lean Product Development",
+        "courseCode": "PJM6825",
+        "subject": "PJM",
+        "courseNumber": "6825",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20404",
+        "courseName": "Capstone",
+        "courseCode": "ALY6980",
+        "subject": "ALY",
+        "courseNumber": "6980",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20411",
+        "courseName": "Managing for Digital Media",
+        "courseCode": "DGM6280",
+        "subject": "DGM",
+        "courseNumber": "6280",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20413",
+        "courseName": "Introduction to Analytics",
+        "courseCode": "ALY6000",
+        "subject": "ALY",
+        "courseNumber": "6000",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20415",
+        "courseName": "Derivatives and Alternative Investments",
+        "courseCode": "CED6250",
+        "subject": "CED",
+        "courseNumber": "6250",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20418",
+        "courseName": "Advanced Digital Storytelling",
+        "courseCode": "DGM6322",
+        "subject": "DGM",
+        "courseNumber": "6322",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20420",
+        "courseName": "AI Communication and Visualization",
+        "courseCode": "EAI6120",
+        "subject": "EAI",
+        "courseNumber": "6120",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20421",
+        "courseName": "Integrated Experiential Capstone",
+        "courseCode": "EAI6980",
+        "subject": "EAI",
+        "courseNumber": "6980",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20460",
+        "courseName": "Regulatory Strategy for Product Development and Life-Cycle Management",
+        "courseCode": "RGA6463",
+        "subject": "RGA",
+        "courseNumber": "6463",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20479",
+        "courseName": "Environmental Economics",
+        "courseCode": "CED6120",
+        "subject": "CED",
+        "courseNumber": "6120",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20480",
+        "courseName": "Web Application Design and Development",
+        "courseCode": "ITC6355",
+        "subject": "ITC",
+        "courseNumber": "6355",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20488",
+        "courseName": "Introduction to Digital Video",
+        "courseCode": "DGM6506",
+        "subject": "DGM",
+        "courseNumber": "6506",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20491",
+        "courseName": "Public Relations Strategy and Planning",
+        "courseCode": "PBR6135",
+        "subject": "PBR",
+        "courseNumber": "6135",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20569",
+        "courseName": "Workforce Analytics",
+        "courseCode": "HRM6025",
+        "subject": "HRM",
+        "courseNumber": "6025",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20584",
+        "courseName": "Human Experimentation: Methodological Issues Fundamentals",
+        "courseCode": "BTC6210",
+        "subject": "BTC",
+        "courseNumber": "6210",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20586",
+        "courseName": "Project Risk Management",
+        "courseCode": "PJM6015",
+        "subject": "PJM",
+        "courseNumber": "6015",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20588",
+        "courseName": "Principles of Agile Project Management",
+        "courseCode": "PJM6810",
+        "subject": "PJM",
+        "courseNumber": "6810",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20616",
+        "courseName": "Mathematical Methods for Economics 2",
+        "courseCode": "CED6031",
+        "subject": "CED",
+        "courseNumber": "6031",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20619",
+        "courseName": "Regional Studies: Europe and Eurasia",
+        "courseCode": "GST6504",
+        "subject": "GST",
+        "courseNumber": "6504",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20620",
+        "courseName": "Global Health Perspectives, Politics, and Experiences in International Development",
+        "courseCode": "GST6700",
+        "subject": "GST",
+        "courseNumber": "6700",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20621",
+        "courseName": "Human Resources Management in Nonprofit Organizations",
+        "courseCode": "NPM6150",
+        "subject": "NPM",
+        "courseNumber": "6150",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20633",
+        "courseName": "AI System Technologies",
+        "courseCode": "EAI6020",
+        "subject": "EAI",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20634",
+        "courseName": "Organizational Design",
+        "courseCode": "HRM6060",
+        "subject": "HRM",
+        "courseNumber": "6060",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20636",
+        "courseName": "Interactive Information Design 1",
+        "courseCode": "DGM6461",
+        "subject": "DGM",
+        "courseNumber": "6461",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20638",
+        "courseName": "Information Security Risk Management",
+        "courseCode": "ITC6315",
+        "subject": "ITC",
+        "courseNumber": "6315",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20657",
+        "courseName": "Human Experimentation: Methodological Issues Fundamentals",
+        "courseCode": "BTC6210",
+        "subject": "BTC",
+        "courseNumber": "6210",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20665",
+        "courseName": "Introduction to Safety Sciences",
+        "courseCode": "RGA6212",
+        "subject": "RGA",
+        "courseNumber": "6212",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20666",
+        "courseName": "Introduction to Safety Sciences",
+        "courseCode": "RGA6212",
+        "subject": "RGA",
+        "courseNumber": "6212",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20667",
+        "courseName": "Introduction to Safety Sciences",
+        "courseCode": "RGA6212",
+        "subject": "RGA",
+        "courseNumber": "6212",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20668",
+        "courseName": "Introduction to Safety Sciences",
+        "courseCode": "RGA6212",
+        "subject": "RGA",
+        "courseNumber": "6212",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20680",
+        "courseName": "Product Development and Process Validation",
+        "courseCode": "RGA6275",
+        "subject": "RGA",
+        "courseNumber": "6275",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20699",
+        "courseName": "Application of Quality System Regulation in Medical Device Design and Manufacturing",
+        "courseCode": "RGA6233",
+        "subject": "RGA",
+        "courseNumber": "6233",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20703",
+        "courseName": "Foundations of Professional Communication",
+        "courseCode": "CMN6005",
+        "subject": "CMN",
+        "courseNumber": "6005",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20709",
+        "courseName": "Introduction to Food and Drug Administration (FDA) Medical Device Regulation",
+        "courseCode": "RGA6001",
+        "subject": "RGA",
+        "courseNumber": "6001",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20720",
+        "courseName": "Project Scope Management",
+        "courseCode": "PJM6005",
+        "subject": "PJM",
+        "courseNumber": "6005",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20737",
+        "courseName": "Alternative Project Delivery Methods and Project Controls",
+        "courseCode": "CMG6402",
+        "subject": "CMG",
+        "courseNumber": "6402",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20740",
+        "courseName": "Foundations of Digital Storytelling",
+        "courseCode": "DGM6122",
+        "subject": "DGM",
+        "courseNumber": "6122",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "19",
+                    "minute": "50"
+                },
+                "endTime": {
+                    "hour": "21",
+                    "minute": "40"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "sunday": false,
+                "monday": false,
+                "tuesday": false,
+                "wednesday": false,
+                "thursday": true,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "20753",
+        "courseName": "Construction Law",
+        "courseCode": "CMG6405",
+        "subject": "CMG",
+        "courseNumber": "6405",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20767",
+        "courseName": "Introduction to Enterprise Analytics",
+        "courseCode": "ALY6050",
+        "subject": "ALY",
+        "courseNumber": "6050",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20789",
+        "courseName": "Law and Policy Concepts 2: Strategizing for Public Policy",
+        "courseCode": "LWP6402",
+        "subject": "LWP",
+        "courseNumber": "6402",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20790",
+        "courseName": "Public Policy Theory and Practice 1",
+        "courseCode": "LWP6450",
+        "subject": "LWP",
+        "courseNumber": "6450",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20833",
+        "courseName": "Applications of Artificial Intelligence",
+        "courseCode": "EAI6010",
+        "subject": "EAI",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20877",
+        "courseName": "Healthcare Information Processing",
+        "courseCode": "EAI6060",
+        "subject": "EAI",
+        "courseNumber": "6060",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20879",
+        "courseName": "Freight Management",
+        "courseCode": "APL6020",
+        "subject": "APL",
+        "courseNumber": "6020",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20881",
+        "courseName": "ERP Systems for Inventory Management",
+        "courseCode": "APL6030",
+        "subject": "APL",
+        "courseNumber": "6030",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20905",
+        "courseName": "Healthcare/Pharmaceutical Data and Applications",
+        "courseCode": "ALY6150",
+        "subject": "ALY",
+        "courseNumber": "6150",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20907",
+        "courseName": "Clinical Trial Design Optimization and Problem Solving",
+        "courseCode": "BTC6213",
+        "subject": "BTC",
+        "courseNumber": "6213",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20940",
+        "courseName": "Information Technology and Creative Practice",
+        "courseCode": "DGM6145",
+        "subject": "DGM",
+        "courseNumber": "6145",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "20942",
+        "courseName": "Capstone",
+        "courseCode": "PJM6910",
+        "subject": "PJM",
+        "courseNumber": "6910",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21027",
+        "courseName": "Corporate Sponsorships",
+        "courseCode": "LDR6445",
+        "subject": "LDR",
+        "courseNumber": "6445",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21106",
+        "courseName": "Finance Information Processing",
+        "courseCode": "EAI6050",
+        "subject": "EAI",
+        "courseNumber": "6050",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21269",
+        "courseName": "Introduction to Regulatory Compliance and Practice",
+        "courseCode": "RGA6002",
+        "subject": "RGA",
+        "courseNumber": "6002",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21383",
+        "courseName": "Intermediate Programming for Digital Media",
+        "courseCode": "DGM6308",
+        "subject": "DGM",
+        "courseNumber": "6308",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "15",
+                    "minute": "00"
+                },
+                "endTime": {
+                    "hour": "16",
+                    "minute": "50"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "sunday": false,
+                "monday": false,
+                "tuesday": true,
+                "wednesday": false,
+                "thursday": false,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "21390",
+        "courseName": "Experiential Integration Seminar",
+        "courseCode": "EXED5945",
+        "subject": "EXED",
+        "courseNumber": "5945",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21402",
+        "courseName": "Biomedical Product Development: From Biotech to Boardroom to Market",
+        "courseCode": "RGA6217",
+        "subject": "RGA",
+        "courseNumber": "6217",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21404",
+        "courseName": "Advanced Regulatory Writing: New Drug Applications",
+        "courseCode": "RGA6380",
+        "subject": "RGA",
+        "courseNumber": "6380",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21414",
+        "courseName": "Fundamentals of Artificial Intelligence",
+        "courseCode": "EAI6000",
+        "subject": "EAI",
+        "courseNumber": "6000",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21415",
+        "courseName": "Applications of Artificial Intelligence",
+        "courseCode": "EAI6010",
+        "subject": "EAI",
+        "courseNumber": "6010",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21429",
+        "courseName": "Experiential Integration Seminar",
+        "courseCode": "EXED5945",
+        "subject": "EXED",
+        "courseNumber": "5945",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21559",
+        "courseName": "Applied Microeconomic Theory 2",
+        "courseCode": "CED6011",
+        "subject": "CED",
+        "courseNumber": "6011",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21581",
+        "courseName": "Intermediate Programming for Digital Media",
+        "courseCode": "DGM6308",
+        "subject": "DGM",
+        "courseNumber": "6308",
+        "meetingTimes": [
+            {
+                "beginTime": {
+                    "hour": "15",
+                    "minute": "50"
+                },
+                "endTime": {
+                    "hour": "17",
+                    "minute": "40"
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "sunday": false,
+                "monday": false,
+                "tuesday": false,
+                "wednesday": false,
+                "thursday": true,
+                "friday": false,
+                "saturday": false
+            }
+        ]
+    },
+    {
+        "CRN": "21605",
+        "courseName": "Managing Innovation Projects",
+        "courseCode": "PJM6185",
+        "subject": "PJM",
+        "courseNumber": "6185",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21607",
+        "courseName": "Foundations of Project Business Analysis",
+        "courseCode": "PJM6610",
+        "subject": "PJM",
+        "courseNumber": "6610",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21609",
+        "courseName": "Requirements Analysis and Design",
+        "courseCode": "PJM6630",
+        "subject": "PJM",
+        "courseNumber": "6630",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21611",
+        "courseName": "Leadership Strategies for the Business Analyst",
+        "courseCode": "PJM6640",
+        "subject": "PJM",
+        "courseNumber": "6640",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21614",
+        "courseName": "European Medical Device Regulations",
+        "courseCode": "RGA6222",
+        "subject": "RGA",
+        "courseNumber": "6222",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21616",
+        "courseName": "Emerging Product Categories in the Regulation of Drugs and Biologics",
+        "courseCode": "RGA6235",
+        "subject": "RGA",
+        "courseNumber": "6235",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21618",
+        "courseName": "Advanced Regulatory Writing: Medical Device Submissions",
+        "courseCode": "RGA6370",
+        "subject": "RGA",
+        "courseNumber": "6370",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21619",
+        "courseName": "Regulatory Strategy for Product Development and Life-Cycle Management",
+        "courseCode": "RGA6463",
+        "subject": "RGA",
+        "courseNumber": "6463",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21620",
+        "courseName": "Visual Communications Foundation",
+        "courseCode": "DGM6105",
+        "subject": "DGM",
+        "courseNumber": "6105",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21638",
+        "courseName": "Project Evaluation and Assessment",
+        "courseCode": "PJM6125",
+        "subject": "PJM",
+        "courseNumber": "6125",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21720",
+        "courseName": "Implementation and Management of Social Media Channels and Online Communities",
+        "courseCode": "CMN6065",
+        "subject": "CMN",
+        "courseNumber": "6065",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21727",
+        "courseName": "Projects for Professionals",
+        "courseCode": "HRM6940",
+        "subject": "HRM",
+        "courseNumber": "6940",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21730",
+        "courseName": "Experiential Integration Seminar",
+        "courseCode": "EXED5945",
+        "subject": "EXED",
+        "courseNumber": "5945",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21731",
+        "courseName": "Experiential Integration Seminar",
+        "courseCode": "EXED5945",
+        "subject": "EXED",
+        "courseNumber": "5945",
+        "meetingTimes": []
+    },
+    {
+        "CRN": "21732",
+        "courseName": "Experiential Integration Seminar",
+        "courseCode": "EXED5945",
+        "subject": "EXED",
+        "courseNumber": "5945",
+        "meetingTimes": []
+    }
+]
