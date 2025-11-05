@@ -170,7 +170,7 @@ export default function Signup() {
         widgetRendered.current = true
         // @ts-ignore
         window.turnstile.render('#turnstile-widget', {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
           callback: (token: string) => {
             setCaptchaToken(token)
           },
@@ -323,9 +323,6 @@ export default function Signup() {
       }
     }
   }, [])
-
-  // Prevent rendering duplicate widgets
-  if (widgetRendered.current) return
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-900 m-0 p-0 min-h-screen">
