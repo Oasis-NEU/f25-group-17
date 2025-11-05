@@ -6,6 +6,7 @@ import { Input } from '@chakra-ui/react'
 import Button from '../../components/button'
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { supabase } from "../../../supabase/lib/supabase";
 
 export default function Login() {
   const router = useRouter()
@@ -19,6 +20,8 @@ export default function Login() {
   const [error, setError] = useState('')
   const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [showPassword, setShowPassword] = useState(false)
+  const [showMagicLinkInput, setShowMagicLinkInput] = useState(false)
+  const [magicLinkEmail, setMagicLinkEmail] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -61,14 +64,69 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      // For now, just simulate login and redirect
-      // You can add Supabase auth later
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      router.push('/study')
+      const cleanEmail = formData.email.trim().toLowerCase()
+
+      // Sign in with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password: formData.password
+      })
+
+      if (authError) {
+        throw new Error(authError.message || 'Invalid email or password')
+      }
+
+      if (authData.user) {
+        // Login successful - redirect to study page
+        router.push('/study')
+      }
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred during login'
       setError(errorMessage)
       console.error('Login error:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleMagicLinkLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+
+    if (!magicLinkEmail.trim()) {
+      setError('Email is required')
+      return
+    }
+
+    if (!/\S+@\S+\.\S+/.test(magicLinkEmail)) {
+      setError('Please enter a valid email')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const cleanEmail = magicLinkEmail.trim().toLowerCase()
+
+      // Send magic link via Supabase Auth (OAuth passwordless)
+      const { error: magicLinkError } = await supabase.auth.signInWithOtp({
+        email: cleanEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+
+      if (magicLinkError) {
+        throw new Error(magicLinkError.message || 'Failed to send magic link')
+      }
+
+      alert('✅ Magic link sent! Check your email to sign in.')
+      setMagicLinkEmail('')
+      setShowMagicLinkInput(false)
+    } catch (err: any) {
+      const errorMessage = err.message || 'An error occurred'
+      setError(errorMessage)
+      console.error('Magic link error:', err)
     } finally {
       setIsLoading(false)
     }
@@ -190,6 +248,56 @@ export default function Login() {
                   {isLoading ? 'Signing In...' : 'Sign In'}
                 </button>
               </div>
+
+              {/* Divider */}
+              <div className="my-4 w-full h-[1px] bg-gradient-to-r from-transparent via-red-900/40 to-transparent"></div>
+
+              {/* Login with Email Button */}
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setShowMagicLinkInput(!showMagicLinkInput)}
+                  className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95"
+                >
+                  📧 Login with Email
+                </button>
+              </div>
+
+              {/* Magic Link Email Form */}
+              {showMagicLinkInput && (
+                <form onSubmit={handleMagicLinkLogin} className="space-y-4 mt-6 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                  <p className="text-gray-300 text-sm">Enter your email to receive a magic link</p>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={magicLinkEmail}
+                    onChange={(e) => setMagicLinkEmail(e.target.value)}
+                    size="lg"
+                    className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500"
+                    _focus={{ 
+                      borderColor: 'rgba(220,20,60,0.8)',
+                      boxShadow: '0 0 20px rgba(220,20,60,0.2)',
+                      background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))'
+                    }}
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-all disabled:opacity-50"
+                    >
+                      {isLoading ? 'Sending...' : 'Send Magic Link'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowMagicLinkInput(false)}
+                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
             </form>
 
             {/* Sign up link */}
