@@ -232,24 +232,24 @@ export default function Signup() {
               <div className="inline-block mb-4">
                 <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full"></div>
               </div>
-              <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-white mb-3">
-                Welcome
+              <h1 className="text-5xl font-black text-white bg-clip-text bg-gradient-to-r from-white via-gray-100 to-white mb-3">
+                EmptyNEU
               </h1>
               <p className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-red-400 to-gray-400 text-sm font-medium">
-                Your study space awaits
+                Sign Up, Your study space awaits
               </p>
             </div>
 
             {/* Form with labels and inputs */}
             <div className="flex flex-col w-full gap-6">
               
-              {/* Username */}
+              {/* First Name */}
               <div className="relative group">
                 <label className="block text-red-400 text-sm font-semibold mb-2">
                   Name
                 </label>
                 <Input 
-                  placeholder="Enter your first name and last name" 
+                  placeholder="Enter Your First Name" 
                   size="lg"
                   value={formData.username}
                   onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
@@ -268,6 +268,31 @@ export default function Signup() {
                 )}
               </div>
               
+              {/* Last Name */}
+              <div className="relative group">
+                <label className="block text-red-400 text-sm font-semibold mb-2">
+                  Name
+                </label>
+                <Input 
+                  placeholder="Enter Your Last Name" 
+                  size="lg"
+                  value={formData.username}
+                  onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  _hover={{
+                    borderColor: 'rgba(220,20,60,0.3)'
+                  }}
+                  _focus={{ 
+                    borderColor: 'rgba(220,20,60,0.8)',
+                    boxShadow: '0 0 20px rgba(220,20,60,0.2)',
+                    background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))'
+                  }}
+                />
+                {errors.username && (
+                  <p className="text-red-400 text-xs mt-1">{errors.username}</p>
+                )}
+              </div>
+
               {/* Email */}
               <div className="relative group">
                 <label className="block text-red-400 text-sm font-semibold mb-2">
