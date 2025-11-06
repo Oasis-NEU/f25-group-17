@@ -97,7 +97,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_sitekey
 
 # Allowed Email Domains (comma-separated, optional)
-NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS=gmail.com
+NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS=northeastern.edu gmail.com
 ```
 
 ### 3. Database Setup
