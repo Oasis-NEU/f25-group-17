@@ -33,7 +33,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [showMagicLinkInput, setShowMagicLinkInput] = useState(false)
   const [magicLinkEmail, setMagicLinkEmail] = useState('')
-  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [captchaToken, setCaptchaToken] = useState<string>("")
+  const [isMounted, setIsMounted] = React.useState(true)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -68,13 +69,22 @@ export default function Login() {
     const pathname = usePathname();
 
     useEffect(() => {
+      setIsMounted(true);
+      return () => {
+        setIsMounted(false);
+      };
+    }, []);
+
+    useEffect(() => {
       const renderCaptcha = () => {
         const el = document.getElementById("turnstile-widget");
-        if (window.turnstile && el) {
+        if (window.turnstile && el && isMounted) {
           el.innerHTML = ""; // prevent duplicates
           window.turnstile.render("#turnstile-widget", {
             sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-            callback: (token: string) => setCaptchaToken(token),
+            callback: (token: string) => {
+              if (isMounted) setCaptchaToken(token);
+            },
           });
         }
       };
@@ -88,7 +98,7 @@ export default function Login() {
         const el = document.getElementById("turnstile-widget");
         if (el) el.innerHTML = "";
       };
-    }, [pathname]);
+    }, [pathname, isMounted]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -114,11 +124,12 @@ export default function Login() {
         throw new Error(authError.message || 'Invalid email or password')
       }
 
-      if (authData.user) {
+      if (authData.user && isMounted) {
         // Login successful - redirect to study page
         router.push('/study')
       }
     } catch (err: any) {
+      if (!isMounted) return;
       const errorMessage = err.message || 'An error occurred during login'
       setError(errorMessage)
       console.error('Login error:', err)
@@ -131,11 +142,13 @@ export default function Login() {
         el.innerHTML = ""
         window.turnstile.render("#turnstile-widget", {
           sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-          callback: (token: string) => setCaptchaToken(token),
+          callback: (token: string) => {
+            if (isMounted) setCaptchaToken(token);
+          },
         })
       }
     } finally {
-      setIsLoading(false)
+      if (isMounted) setIsLoading(false)
     }
   }
 
@@ -170,15 +183,18 @@ export default function Login() {
         throw new Error(magicLinkError.message || 'Failed to send magic link')
       }
 
-      alert('Magic link sent! Check your email to sign in.')
-      setMagicLinkEmail('')
-      setShowMagicLinkInput(false)
+      if (isMounted) {
+        alert('Magic link sent! Check your email to sign in.')
+        setMagicLinkEmail('')
+        setShowMagicLinkInput(false)
+      }
     } catch (err: any) {
+      if (!isMounted) return;
       const errorMessage = err.message || 'An error occurred'
       setError(errorMessage)
       console.error('Magic link error:', err)
     } finally {
-      setIsLoading(false)
+      if (isMounted) setIsLoading(false)
     }
   }
 
@@ -381,6 +397,7 @@ export default function Login() {
         <div className="absolute top-0 left-0 ">
           <div style={{ height: '100vh', background: '#1a1a1a' }}>
           </div>
+        </div>
 
         {/* Cloudflare Captcha */}
         <Script
@@ -391,8 +408,6 @@ export default function Login() {
           if (window.onTurnstileLoad) window.onTurnstileLoad();
           }}
         />
-
-        </div>
       </div>
     </main>
   );
