@@ -27,12 +27,22 @@ import {
 export default function Study() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
+  const [isMounted, setIsMounted] = React.useState(true);
 
   // Check if user is authenticated
+  React.useEffect(() => {
+    setIsMounted(true);
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
+
   React.useEffect(() => {
     const checkAuth = async () => {
       try {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (!isMounted) return;
         
         if (authError || !user) {
           console.error('Auth error:', authError);
@@ -43,12 +53,14 @@ export default function Study() {
         setLoading(false);
       } catch (err) {
         console.error('Unexpected error:', err);
-        router.push("/login");
+        if (isMounted) {
+          router.push("/login");
+        }
       }
     };
 
     checkAuth();
-  }, [router]);
+  }, []);
 
   if (loading) {
     return (
@@ -57,6 +69,7 @@ export default function Study() {
       </div>
     );
   }
+
   const [openDialogId, setOpenDialogId] = React.useState<number | null>(null);
 
   const menuItems = [
@@ -100,12 +113,17 @@ export default function Study() {
 
   // Function to handle joining a study space
   const handleJoinSpace = (spaceId: number) => {
-    // TODO: Implement actual join functionality (e.g., API call)
-    alert(`Joining study space at Location ${spaceId + 1}, Room ${100 + spaceId}!`);
-    // You can add logic here to:
-    // - Add to user's joined spaces
-    // - Send notification to other users
-    // - Update availability status
+    try {
+      // TODO: Implement actual join functionality (e.g., API call)
+      alert(`Joining study space at Location ${spaceId + 1}, Room ${100 + spaceId}!`);
+      // You can add logic here to:
+      // - Add to user's joined spaces
+      // - Send notification to other users
+      // - Update availability status
+    } catch (err) {
+      console.error('Error joining space:', err);
+      alert('Failed to join space. Please try again.');
+    }
   };
 
   // Function to handle viewing space details
@@ -224,7 +242,11 @@ export default function Study() {
 
         {/* Dialog for viewing space details */}
         {openDialogId !== null && (
-          <Dialog.Root open={openDialogId !== null} onOpenChange={(e) => e.open ? null : handleCloseDialog()}>
+          <Dialog.Root open={true} onOpenChange={(details) => {
+            if (!details.open) {
+              handleCloseDialog();
+            }
+          }}>
             <Dialog.Backdrop bg="blackAlpha.700" />
             <Dialog.Positioner display="flex" alignItems="center" justifyContent="center">
               <Dialog.Content 
