@@ -9,6 +9,7 @@ import Link from "next/link";
 import { supabase } from '../../../supabase/lib/supabase'
 import Script from "next/script";
 import { usePathname } from "next/navigation";
+import json from '../../../Data/combineMajor.json'
 
 declare global {
   interface Window {
@@ -17,19 +18,7 @@ declare global {
   }
 } 
 
-const MAJORS = [
-  "Accounting", "Architectural Studies", "Architecture", "Behavioral Neuroscience",
-  "Biochemistry", "Biology", "Bioengineering", "Business Administration",
-  "Chemical Engineering", "Chemistry", "Civil Engineering", "Communication Studies",
-  "Computer Engineering", "Computer Science", "Criminal Justice", "Cybersecurity",
-  "Data Science", "Economics", "Electrical Engineering", "English",
-  "Environmental Engineering", "Environmental Science", "Finance", "Game Design",
-  "Health Science", "History", "Human Services", "Industrial Engineering",
-  "Information Science", "International Affairs", "Journalism", "Landscape Architecture",
-  "Mathematics", "Mechanical Engineering", "Media Arts", "Music", "Nursing",
-  "Pharmaceutical Sciences", "Philosophy", "Physics", "Political Science",
-  "Psychology", "Public Health", "Sociology", "Theatre","International Business", "Undeclared"
-];
+const MAJORS = json
 
 const YEARS = [
   "Freshmen", "Sophmore", "Junior", "Senior", "Fifth Year", "Graduate Student"
@@ -619,7 +608,7 @@ export default function Signup() {
                     Courses
                   </label>
 
-                  <Link href="/onboarding/courses">
+                  <Link href="/course">
                     <div
                       className="
                         w-full h-12 rounded-md bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 flex items-center justify-center text-gray-300 font-semibold tracking-wide cursor-pointer transition-all hover:border-red-500/70 hover:text-white hover:bg-gray-900/70 backdrop-blur-sm
