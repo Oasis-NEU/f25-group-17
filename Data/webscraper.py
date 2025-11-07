@@ -44,8 +44,8 @@ with open('/Users/jacksonzheng/f25-group-17/Data/raw.txt', 'r', encoding='utf-8'
                 major_l.append(line.rstrip('\n'))
 
 combined = major_l + cleaned
-majors = sorted(combined)
-cleaned_major = list(set(majors))
+major = list(set(combined))
+cleaned_major = sorted(major)
 print(cleaned_major, len(cleaned_major))
 
 with open('Data/combineMajor.json', 'w') as d:
