@@ -6,8 +6,12 @@ import StaggeredMenu from '../../components/StaggeredMenu';
 import PageTransition from '../../components/PageTransition';
 import { Avatar, Box, Heading, Text, Stack, CardRoot, CardBody, Input, Button, SimpleGrid } from '@chakra-ui/react';
 import { supabase } from "../../../supabase/lib/supabase";
+import { useRouter } from "next/navigation";
+
 
 export default function Profile() {
+  const router = useRouter();
+
   const [isEditing, setIsEditing] = React.useState(false);
   const [fullName, setFullName] = React.useState("John Doe");
   const [major, setMajor] = React.useState("Computer Science");
@@ -31,6 +35,7 @@ export default function Profile() {
         if (authError || !user) {
           console.error('Auth error:', authError);
           setLoading(false);
+          router.push("/login"); //preventing them from access this page if they arent the user and not logged in 
           return;
         }
 

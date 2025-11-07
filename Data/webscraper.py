@@ -1,6 +1,10 @@
-from bs4 import BeautifulSoup
+'''
+Webscrape for major data
+'''
+
 import requests
 import json 
+from bs4 import BeautifulSoup
 
 url = 'https://admissions.northeastern.edu/academics/combined-majors'
 

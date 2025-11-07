@@ -425,7 +425,6 @@ export default function OnboardingCourses() {
                 ← Back to Sign Up
               </Link>
             </div>
-
           </div>
         </div>
       </div>

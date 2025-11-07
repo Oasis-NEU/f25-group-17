@@ -170,7 +170,7 @@ export default function Login() {
         throw new Error(magicLinkError.message || 'Failed to send magic link')
       }
 
-      alert('✅ Magic link sent! Check your email to sign in.')
+      alert('Magic link sent! Check your email to sign in.')
       setMagicLinkEmail('')
       setShowMagicLinkInput(false)
     } catch (err: any) {
