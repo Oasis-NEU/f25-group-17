@@ -1,12 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../globals.css'
 import { Input } from '@chakra-ui/react'
 import Button from '../../components/button'
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from '../../../supabase/lib/supabase'
+import Script from "next/script";
+import { usePathname } from "next/navigation";
+
+declare global {
+  interface Window {
+    turnstile?: any;
+    onTurnstileLoad?: () => void;
+  }
+} 
 
 const MAJORS = [
   "Accounting", "Architectural Studies", "Architecture", "Behavioral Neuroscience",
@@ -28,10 +37,13 @@ const YEARS = [
 
 export default function Signup() {
   const router = useRouter()
+  const widgetRendered = React.useRef(false)
+  const pathname = usePathname();
   
   // Form state
   const [formData, setFormData] = useState({
-    username: '',
+    firstname: '',
+    lastname: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -51,6 +63,7 @@ export default function Signup() {
   const [yearSearch, setYearSearch] = useState('')
   const [showYearDropdown, setShowYearDropdown] = useState(false)
   const [isSelectingYear, setIsSelectingYear] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string>("");
 
   const filteredMajors = MAJORS.filter(major => 
     major.toLowerCase().includes(majorSearch.toLowerCase())
@@ -113,8 +126,12 @@ export default function Signup() {
   const validateForm = () => {
     const newErrors: {[key: string]: string} = {}
 
-    if (!formData.username.trim()) {
-      newErrors.username = 'Name is required'
+    if (!formData.firstname.trim()) {
+      newErrors.username = 'First name is required'
+    }
+
+    if (!formData.lastname.trim()) {
+      newErrors.username = 'Last name is required'
     }
 
     if (!formData.email.trim()) {
@@ -145,12 +162,58 @@ export default function Signup() {
     return Object.keys(newErrors).length === 0
   }
 
+  useEffect(() => {
+    // Dynamically load and initialize Turnstile
+    const loadTurnstile = () => {
+      // @ts-ignore
+      if (window.turnstile && !widgetRendered.current) {
+        widgetRendered.current = true
+        // @ts-ignore
+        window.turnstile.render('#turnstile-widget', {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+          callback: (token: string) => {
+            setCaptchaToken(token)
+          },
+          'error-callback': () => {
+            try {
+              console.warn('Captcha error occurred')
+            } catch (e) {
+              // Silently ignore
+            }
+          }
+        })
+      }
+    }
+
+    // Check if script is already loaded
+    // @ts-ignore
+    if (window.turnstile) {
+      loadTurnstile()
+    } else {
+      // Wait for script to load
+      const checkInterval = setInterval(() => {
+        // @ts-ignore
+        if (window.turnstile) {
+          clearInterval(checkInterval)
+          loadTurnstile()
+        }
+      }, 100)
+
+      return () => clearInterval(checkInterval)
+    }
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     
     if (!validateForm()) {
       return
+    }
+
+    if (!captchaToken) {
+      setError("Please complete the captcha verification");
+      return;
     }
 
     setIsLoading(true)
@@ -160,17 +223,10 @@ export default function Signup() {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        options: {
-          data: {
-            username: formData.username,
-            major: formData.major,
-            year: formData.year,
-          }
-        }
-      })
+        options: { captchaToken, },
+      });
 
       if (authError) {
-        // Handle specific error cases
         if (authError.message.includes('already registered') || 
             authError.message.includes('already exists') ||
             authError.message.includes('User already registered')) {
@@ -180,20 +236,47 @@ export default function Signup() {
       }
 
       if (authData.user) {
-        // Check if user was actually created (identities array empty = duplicate)
+        // Check if user was actually created
         if (authData.user.identities && authData.user.identities.length === 0) {
           throw new Error('This email is already registered. Please use a different email or try logging in.')
         }
-        
-        // Success! Redirect to login
-        alert('Account created successfully! Please check your email to verify your account.')
-        router.push('/login')
+
+        // Insert user data into UserData table
+        console.log('Attempting to insert user data:', {
+          firstName: formData.firstname,
+          lastName: formData.lastname,
+          email: formData.email,
+          major: formData.major,
+          year: formData.year,
+          user_id: authData.user.id,
+        });
+
+        const { data: insertedData, error: userError } = await supabase
+          .from("UserData")
+          .insert([{
+            firstName: formData.firstname,
+            lastName: formData.lastname,
+            email: formData.email,
+            major: formData.major,
+            year: formData.year,
+            user_id: authData.user.id,
+          }] as any)
+          .select();
+
+        if (userError) {
+          console.error('Error inserting user data:', userError);
+          setError(`Failed to store user profile: ${userError.message}`);
+          return;
+        }
+
+        console.log('User data inserted successfully:', insertedData);
+        alert('Account created successfully! Please check your email to verify your account.');
+        router.push('/login');
       }
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred during signup'
       setError(errorMessage)
       
-      // Also set error on email field if it's a duplicate email error
       if (errorMessage.toLowerCase().includes('email') && 
           (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('registered'))) {
         setErrors(prev => ({ ...prev, email: 'This email is already in use' }))
@@ -216,6 +299,29 @@ export default function Signup() {
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Cleanup: destroy all Turnstile widgets when component unmounts (leaving page)
+  React.useEffect(() => {
+    return () => {
+      try {
+        // @ts-ignore
+        if (window.turnstile && window.turnstile._widgetMap) {
+          // @ts-ignore
+          const widgets = window.turnstile._widgetMap
+          Object.keys(widgets).forEach(key => {
+            try {
+              // @ts-ignore
+              window.turnstile.remove(key)
+            } catch (e) {
+              console.warn(`Failed to remove widget ${key}:`, e)
+            }
+          })
+        }
+      } catch (e) {
+        console.warn('Error cleaning up Turnstile widgets:', e)
+      }
+    }
   }, [])
 
   return (
@@ -251,8 +357,8 @@ export default function Signup() {
                 <Input 
                   placeholder="Enter Your First Name" 
                   size="lg"
-                  value={formData.username}
-                  onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                  value={formData.firstname}
+                  onChange={(e) => setFormData(prev => ({ ...prev, firstname: e.target.value }))}
                   className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: 'rgba(220,20,60,0.3)'
@@ -276,8 +382,8 @@ export default function Signup() {
                 <Input 
                   placeholder="Enter Your Last Name" 
                   size="lg"
-                  value={formData.username}
-                  onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                  value={formData.lastname}
+                  onChange={(e) => setFormData(prev => ({ ...prev, lastname: e.target.value }))}
                   className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: 'rgba(220,20,60,0.3)'
@@ -525,6 +631,14 @@ export default function Signup() {
               </div>}
             </div>
 
+            {/* Cloudflare Turnstile Captcha */}
+            <div className="flex justify-center items-center mt-12 mb-6">
+              <div 
+                id="turnstile-widget" 
+                style={{ transform: 'scale(1.5)', transformOrigin: 'center' }}
+              ></div>
+            </div>
+
             {/* Error Message */}
             {error && (
               <div className="mt-6 p-4 bg-red-600/20 border border-red-600/50 rounded-lg">
@@ -562,6 +676,16 @@ export default function Signup() {
           <div style={{ height: '100vh', background: '#1a1a1a' }}>
           </div>
         </div>
+
+        {/* Cloudflare Captcha */}
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
+          onLoad={() => {
+          // @ts-ignore
+          if (window.onTurnstileLoad) window.onTurnstileLoad();
+          }}
+        />
       </div>
     </main>
   );
