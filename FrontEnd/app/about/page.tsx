@@ -1,19 +1,41 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
 import '../globals.css'
+import React, { useEffect, useRef } from "react";
 import StaggeredMenu from '../../components/StaggeredMenu';
 import PageTransition from '../../components/PageTransition';
 import RotatingCarousel from '../../components/RotatingCarousel';
 import CardSwap, { Card } from '../../components/CardSwap';
 import { Box, Heading, Text } from '@chakra-ui/react';
+import { useRouter } from "next/navigation";
+import { supabase } from "../../../supabase/lib/supabase";
 
 export default function About() {
+  const router = useRouter();
   const heroRef = useRef<HTMLDivElement>(null);
   const cardSectionRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const [isCardSectionVisible, setIsCardSectionVisible] = React.useState(true);
+  
+  const handleExploreClick = async () => {
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        console.error('Auth error:', authError);
+        router.push("/login");
+        return;
+      }
+      
+      // User is authenticated, redirect to study
+      router.push('/study');
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      router.push("/login");
+    }
+  };
+
 
   useEffect(() => {
     const observerOptions = {
@@ -369,11 +391,12 @@ export default function About() {
                 Experience the convenience of real-time availability, smart filtering, and community-driven updates. 
                 Start studying smarter, not harder—find your ideal study environment in seconds.
               </Text>
-              <a href="/study">
-                <button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-5 px-12 rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95 text-xl shadow-2xl">
-                  Explore Study Spaces →
-                </button>
-              </a>
+              <button 
+                onClick={handleExploreClick}
+                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-5 px-12 rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95 active:shadow-inner text-xl shadow-2xl"
+              >
+                Explore Study Spaces →
+              </button>
               <Text fontSize="sm" color="gray.500" mt={5} fontWeight="medium">
               </Text>
             </Box>

@@ -815,6 +815,15 @@ export default function Signup() {
                 >
                   Sign In
                 </Link>
+              
+              </p>
+              <p className="text-gray-500 text-sm">
+                <Link
+                  href="/about"
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600 font-semibold hover:from-red-300 hover:to-red-500 transition-all"
+                >
+                  Learn More
+                </Link>
               </p>
             </div>
           </div>
