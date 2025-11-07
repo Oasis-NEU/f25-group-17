@@ -34,9 +34,9 @@ async function insertClasses() {
     const chunk = rows.slice(i, i + chunkSize);
     const { error } = await supabase.from('ClassTime_Data').insert(chunk);
     if (error) {
-      console.error(`❌ Error inserting rows ${i + 1}-${i + chunk.length}:`, error.message);
+      console.error(`Error inserting rows ${i + 1}-${i + chunk.length}:`, error.message);
     } else {
-      console.log(`✅ Inserted rows ${i + 1}-${i + chunk.length}`);
+      console.log(`Inserted rows ${i + 1}-${i + chunk.length}`);
     }
   }
 
@@ -44,5 +44,5 @@ async function insertClasses() {
 }
 
 insertClasses()
-  .then(() => console.log('✅ Done!'))
+  .then(() => console.log('Done!'))
   .catch((err) => console.error('Unexpected error:', err));

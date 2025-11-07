@@ -5,6 +5,7 @@ import '../globals.css'
 import StaggeredMenu from '../../components/StaggeredMenu';
 import PageTransition from '../../components/PageTransition';
 import { Avatar, Box, Heading, Text, Stack, CardRoot, CardBody, Input, Button, SimpleGrid } from '@chakra-ui/react';
+import { supabase } from "../../../supabase/lib/supabase";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = React.useState(false);
@@ -12,7 +13,68 @@ export default function Profile() {
   const [major, setMajor] = React.useState("Computer Science");
   const [email, setEmail] = React.useState("john.doe@northeastern.edu");
   const [year, setYear] = React.useState("Junior");
-  const [studentId, setStudentId] = React.useState("002123456");
+  const [loading, setLoading] = React.useState(true);
+
+  // Store original values for cancel functionality
+  const [originalFullName, setOriginalFullName] = React.useState("John Doe");
+  const [originalMajor, setOriginalMajor] = React.useState("Computer Science");
+  const [originalEmail, setOriginalEmail] = React.useState("john.doe@northeastern.edu");
+  const [originalYear, setOriginalYear] = React.useState("Junior");
+
+  // Fetch user profile data on component mount
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Get current authenticated user
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError || !user) {
+          console.error('Auth error:', authError);
+          setLoading(false);
+          return;
+        }
+
+        // Fetch user profile from UserData table
+        const { data, error } = await supabase
+          .from('UserData')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching user data:', error);
+          setLoading(false);
+          return;
+        }
+
+        if (data && typeof data === 'object') {
+          const userData = data as any;
+          const fullNameValue = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+          const emailValue = userData.email || '';
+          const majorValue = userData.major || '';
+          const yearValue = userData.year || '';
+
+          // Set current values
+          setFullName(fullNameValue);
+          setEmail(emailValue);
+          setMajor(majorValue);
+          setYear(yearValue);
+
+          // Store original values for cancel functionality
+          setOriginalFullName(fullNameValue);
+          setOriginalEmail(emailValue);
+          setOriginalMajor(majorValue);
+          setOriginalYear(yearValue);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
@@ -30,20 +92,57 @@ export default function Profile() {
   // Check if required fields are filled
   const canSave = fullName.trim() !== "" && major.trim() !== "";
 
-  const handleSave = () => {
-    if (canSave) {
+  const handleSave = async () => {
+    if (!canSave) return;
+
+    try {
+      // Get current authenticated user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        console.error('Auth error:', authError);
+        return;
+      }
+
+      // Parse full name into first and last name
+      const nameParts = fullName.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Update user data in UserData table
+      const updates: Record<string, string> = {
+        firstName,
+        lastName,
+        email,
+        major,
+        year
+      };
+
+      const { error: updateError } = await supabase
+        .from('UserData')
+        // @ts-ignore - Supabase type inference issue
+        .update(updates)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        console.error('Error updating user data:', updateError);
+        return;
+      }
+
       setIsEditing(false);
-      // Add save logic here
+      console.log('Profile updated successfully');
+    } catch (err) {
+      console.error('Unexpected error:', err);
     }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset to original values if needed
-    setFullName("John Doe");
-    setMajor("Computer Science");
-    setEmail("john.doe@northeastern.edu");
-    setYear("Junior");
+    // Reset to original values
+    setFullName(originalFullName);
+    setMajor(originalMajor);
+    setEmail(originalEmail);
+    setYear(originalYear);
   };
 
   return (
@@ -129,7 +228,6 @@ export default function Profile() {
                     </Avatar.Root>
                     <Box>
                       <Heading size="md" mb={1} color="white">{fullName}</Heading>
-                      <Text fontSize="sm" color="gray.400">{studentId}</Text>
                       <Text fontSize="sm" color="red.400" mt={1}>{major}</Text>
                     </Box>
                   </Stack>
