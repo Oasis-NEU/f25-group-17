@@ -28,6 +28,7 @@ export default function Study() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
   const [isMounted, setIsMounted] = React.useState(true);
+  const [openDialogId, setOpenDialogId] = React.useState<number | null>(null);
 
   // Check if user is authenticated
   React.useEffect(() => {
@@ -69,8 +70,6 @@ export default function Study() {
       </div>
     );
   }
-
-  const [openDialogId, setOpenDialogId] = React.useState<number | null>(null);
 
   const menuItems = [
     { label: "Home", ariaLabel: "Go to home page", link: "/" },
