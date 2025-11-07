@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../../supabase/lib/supabase";
 import "../globals.css";
 import StaggeredMenu from "../../components/StaggeredMenu";
 import PageTransition from "../../components/PageTransition";
@@ -22,7 +24,39 @@ import {
   createOverlay
 } from "@chakra-ui/react";
 
-export default function About() {
+export default function Study() {
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(true);
+
+  // Check if user is authenticated
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError || !user) {
+          console.error('Auth error:', authError);
+          router.push("/login");
+          return;
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
   const [openDialogId, setOpenDialogId] = React.useState<number | null>(null);
 
   const menuItems = [

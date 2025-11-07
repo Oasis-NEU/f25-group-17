@@ -79,7 +79,7 @@ export default function Profile() {
     };
 
     fetchUserData();
-  }, []);
+  }, [router]);
 
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
@@ -96,6 +96,16 @@ export default function Profile() {
 
   // Check if required fields are filled
   const canSave = fullName.trim() !== "" && major.trim() !== "";
+
+  // Get initials from full name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const handleSave = async () => {
     if (!canSave) return;
@@ -259,11 +269,11 @@ export default function Profile() {
                       color="white"
                       title="User Avatar"
                     >
-                      <Avatar.Fallback>JD</Avatar.Fallback>
+                      <Avatar.Fallback>{getInitials(fullName)}</Avatar.Fallback>
                     </Avatar.Root>
                     <Box>
                       <Heading size="md" mb={1} color="white">{fullName}</Heading>
-                      <Text fontSize="sm" color="red.400" mt={1}>{major}</Text>
+                      <Text fontSize="sm" color="red.400" mt={1}>Major: {major}</Text>
                     </Box>
                   </Stack>
 

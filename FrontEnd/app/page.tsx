@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../../supabase/lib/supabase";
 import Button from "@/components/button";
 import PageTransition from "@/components/PageTransition";
 import TypeWriter from "@/components/TypeWriter";
@@ -10,6 +11,25 @@ import Orb from "@/components/Orb"
 
 export default function Home() {
   const router = useRouter();
+
+  // Handle Find Now button click with auth check
+  const handleFindNow = async () => {
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        console.error('Auth error:', authError);
+        router.push("/login");
+        return;
+      }
+      
+      // User is authenticated, redirect to about
+      router.push('/about');
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      router.push("/login");
+    }
+  };
 
   return (
     <PageTransition>
@@ -62,7 +82,7 @@ export default function Home() {
               />
             </h2>
                     <div className="pt-6">
-                      <Button text="Find Now" onClick={() => router.push("/login")} />
+                      <Button text="Find Now" onClick={handleFindNow} />
                     </div>
           </div>
         </div>
