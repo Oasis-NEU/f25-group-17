@@ -150,6 +150,25 @@ export default function Profile() {
     setYear(originalYear);
   };
 
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Error signing out:', error);
+        return;
+      }
+
+      // Clear any stored courses on sign out
+      localStorage.removeItem('userCourses');
+      
+      // Redirect to home
+      router.push('/login');
+    } catch (err) {
+      console.error('Unexpected error signing out:', err);
+    }
+  };
+
   return (
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-auto">
@@ -187,17 +206,28 @@ export default function Profile() {
                 </Heading>
                 <Text color="gray.400" fontSize="lg">Welcome back, {fullName}</Text>
               </Box>
-              {!isEditing && (
+              <Stack direction="row" gap={3}>
+                {!isEditing && (
+                  <Button
+                    bg="red.600"
+                    color="white"
+                    _hover={{ bg: "red.700" }}
+                    size="lg"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit Profile
+                  </Button>
+                )}
                 <Button
-                  bg="red.600"
+                  bg="gray.700"
                   color="white"
-                  _hover={{ bg: "red.700" }}
+                  _hover={{ bg: "gray.600" }}
                   size="lg"
-                  onClick={() => setIsEditing(true)}
+                  onClick={handleSignOut}
                 >
-                  Edit Profile
+                  Sign Out
                 </Button>
-              )}
+              </Stack>
             </Stack>
           </Box>
 
