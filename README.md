@@ -51,12 +51,18 @@ f25-group-17/
 │   └── lib/
 │       └── supabase.ts    # Supabase client setup
 │
-└── Data/                  # Course data scripts & catalogs
-    ├── catalogAPI/        # Course catalog parser
-    └── [termCode]/        # Term-specific course data
-        ├── coursesRaw.json #Only created for fall 2025 and cps 
-        ├── courseMeetingTimes.json
-        └──data_cleaning.js #Pushes selective data into a postgres database
+├── Data/                  # Course data scripts & catalogs
+│   ├── catalogAPI/        # Course catalog parser
+│   └── [termCode]/        # Term-specific course data
+│       ├── coursesRaw.json #Only created for fall 2025 and cps 
+│       ├── courseMeetingTimes.json
+│       └──data_cleaning.js #Pushes selective data into a postgres database
+│
+├── package.json
+├── tsconfig.json
+├── .env.local
+└── .env
+
 ```
 
 ## Tech Stack
