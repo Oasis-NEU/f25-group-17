@@ -657,28 +657,6 @@ export default function Study() {
             <Text fontSize="xl" maxW="2xl" mx="auto" color="gray.400" fontWeight="500" mb={6}>
               Find your perfect study space on campus in seconds
             </Text>
-            
-            {/* Leave Room Button - Shows only if user is in a room */}
-            {userBookingId && (
-              <Button
-                onClick={() => {
-                  handleLeaveRoom(userBookingId);
-                  setNotification({ show: true, message: 'You have left the room' });
-                  setTimeout(() => {
-                    setNotification({ show: false, message: '' });
-                  }, 2000);
-                }}
-                bg="red.600"
-                color="white"
-                _hover={{ bg: "red.700" }}
-                size="md"
-                fontWeight="600"
-                border="1px solid rgba(239, 68, 68, 0.3)"
-                px={8}
-              >
-                🚪 Leave Current Room
-              </Button>
-            )}
           </motion.div>
 
           {/* Controls Section */}
@@ -900,9 +878,32 @@ export default function Study() {
               fontWeight="600"
               border="1px solid rgba(239, 68, 68, 0.3)"
               w="100%"
+              mb={3}
             >
               Apply
             </Button>
+
+            {/* Leave Room Button - Shows only if user is in a room */}
+            {userBookingId && (
+              <Button
+                onClick={() => {
+                  handleLeaveRoom(userBookingId);
+                  setNotification({ show: true, message: 'You have left the room' });
+                  setTimeout(() => {
+                    setNotification({ show: false, message: '' });
+                  }, 2000);
+                }}
+                bg="red.600"
+                color="white"
+                _hover={{ bg: "red.700" }}
+                size="md"
+                fontWeight="600"
+                border="1px solid rgba(239, 68, 68, 0.3)"
+                w="100%"
+              >
+                🚪 Leave Current Room
+              </Button>
+            )}
           </motion.div>
 
           {/* Results Stats */}
@@ -1071,29 +1072,28 @@ export default function Study() {
         {/* Notification Popup */}
         {notification.show && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.3 }}
             style={{
               position: 'fixed',
               top: '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
+              right: '20px',
               zIndex: 999,
-              backgroundColor: 'rgba(34, 197, 94, 0.95)',
+              backgroundColor: notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? 'rgba(239, 68, 68, 0.95)' : 'rgba(34, 197, 94, 0.95)',
               color: 'white',
               padding: '16px 24px',
               borderRadius: '12px',
-              border: '1px solid rgba(34, 197, 94, 0.5)',
-              boxShadow: '0 8px 32px rgba(34, 197, 94, 0.3)',
+              border: notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(34, 197, 94, 0.5)',
+              boxShadow: notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? '0 8px 32px rgba(239, 68, 68, 0.3)' : '0 8px 32px rgba(34, 197, 94, 0.3)',
               backdropFilter: 'blur(10px)',
               fontSize: '16px',
               fontWeight: '600',
               maxWidth: '90%'
             }}
           >
-            ✓ {notification.message}
+            {notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? '✗' : '✓'} {notification.message}
           </motion.div>
         )}
 
