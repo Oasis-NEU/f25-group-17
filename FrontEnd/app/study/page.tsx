@@ -196,20 +196,31 @@ export default function Study() {
   // Handle Leave Room
   const handleLeaveRoom = async (bookingId: string) => {
     try {
+      console.log('🚪 Attempting to leave room with booking ID:', bookingId);
+      
       const { error } = await (supabase as any)
         .from('RoomBooking')
         .update({ inUse: false })
         .eq('id', bookingId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error updating inUse:', error);
+        throw error;
+      }
 
+      console.log('✅ Successfully marked as inUse: false');
       setUserBookingId(null);
-      console.log('✅ Left room successfully');
       
       // Refresh occupancy after leaving
       await fetchAllRoomOccupancy();
+      
+      setNotification({ show: true, message: 'You have left the room' });
+      setTimeout(() => {
+        setNotification({ show: false, message: '' });
+      }, 2000);
     } catch (err: any) {
-      console.error('Error leaving room:', err);
+      console.error('❌ Error leaving room:', err);
+      setNotification({ show: true, message: 'Failed to leave room. Please try again.' });
     }
   };
 
@@ -332,6 +343,24 @@ export default function Study() {
     const fetchAvailableSpaces = async () => {
       try {
         setLoading(true);
+
+        // Get current user to fetch their booking
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          // Check if user has an active booking
+          const { data: userBooking } = await (supabase as any)
+            .from('RoomBooking')
+            .select('id')
+            .eq('user', user.id)
+            .eq('inUse', true)
+            .single();
+          
+          if (userBooking) {
+            setUserBookingId((userBooking as any).id);
+            console.log('✅ User has active booking:', (userBooking as any).id);
+          }
+        }
 
         // Fetch ALL slots from database using pagination if needed
         let allTimeSlots: any[] = [];
@@ -1208,6 +1237,11 @@ export default function Study() {
                               ) : (
                                 <Text fontSize="sm" color="gray.500" fontStyle="italic">
                                   No courses listed
+                                </Text>
+                              )}
+                              {booking.major && (
+                                <Text fontSize="xs" color="gray.500" mt={1}>
+                                  Major: {booking.major}
                                 </Text>
                               )}
                             </Box>
