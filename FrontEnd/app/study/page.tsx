@@ -103,6 +103,8 @@ export default function Study() {
   // Handle Join Room
   const handleJoinRoom = async (space: any) => {
     try {
+      console.log('🚀 Attempting to join room:', space);
+      
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -132,6 +134,14 @@ export default function Study() {
       }
 
       // Insert booking into RoomBooking table
+      console.log('📝 Inserting booking with data:', {
+        space_id: space.id,
+        buildingName: space.building,
+        roomNumber: space.roomNumber,
+        user: user.id,
+        inUse: true
+      });
+
       const { data, error } = await supabase.from('RoomBooking').insert([
         {
           space_id: space.id,
@@ -142,7 +152,12 @@ export default function Study() {
         }
       ] as any).select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Insert error:', error);
+        throw error;
+      }
+
+      console.log('✅ Insert successful:', data);
 
       // Store the booking ID for later logout
       if (data && data[0]) {
@@ -173,6 +188,7 @@ export default function Study() {
       }, 3000);
     } catch (err: any) {
       console.error('Error joining room:', err);
+      console.error('Error details:', err.message, err.details, err.hint);
       setNotification({ show: true, message: 'Failed to join room. Please try again.' });
     }
   };
@@ -205,7 +221,30 @@ export default function Study() {
         .eq('inUse', true);
 
       if (error) throw error;
-      setRoomUsers(data || []);
+      
+      // Fetch user profiles for each booking
+      const enrichedData = await Promise.all((data || []).map(async (booking: any) => {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('first_name, last_name')
+            .eq('id', booking.user)
+            .single();
+          
+          if (!profile) {
+            return { ...booking, first_name: 'Unknown', last_name: 'User' };
+          }
+          return { 
+            ...booking, 
+            first_name: (profile as any).first_name || 'Unknown', 
+            last_name: (profile as any).last_name || 'User' 
+          };
+        } catch (err) {
+          return { ...booking, first_name: 'Unknown', last_name: 'User' };
+        }
+      }));
+      
+      setRoomUsers(enrichedData);
     } catch (err: any) {
       console.error('Error fetching room users:', err);
       setRoomUsers([]);
@@ -594,9 +633,31 @@ export default function Study() {
             <Heading as="h1" size="7xl" mb={4} color="white" fontWeight="900" letterSpacing="-0.02em">
               EMPTY NEU
             </Heading>
-            <Text fontSize="xl" maxW="2xl" mx="auto" color="gray.400" fontWeight="500">
+            <Text fontSize="xl" maxW="2xl" mx="auto" color="gray.400" fontWeight="500" mb={6}>
               Find your perfect study space on campus in seconds
             </Text>
+            
+            {/* Leave Room Button - Shows only if user is in a room */}
+            {userBookingId && (
+              <Button
+                onClick={() => {
+                  handleLeaveRoom(userBookingId);
+                  setNotification({ show: true, message: 'You have left the room' });
+                  setTimeout(() => {
+                    setNotification({ show: false, message: '' });
+                  }, 2000);
+                }}
+                bg="red.600"
+                color="white"
+                _hover={{ bg: "red.700" }}
+                size="md"
+                fontWeight="600"
+                border="1px solid rgba(239, 68, 68, 0.3)"
+                px={8}
+              >
+                🚪 Leave Current Room
+              </Button>
+            )}
           </motion.div>
 
           {/* Controls Section */}
@@ -1113,7 +1174,7 @@ export default function Study() {
                               px={3}
                             >
                               <Text color="gray.200" fontWeight="500" mb={1}>
-                                User ID: {booking.user.substring(0, 8)}...
+                                👤 {booking.first_name} {booking.last_name}
                               </Text>
                               {booking.courses ? (
                                 <Text fontSize="sm" color="gray.400">
