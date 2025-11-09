@@ -74,21 +74,22 @@ const useAvailableSpaces = () => {
           // Check if available on current day (boolean check)
           const isAvailableToday = slot[currentDayName];
           
+          // If the day is false, it means there's NO class that day
+          // So the room IS available all day
           if (!isAvailableToday) {
-            return false;
+            // No class on this day = room is available
+            return true;
           }
 
-          // Check if current time falls OUTSIDE the class time (room is FREE)
-          const begin = slot.beginTime;    // Expected: "HH:MM"
-          const end = slot.endTime;        // Expected: "HH:MM"
+          // If day is true, check if current time falls OUTSIDE the class time (room is FREE)
+          const begin = slot.beginTime;    // Expected: "HH:MM:SS"
+          const end = slot.endTime;        // Expected: "HH:MM:SS"
 
           // Return true if current time is NOT within the class time
           // (i.e., the room is available because the class is NOT happening now)
           const isAvailable = currentTime < begin || currentTime > end;
           
-          if (isAvailableToday) {
-            console.log(`Room ${slot.roomNumber} in ${slot.building}: ${begin}-${end}, Available: ${isAvailable}`);
-          }
+          console.log(`Room ${slot.roomNumber} in ${slot.building}: ${begin}-${end}, Current: ${currentTime}, Available: ${isAvailable}`);
           
           return isAvailable;
         });
@@ -272,6 +273,44 @@ export default function Study() {
               <Text> hehe</Text>
             </div>
           </div>
+
+          {/* Day Testing Panel */}
+          <Box mb={8} p={6} bg="gray.800" rounded="lg" w="100%" maxW="4xl">
+            <Heading size="md" mb={4} color="white">Test Availability by Day</Heading>
+            <SimpleGrid columns={[2, 4, 7]} gap={2}>
+              {['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map((day, idx) => {
+                const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                const testTime = '12:00:00'; // Test at noon
+                
+                // Count available rooms for this day
+                const availableCount = (availableSpaces || []).reduce((count: number, slot: any) => {
+                  const isDayAvailable = slot[day];
+                  if (!isDayAvailable) return count + 1; // No class = available
+                  
+                  const isTimeAvailable = testTime < slot.beginTime || testTime > slot.endTime;
+                  return isTimeAvailable ? count + 1 : count;
+                }, 0);
+
+                return (
+                  <Box
+                    key={day}
+                    p={3}
+                    bg={idx === new Date().getDay() ? 'red.600' : 'gray.700'}
+                    rounded="md"
+                    textAlign="center"
+                    border={idx === new Date().getDay() ? '2px solid red' : 'none'}
+                  >
+                    <Text fontSize="sm" fontWeight="bold" color="white" textTransform="capitalize">
+                      {day}
+                    </Text>
+                    <Text fontSize="xs" color="gray.300" mt={1}>
+                      {availableCount} rooms available
+                    </Text>
+                  </Box>
+                );
+              })}
+            </SimpleGrid>
+          </Box>
 
           {/* Cards grid with clearer gaps */}
           <SimpleGrid columns={[1, 2, 3]} padding={24} gap={12} mb={12}>
