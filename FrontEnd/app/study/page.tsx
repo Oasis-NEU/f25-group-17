@@ -1299,9 +1299,6 @@ export default function Study() {
                     }}
                     size="lg"
                     px={8}
-                    disabled={userBookingId ? true : false}
-                    opacity={userBookingId ? 0.5 : 1}
-                    cursor={userBookingId ? 'not-allowed' : 'pointer'}
                   >
                     {userBookingId ? 'Already in a Room' : 'Join Space'}
                   </Button>
