@@ -225,16 +225,20 @@ export default function Study() {
       // Fetch user profiles for each booking
       const enrichedData = await Promise.all((data || []).map(async (booking: any) => {
         try {
-          const { data: profile, error: profileError } = await supabase
+          const { data: profile } = await supabase
             .from('profiles')
             .select('first_name, last_name')
             .eq('id', booking.user)
             .single();
           
-          if (profileError || !profile) {
+          if (!profile) {
             return { ...booking, first_name: 'Unknown', last_name: 'User' };
           }
-          return { ...booking, first_name: profile.first_name, last_name: profile.last_name };
+          return { 
+            ...booking, 
+            first_name: (profile as any).first_name || 'Unknown', 
+            last_name: (profile as any).last_name || 'User' 
+          };
         } catch (err) {
           return { ...booking, first_name: 'Unknown', last_name: 'User' };
         }
