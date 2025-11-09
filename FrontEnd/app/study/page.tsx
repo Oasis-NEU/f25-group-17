@@ -230,6 +230,27 @@ export default function Study() {
     // Additional view logic can be added here
   };
 
+  // Filter unique spaces by building + room number
+  const uniqueSpaces = React.useMemo(() => {
+    const seen = new Set<string>();
+    const unique: any[] = [];
+    
+    (availableSpaces || []).forEach((space: any) => {
+      const key = `${space.building}|${space.roomNumber}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(space);
+      }
+    });
+    
+    // Sort by building name, then room number
+    return unique.sort((a: any, b: any) => {
+      const buildingCompare = a.building.localeCompare(b.building);
+      if (buildingCompare !== 0) return buildingCompare;
+      return parseInt(a.roomNumber) - parseInt(b.roomNumber);
+    });
+  }, [availableSpaces]);
+
   return (
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-hidden">
@@ -314,64 +335,81 @@ export default function Study() {
 
           {/* Cards grid with clearer gaps */}
           <SimpleGrid columns={[1, 2, 3]} padding={24} gap={12} mb={12}>
-            {availableSpaces.length > 0 ? (
-              availableSpaces.map((space: any, i: number) => (
-                <CardRoot
-                  key={space.id}
-                  bg="gray.900"
-                  shadow={"lg"}
-                  rounded={"2xl"}
-                  border="2px solid rgba(241, 37, 37, 0.3)"
-                  _hover={{ transform: "scale(1.1)", transition: "0.2s ease-out", zIndex: 999 }}
-                  transition="all 0.2s ease-out"
-                  color="white"
-                  position="relative"
-                >
-                  <CardHeader>
-                    <Stack direction="row" gap={4} align="center">
-                      {/* Availability indicator - all are available since filtered */}
-                      <Avatar.Root
-                        bg="green"
-                        title="Available"
-                      />
-                      <Box>
-                        <Heading size="md" color="white">{space.building}</Heading>
-                        <Text fontSize="sm" color="gray.400">Room {space.roomNumber}</Text>
-                        <Text fontSize="xs" color="green.300">
-                          {space.beginTime} - {space.endTime}
-                        </Text>
-                      </Box>
-                    </Stack>
-                  </CardHeader>
+            {uniqueSpaces.length > 0 ? (
+              Object.entries(
+                uniqueSpaces.reduce((grouped: any, space: any) => {
+                  const building = space.building;
+                  if (!grouped[building]) {
+                    grouped[building] = [];
+                  }
+                  grouped[building].push(space);
+                  return grouped;
+                }, {})
+              ).map(([building, spaces]: [string, any]) => (
+                <Box key={building} gridColumn="1 / -1">
+                  <Heading size="md" mb={4} color="red.400" mt={6}>
+                    {building}
+                  </Heading>
+                  <SimpleGrid columns={[1, 2, 3]} gap={6}>
+                    {(spaces as any[]).map((space: any) => (
+                      <CardRoot
+                        key={`${space.building}|${space.roomNumber}`}
+                        bg="gray.900"
+                        shadow={"lg"}
+                        rounded={"2xl"}
+                        border="2px solid rgba(241, 37, 37, 0.3)"
+                        _hover={{ transform: "scale(1.1)", transition: "0.2s ease-out", zIndex: 999 }}
+                        transition="all 0.2s ease-out"
+                        color="white"
+                        position="relative"
+                      >
+                        <CardHeader>
+                          <Stack direction="row" gap={4} align="center">
+                            {/* Availability indicator - all are available since filtered */}
+                            <Avatar.Root
+                              bg="green"
+                              title="Available"
+                            />
+                            <Box>
+                              <Heading size="md" color="white">Room {space.roomNumber}</Heading>
+                              <Text fontSize="xs" color="green.300">
+                                ✓ Available
+                              </Text>
+                            </Box>
+                          </Stack>
+                        </CardHeader>
 
-                  <CardBody>
-                    <Text color="gray.300">
-                      {space.courseName} (CRN: {space.crn})
-                    </Text>
-                  </CardBody>
+                        <CardBody>
+                          <Text color="gray.300">
+                            This room is currently available for studying.
+                          </Text>
+                        </CardBody>
 
-                  <CardFooter justifyContent="flex-end" gap={3}>
-                    <Button 
-                      variant="outline" 
-                      colorScheme="red"
-                      onClick={() => handleViewSpace(i)}
-                      color="white"
-                      borderColor="red.500"
-                      _hover={{ bg: "red.600", color: "white" }}
-                    >
-                      View 
-                    </Button>
-                    <Button 
-                      colorScheme="red"
-                      bg="red.600"
-                      color="white"
-                      _hover={{ bg: "red.700" }}
-                      onClick={() => handleJoinSpace(i)}
-                    >
-                      Join
-                    </Button>
-                  </CardFooter>
-                </CardRoot>
+                        <CardFooter justifyContent="flex-end" gap={3}>
+                          <Button 
+                            variant="outline" 
+                            colorScheme="red"
+                            onClick={() => handleViewSpace(uniqueSpaces.indexOf(space))}
+                            color="white"
+                            borderColor="red.500"
+                            _hover={{ bg: "red.600", color: "white" }}
+                          >
+                            View 
+                          </Button>
+                          <Button 
+                            colorScheme="red"
+                            bg="red.600"
+                            color="white"
+                            _hover={{ bg: "red.700" }}
+                            onClick={() => handleJoinSpace(uniqueSpaces.indexOf(space))}
+                          >
+                            Join
+                          </Button>
+                        </CardFooter>
+                      </CardRoot>
+                    ))}
+                  </SimpleGrid>
+                </Box>
               ))
             ) : (
               <Box gridColumn="1 / -1" textAlign="center" py={12}>
