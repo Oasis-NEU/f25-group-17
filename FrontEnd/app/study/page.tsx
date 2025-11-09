@@ -952,9 +952,6 @@ export default function Study() {
               border="1px solid rgba(239, 68, 68, 0.3)"
               w="100%"
               mt={0}
-              opacity={userBookingId ? 1 : 0.5}
-              cursor={userBookingId ? 'pointer' : 'not-allowed'}
-              disabled={!userBookingId}
             >
               🚪 Leave Current Room
             </Button>
