@@ -13,7 +13,6 @@ import json from "../../../Data/combineMajor.json";
 
 declare global {
   interface Window {
-    turnstile?: any;
     onTurnstileLoad?: () => void;
   }
 }
