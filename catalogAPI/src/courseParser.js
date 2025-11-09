@@ -165,10 +165,12 @@ class CourseParser {
 
     async fetchCourseMeetingTimes({ allowCacheUse = true, updateRawCache = true } = {}) {
         const rawCourseData = await (allowCacheUse ? this.getRawCourses(updateRawCache) : this.fetchRawCourses());
-        const filteredCourseData = rawCourseData.filter(course => course.campusDescription == "Boston");
-        filteredCourseData.forEach(course => course.meetingsFaculty = course.meetingsFaculty.filter(
+        const bostonCourseData = rawCourseData.filter(course => course.campusDescription == "Boston");
+        bostonCourseData.forEach(course => course.meetingsFaculty = course.meetingsFaculty.filter(
             fmt => fmt.meetingTime.building != null && fmt.meetingTime.beginTime != null
+                && fmt.meetingTime.building != "BOS" && fmt.meetingTime.building != "VTL"
         ));
+        const filteredCourseData = bostonCourseData.filter(course => course.meetingsFaculty.length > 0);
         filteredCourseData.forEach(course => {
             course.CRN = course.courseReferenceNumber;
             course.courseName = course.courseTitle;
