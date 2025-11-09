@@ -883,27 +883,31 @@ export default function Study() {
               Apply
             </Button>
 
-            {/* Leave Room Button - Shows only if user is in a room */}
-            {userBookingId && (
-              <Button
-                onClick={() => {
+            {/* Leave Room Button - Always visible */}
+            <Button
+              onClick={() => {
+                if (userBookingId) {
                   handleLeaveRoom(userBookingId);
                   setNotification({ show: true, message: 'You have left the room' });
                   setTimeout(() => {
                     setNotification({ show: false, message: '' });
                   }, 2000);
-                }}
-                bg="red.600"
-                color="white"
-                _hover={{ bg: "red.700" }}
-                size="md"
-                fontWeight="600"
-                border="1px solid rgba(239, 68, 68, 0.3)"
-                w="100%"
-              >
-                🚪 Leave Current Room
-              </Button>
-            )}
+                }
+              }}
+              bg="red.600"
+              color="white"
+              _hover={{ bg: "red.700" }}
+              size="md"
+              fontWeight="600"
+              border="1px solid rgba(239, 68, 68, 0.3)"
+              w="100%"
+              mt={0}
+              opacity={userBookingId ? 1 : 0.5}
+              cursor={userBookingId ? 'pointer' : 'not-allowed'}
+              disabled={!userBookingId}
+            >
+              🚪 Leave Current Room
+            </Button>
           </motion.div>
 
           {/* Results Stats */}

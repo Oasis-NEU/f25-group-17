@@ -72,15 +72,34 @@ export default function Profile() {
           setOriginalMajor(majorValue);
           setOriginalYear(yearValue);
 
-          // Fetch courses from ClassTime_Data table
-          const { data: coursesData } = await supabase
-            .from('ClassTime_Data')
-            .select('courseName, building, beginTime, endTime')
-            .neq('courseName', null);
+          // Fetch courses from ClassTime_Data table with pagination to get all records
+          let allClassData: any[] = [];
+          let page = 0;
+          const pageSize = 1000;
+          let hasMore = true;
 
-          if (coursesData && userData.courses && Array.isArray(userData.courses)) {
+          while (hasMore) {
+            const { data: pageData } = await supabase
+              .from('ClassTime_Data')
+              .select('courseName, building, beginTime, endTime')
+              .range(page * pageSize, (page + 1) * pageSize - 1)
+              .neq('courseName', null);
+
+            if (!pageData || pageData.length === 0) {
+              hasMore = false;
+            } else {
+              allClassData = [...allClassData, ...pageData];
+              page++;
+              if (pageData.length < pageSize) hasMore = false;
+            }
+          }
+
+          console.log(`📊 Total ClassTime_Data records fetched: ${allClassData.length}`);
+          console.log('📚 User enrolled courses:', userData.courses);
+
+          if (allClassData && userData.courses && Array.isArray(userData.courses)) {
             // Filter courses that match the user's enrolled courses
-            const enrolledCourses = coursesData.filter((course: any) => 
+            const enrolledCourses = allClassData.filter((course: any) => 
               userData.courses.includes(course.courseName)
             );
             
@@ -88,9 +107,12 @@ export default function Profile() {
             const uniqueCourses = Array.from(
               new Map(enrolledCourses.map((course: any) => [course.courseName, course])).values()
             );
+            console.log('📚 Enrolled courses found in DB:', uniqueCourses.length);
+            console.log('📚 Courses:', uniqueCourses.map((c: any) => c.courseName));
             setCourses(uniqueCourses);
           } else if (userData.courses && Array.isArray(userData.courses)) {
             // Fallback: just use course names from UserData
+            console.log('📚 Using fallback courses from UserData:', userData.courses.length);
             setCourses(userData.courses.map((name: string) => ({ courseName: name })));
           }
         }
