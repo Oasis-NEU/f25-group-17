@@ -5,6 +5,7 @@ import { Input } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../supabase/lib/supabase";
 import Link from "next/link";
+import { stringify } from "querystring";
 
 // Extend Window interface to include previousCourseValues
 declare global {
@@ -28,121 +29,99 @@ export default function OnboardingCourses() {
 
   // Fetch class names from ClassTime_Data table
   useEffect(() => {
-    const fetchClassNames = async () => {
-      try {
-        console.log("Fetching unique courseName from ClassTime_Data...");
-        
-        // Fetch all data with pagination to get everything
-        let allCourses: any[] = [];
-        let page = 0;
-        const pageSize = 1000;
-        let hasMore = true;
+    async function fetchClassNames(pageSize = 1000) {
+      //Declare what a record would look like 
+      type ClassTimeRow = {
+        courseName: string | null;
+      };
 
-        while (hasMore) {
-          const { data, error } = await supabase
-            .from("ClassTime_Data")
-            .select("courseName")
-            .range(page * pageSize, (page + 1) * pageSize - 1);
+      let allCourses = [];
+      let page = 0;
+      let hasMore = true;
 
-          if (error) {
-            console.error("Error fetching classes:", error);
-            hasMore = false;
-            break;
-          }
+      //Calling supabase and extracting all the course name from the database 
+      while (hasMore) {
+        const { data, error } = await supabase
+        .from("ClassTime_Data")
+        .select("courseName")
+        .range(page * pageSize, (page + 1) * pageSize - 1)
 
-          if (!data || data.length === 0) {
-            hasMore = false;
-          } else {
-            allCourses = [...allCourses, ...data];
-            page++;
-            if (data.length < pageSize) hasMore = false;
-          }
-        }
+        if (error) throw new Error(error.message);
+        if (!data?.length) break;
 
-        console.log("Raw data from database:", allCourses);
-        console.log(`Total records fetched: ${allCourses.length}`);
+        const typedData = data as ClassTimeRow[];
 
-        // Extract unique course names using Set and sort alphabetically
-        const uniqueCoursesSet = new Set<string>();
-        allCourses.forEach((item: any) => {
-          if (item.courseName && item.courseName.trim()) {
-            uniqueCoursesSet.add(item.courseName.trim());
-          }
-        });
-        
-        const uniqueClasses = Array.from(uniqueCoursesSet).sort();
-        console.log("Unique classes:", uniqueClasses);
-        console.log("Total unique courses:", uniqueClasses.length);
-        
-        setClassNames(uniqueClasses);
-      } catch (err) {
-        console.error("Unexpected error fetching classes:", err);
+        allCourses.push(
+          ...typedData
+            .map(d => d.courseName?.trim())
+            .filter((name): name is string => Boolean(name))
+        );
+
+        hasMore = data.length === pageSize;
+        page++;
       }
-    };
 
-    fetchClassNames();
+      const uniqueCourses = [...new Set(allCourses)].sort();
+      setClassNames(uniqueCourses)
+    }
+
+    fetchClassNames().catch(err =>
+    console.error("Error fetching class names:", err)
+  );
   }, []);
 
   // Load saved courses from localStorage on component mount
   useEffect(() => {
-    try {
-      const savedCourses = localStorage.getItem("userCourses");
-      if (savedCourses) {
-        const parsedCourses = JSON.parse(savedCourses);
-        if (Array.isArray(parsedCourses) && parsedCourses.length > 0) {
-          // Store the saved courses separately
-          setSavedCourses(parsedCourses);
-          
-          // Set initial edit form with saved courses + one empty field
-          const courseObjects = parsedCourses.map((courseName: string) => ({ courseName }));
-          courseObjects.push({ courseName: "" });
-          setCourses(courseObjects);
-          
-          // Set search values to match
-          setCourseSearch([...parsedCourses, ""]);
-          
-          console.log("Loaded courses from localStorage:", parsedCourses);
-        }
-      }
-    } catch (err) {
-      console.error("Error loading courses from localStorage:", err);
-    }
+    type courseName = string;
+    const parsed = JSON.parse(localStorage.getItem("userCourses") ?? "[]");
+    if (Array.isArray(parsed) || parsed.length === 0) return;
+
+    setSavedCourses(parsed);
+    setCourses([...parsed.map((c : string) => ({ courseName: c })), { courseName: "" }]);
+    setCourseSearch([...parsed, ""]);
   }, []);
 
-  const addCourse = () => {
-    setCourses((prev) => [...prev, { courseName: "" }]);
-    setCourseSearch((prev) => [...prev, ""]);
-    setShowCourseDropdown((prev) => [...prev, false]);
-    setIsSelectingCourse((prev) => [...prev, false]);
+  const addEmptyCourseInput = () => {
+  setCourses(prev => [...prev, { 
+    courseName: "", 
+    searchValue: "", 
+    showDropdown: false, 
+    isSelecting: false 
+    }]);
   };
 
-  const removeCourse = (index: number) => {
-    setCourses((prev) => prev.filter((_, i) => i !== index));
-    setCourseSearch((prev) => prev.filter((_, i) => i !== index));
-    setShowCourseDropdown((prev) => prev.filter((_, i) => i !== index));
-    setIsSelectingCourse((prev) => prev.filter((_, i) => i !== index));
+  const removeCourseInput = (index: number) => {
+    setCourses(prev => prev.filter((_, i) => i !== index));
   };
 
-  const updateCourse = (index: number, value: string) => {
-    setCourses((prev) => {
+  const handleCourseNameInputChange = (index: number, value: string) => {
+    setCourses(prev => {
       const next = [...prev];
-      next[index] = { courseName: value };
+      next[index].courseName = value;
       return next;
     });
   };
 
-  const handleCourseSelect = (index: number, courseName: string) => {
+  // Handles what happens when a user selects a course from the dropdown at a given index
+  const handleCourseSelectionIndex = (index: number, courseName: string) => {
+    // Marks the course at the given index as currently being selected by setting its flag to true.
     setIsSelectingCourse((prev) => {
       const next = [...prev];
       next[index] = true;
       return next;
     });
-    updateCourse(index, courseName);
+
+    // Updates the main course name data at the given index with the newly selected course.
+    handleCourseNameInputChange(index, courseName);
+
+    // Updates the search bar or input field text for this index to display the selected course name.
     setCourseSearch((prev) => {
       const next = [...prev];
       next[index] = courseName;
       return next;
     });
+    
+    // Closes the dropdown menu for the selected course by setting its visibility to false.
     setShowCourseDropdown((prev) => {
       const next = [...prev];
       next[index] = false;
@@ -191,7 +170,7 @@ export default function OnboardingCourses() {
           next[index] = previousValue;
           return next;
         });
-        updateCourse(index, previousValue);
+        handleCourseNameInputChange(index, previousValue);
         setShowCourseDropdown((prev) => {
           const next = [...prev];
           next[index] = false;
@@ -206,7 +185,7 @@ export default function OnboardingCourses() {
       );
       
       if (filtered.length > 0 && search !== courses[index].courseName) {
-        handleCourseSelect(index, filtered[0]);
+        handleCourseSelectionIndex(index, filtered[0]);
       }
       
       setShowCourseDropdown((prev) => {
@@ -224,53 +203,44 @@ export default function OnboardingCourses() {
 
   const handleSave = async () => {
     setError("");
+    const nonEmptyCourses = courses
+      .map(c => c.courseName.trim())
+      .filter(name => name !== "");
 
-    // Filter out empty courses
-    const nonEmptyCourses = courses.filter((c) => c.courseName.trim() !== "");
-    
-    // If user has entered courses, check for duplicates
-    if (nonEmptyCourses.length > 0) {
-      const courseNames = nonEmptyCourses.map((c) => c.courseName.trim());
-      const duplicates = courseNames.filter((name, index) => courseNames.indexOf(name) !== index);
-      
+    const hasCourses = nonEmptyCourses.length > 0;
+
+    // Check for duplicates if courses exist
+    if (hasCourses) {
+      const duplicates = nonEmptyCourses.filter(
+        (name, index) => nonEmptyCourses.indexOf(name) !== index
+      );
       if (duplicates.length > 0) {
         setError(`Duplicate courses found: ${duplicates.join(", ")}. Each course must be unique.`);
         return;
       }
+    }
 
-      setIsSaving(true);
+    setIsSaving(true);
 
-      try {
-        // Save only non-empty courses to local storage as JSON
-        localStorage.setItem("userCourses", JSON.stringify(courseNames));
-        // Update savedCourses state to display
-        setSavedCourses(courseNames);
-        console.log("Courses saved to local storage:", courseNames);
+    try {
+      // Save courses (or empty array) to local storage
+      localStorage.setItem("userCourses", JSON.stringify(hasCourses ? nonEmptyCourses : []));
+      setSavedCourses(hasCourses ? nonEmptyCourses : []);
+      console.log(
+        hasCourses
+          ? "Courses saved to local storage:"
+          : "No courses saved - user chose to skip",
+        hasCourses ? nonEmptyCourses : []
+      );
 
-        await new Promise((res) => setTimeout(res, 400));
-        router.push("/signup");
+      await new Promise(res => setTimeout(res, 400));
+      router.push("/signup");
       } catch (err) {
         console.error("Unexpected error:", err);
         setError("An error occurred while saving courses.");
+      } finally {
         setIsSaving(false);
       }
-    } else {
-      // User chose not to add any courses - save empty array
-      setIsSaving(true);
-
-      try {
-        localStorage.setItem("userCourses", JSON.stringify([]));
-        setSavedCourses([]);
-        console.log("No courses saved - user chose to skip");
-
-        await new Promise((res) => setTimeout(res, 400));
-        router.push("/signup");
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        setError("An error occurred while saving.");
-        setIsSaving(false);
-      }
-    }
   };
 
   return (
@@ -337,7 +307,7 @@ export default function OnboardingCourses() {
                               next[index] = "";
                               return next;
                             });
-                            updateCourse(index, "");
+                            handleCourseNameInputChange(index, "");
                             return;
                           }
 
@@ -346,7 +316,7 @@ export default function OnboardingCourses() {
                           );
                           
                           if (filtered.length > 0) {
-                            handleCourseSelect(index, filtered[0]);
+                            handleCourseSelectionIndex(index, filtered[0]);
                           }
                         }
                       }}
@@ -375,7 +345,7 @@ export default function OnboardingCourses() {
                                 onMouseDown={(e) => {
                                   e.preventDefault();
                                   if (!isAlreadySelected) {
-                                    handleCourseSelect(index, cls);
+                                    handleCourseSelectionIndex(index, cls);
                                   }
                                 }}
                                 className={`w-full px-4 py-3 text-left border-b border-gray-800/50 last:border-b-0 transition-colors ${
@@ -401,7 +371,7 @@ export default function OnboardingCourses() {
                   {courses.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => removeCourse(index)}
+                      onClick={() => removeCourseInput(index)}
                       className="text-xs text-red-300 hover:text-red-200 self-end"
                     >
                       Remove
@@ -414,7 +384,7 @@ export default function OnboardingCourses() {
             {/* Add more */}
             <button
               type="button"
-              onClick={addCourse}
+              onClick={addEmptyCourseInput}
               className="text-sm text-red-300 hover:text-red-100 mb-6"
             >
               + Add another course
