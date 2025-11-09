@@ -177,7 +177,7 @@ export default function Orb({
 
   useEffect(() => {
     const container = ctnDom.current;
-    if (!container) return;
+    if(!container) return;
 
     let renderer: Renderer | null = null;
     let gl: Renderer['gl'] | null = null;
@@ -186,7 +186,7 @@ export default function Orb({
       renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
       gl = renderer.gl;
       gl.clearColor(0, 0, 0, 0);
-      if (gl.canvas instanceof HTMLCanvasElement) {
+      if(gl.canvas instanceof HTMLCanvasElement) {
         container.appendChild(gl.canvas);
       }
     } catch {
@@ -213,7 +213,7 @@ export default function Orb({
     const mesh = new Mesh(gl, { geometry, program });
 
     function resize() {
-      if (!container || !renderer || !gl) return;
+      if(!container || !renderer || !gl) return;
       const dpr = window.devicePixelRatio || 1;
       const width = container.clientWidth;
       const height = container.clientHeight;
@@ -231,7 +231,7 @@ export default function Orb({
     const rotationSpeed = 0.3;
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!container) return;
+      if(!container) return;
       const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -243,7 +243,7 @@ export default function Orb({
       const uvX = ((x - centerX) / size) * 2.0;
       const uvY = ((y - centerY) / size) * 2.0;
 
-      if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
+      if(Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
         targetHover = 1;
       } else {
         targetHover = 0;
@@ -259,7 +259,7 @@ export default function Orb({
 
     let rafId: number;
     const update = (t: number) => {
-      if (!renderer) return;
+      if(!renderer) return;
       rafId = requestAnimationFrame(update);
       const dt = (t - lastTime) * 0.001;
       lastTime = t;
@@ -270,7 +270,7 @@ export default function Orb({
       const effectiveHover = forceHoverState ? 1 : targetHover;
       program.uniforms.hover.value += (effectiveHover - program.uniforms.hover.value) * 0.1;
 
-      if (rotateOnHover && effectiveHover > 0.5) {
+      if(rotateOnHover && effectiveHover > 0.5) {
         currentRot += dt * rotationSpeed;
       }
       program.uniforms.rot.value = currentRot;
@@ -284,7 +284,7 @@ export default function Orb({
       window.removeEventListener('resize', resize);
       container.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('mouseleave', handleMouseLeave);
-      if (gl && gl.canvas && container.contains(gl.canvas)) {
+      if(gl && gl.canvas && container.contains(gl.canvas)) {
         container.removeChild(gl.canvas);
         gl.getExtension('WEBGL_lose_context')?.loseContext();
       }

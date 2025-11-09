@@ -39,7 +39,7 @@ export default function Login() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    if (errors[name]) {
+    if(errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev }
         delete newErrors[name]
@@ -52,13 +52,13 @@ export default function Login() {
   const validateForm = () => {
     const newErrors: {[key: string]: string} = {}
 
-    if (!formData.email.trim()) {
+    if(!formData.email.trim()) {
       newErrors.email = 'Email is required'
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if(!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email'
     }
 
-    if (!formData.password) {
+    if(!formData.password) {
       newErrors.password = 'Password is required'
     }
 
@@ -78,12 +78,12 @@ export default function Login() {
     useEffect(() => {
       const renderCaptcha = () => {
         const el = document.getElementById("turnstile-widget");
-        if (window.turnstile && el && isMounted) {
+        if(window.turnstile && el && isMounted) {
           el.innerHTML = ""; // prevent duplicates
           window.turnstile.render("#turnstile-widget", {
             sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
             callback: (token: string) => {
-              if (isMounted) setCaptchaToken(token);
+              if(isMounted) setCaptchaToken(token);
             },
           });
         }
@@ -92,11 +92,11 @@ export default function Login() {
       window.onTurnstileLoad = renderCaptcha;
 
       // Render immediately if Turnstile is already loaded
-      if (window.turnstile) renderCaptcha();
+      if(window.turnstile) renderCaptcha();
 
       return () => {
         const el = document.getElementById("turnstile-widget");
-        if (el) el.innerHTML = "";
+        if(el) el.innerHTML = "";
       };
     }, [pathname, isMounted]);
 
@@ -104,7 +104,7 @@ export default function Login() {
     e.preventDefault()
     setError('')
     
-    if (!validateForm()) {
+    if(!validateForm()) {
       return
     }
 
@@ -120,16 +120,16 @@ export default function Login() {
         options: {captchaToken},
       })
 
-      if (authError) {
+      if(authError) {
         throw new Error(authError.message || 'Invalid email or password')
       }
 
-      if (authData.user && isMounted) {
+      if(authData.user && isMounted) {
         // Login successful - redirect to study page
         router.push('/study')
       }
     } catch (err: any) {
-      if (!isMounted) return;
+      if(!isMounted) return;
       const errorMessage = err.message || 'An error occurred during login'
       setError(errorMessage)
       console.error('Login error:', err)
@@ -138,17 +138,17 @@ export default function Login() {
       setCaptchaToken('')
       // Reset captcha widget
       const el = document.getElementById("turnstile-widget")
-      if (el && window.turnstile) {
+      if(el && window.turnstile) {
         el.innerHTML = ""
         window.turnstile.render("#turnstile-widget", {
           sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
           callback: (token: string) => {
-            if (isMounted) setCaptchaToken(token);
+            if(isMounted) setCaptchaToken(token);
           },
         })
       }
     } finally {
-      if (isMounted) setIsLoading(false)
+      if(isMounted) setIsLoading(false)
     }
   }
 
@@ -156,12 +156,12 @@ export default function Login() {
     e.preventDefault()
     setError('')
 
-    if (!magicLinkEmail.trim()) {
+    if(!magicLinkEmail.trim()) {
       setError('Email is required')
       return
     }
 
-    if (!/\S+@\S+\.\S+/.test(magicLinkEmail)) {
+    if(!/\S+@\S+\.\S+/.test(magicLinkEmail)) {
       setError('Please enter a valid email')
       return
     }
@@ -179,22 +179,22 @@ export default function Login() {
         },
       })
 
-      if (magicLinkError) {
+      if(magicLinkError) {
         throw new Error(magicLinkError.message || 'Failed to send magic link')
       }
 
-      if (isMounted) {
+      if(isMounted) {
         alert('Magic link sent! Check your email to sign in.')
         setMagicLinkEmail('')
         setShowMagicLinkInput(false)
       }
     } catch (err: any) {
-      if (!isMounted) return;
+      if(!isMounted) return;
       const errorMessage = err.message || 'An error occurred'
       setError(errorMessage)
       console.error('Magic link error:', err)
     } finally {
-      if (isMounted) setIsLoading(false)
+      if(isMounted) setIsLoading(false)
     }
   }
 
@@ -405,7 +405,7 @@ export default function Login() {
           strategy="afterInteractive"
           onLoad={() => {
           // @ts-ignore
-          if (window.onTurnstileLoad) window.onTurnstileLoad();
+          if(window.onTurnstileLoad) window.onTurnstileLoad();
           }}
         />
       </div>

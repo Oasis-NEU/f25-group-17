@@ -85,7 +85,7 @@ export default function Signup() {
 
   const handleMajorBlur = () => {
     setTimeout(() => {
-      if (
+      if(
         !isSelectingFromDropdown &&
         majorSearch &&
         filteredMajors.length > 0 &&
@@ -115,7 +115,7 @@ export default function Signup() {
 
   const handleYearBlur = () => {
     setTimeout(() => {
-      if (
+      if(
         !isSelectingYear &&
         yearSearch &&
         filteredYears.length > 0 &&
@@ -132,35 +132,35 @@ export default function Signup() {
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!formData.firstname.trim()) {
+    if(!formData.firstname.trim()) {
       newErrors.username = "First name is required";
     }
 
-    if (!formData.lastname.trim()) {
+    if(!formData.lastname.trim()) {
       newErrors.username = "Last name is required";
     }
 
-    if (!formData.email.trim()) {
+    if(!formData.email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if(!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
 
-    if (!formData.password) {
+    if(!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
+    } else if(formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if(formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-    if (!formData.year) {
+    if(!formData.year) {
       newErrors.year = "Please select your year";
     }
 
-    if (!formData.major) {
+    if(!formData.major) {
       newErrors.major = "Please select your major";
     }
 
@@ -172,7 +172,7 @@ export default function Signup() {
     // Dynamically load and initialize Turnstile
     const loadTurnstile = () => {
       // @ts-ignore
-      if (window.turnstile && !widgetRendered.current) {
+      if(window.turnstile && !widgetRendered.current) {
         widgetRendered.current = true;
         // @ts-ignore
         window.turnstile.render("#turnstile-widget", {
@@ -193,13 +193,13 @@ export default function Signup() {
 
     // Check if script is already loaded
     // @ts-ignore
-    if (window.turnstile) {
+    if(window.turnstile) {
       loadTurnstile();
     } else {
       // Wait for script to load
       const checkInterval = setInterval(() => {
         // @ts-ignore
-        if (window.turnstile) {
+        if(window.turnstile) {
           clearInterval(checkInterval);
           loadTurnstile();
         }
@@ -213,11 +213,11 @@ export default function Signup() {
     e.preventDefault();
     setError("");
 
-    if (!validateForm()) {
+    if(!validateForm()) {
       return;
     }
 
-    if (!captchaToken) {
+    if(!captchaToken) {
       setError("Please complete the captcha verification");
       return;
     }
@@ -232,8 +232,8 @@ export default function Signup() {
         options: { captchaToken },
       });
 
-      if (authError) {
-        if (
+      if(authError) {
+        if(
           authError.message.includes("already registered") ||
           authError.message.includes("already exists") ||
           authError.message.includes("User already registered")
@@ -245,9 +245,9 @@ export default function Signup() {
         throw authError;
       }
 
-      if (authData.user) {
+      if(authData.user) {
         // Check if user was actually created
-        if (authData.user.identities && authData.user.identities.length === 0) {
+        if(authData.user.identities && authData.user.identities.length === 0) {
           throw new Error(
             "This email is already registered. Please use a different email or try logging in."
           );
@@ -278,7 +278,7 @@ export default function Signup() {
           ] as any)
           .select();
 
-        if (userError) {
+        if(userError) {
           console.error("Error inserting user data:", userError);
           setError(`Failed to store user profile: ${userError.message}`);
           return;
@@ -294,7 +294,7 @@ export default function Signup() {
       const errorMessage = err.message || "An error occurred during signup";
       setError(errorMessage);
 
-      if (
+      if(
         errorMessage.toLowerCase().includes("email") &&
         (errorMessage.toLowerCase().includes("already") ||
           errorMessage.toLowerCase().includes("registered"))
@@ -312,7 +312,7 @@ export default function Signup() {
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest(".major-dropdown-container")) {
+      if(!target.closest(".major-dropdown-container")) {
         setShowMajorDropdown(false);
       }
     };
@@ -326,7 +326,7 @@ export default function Signup() {
     return () => {
       try {
         // @ts-ignore
-        if (window.turnstile && window.turnstile._widgetMap) {
+        if(window.turnstile && window.turnstile._widgetMap) {
           // @ts-ignore
           const widgets = window.turnstile._widgetMap;
           Object.keys(widgets).forEach((key) => {
@@ -348,9 +348,9 @@ export default function Signup() {
   React.useEffect(() => {
     try {
       const savedCourses = localStorage.getItem("userCourses");
-      if (savedCourses) {
+      if(savedCourses) {
         const parsedCourses = JSON.parse(savedCourses);
-        if (Array.isArray(parsedCourses) && parsedCourses.length > 0) {
+        if(Array.isArray(parsedCourses) && parsedCourses.length > 0) {
           setCourses(parsedCourses);
           console.log("Loaded courses from localStorage:", parsedCourses);
         }
@@ -453,10 +453,10 @@ export default function Signup() {
                   onChange={(e) => {
                     setFormData((prev) => ({ ...prev, email: e.target.value }));
                     // Clear email error when user starts typing
-                    if (errors.email) {
+                    if(errors.email) {
                       setErrors((prev) => ({ ...prev, email: "" }));
                     }
-                    if (error && error.toLowerCase().includes("email")) {
+                    if(error && error.toLowerCase().includes("email")) {
                       setError("");
                     }
                   }}
@@ -629,16 +629,16 @@ export default function Signup() {
                 </label>
                 <Input
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if(e.key === "Enter") {
                       e.preventDefault();
                       const search = yearSearch;
-                      if (!search || search.trim() === "") {
+                      if(!search || search.trim() === "") {
                         setFormData((prev) => ({ ...prev, year: "" }));
                       } else {
                         const filtered = YEARS.filter((y) =>
                           y.toLowerCase().includes(search.toLowerCase())
                         );
-                        if (filtered.length > 0) {
+                        if(filtered.length > 0) {
                           handleYearSelect(filtered[0]);
                         }
                       }
@@ -692,16 +692,16 @@ export default function Signup() {
                 </label>
                 <Input
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if(e.key === "Enter") {
                       e.preventDefault();
                       const search = majorSearch;
-                      if (!search || search.trim() === "") {
+                      if(!search || search.trim() === "") {
                         setFormData((prev) => ({ ...prev, major: "" }));
                       } else {
                         const filtered = MAJORS.filter((m) =>
                           m.toLowerCase().includes(search.toLowerCase())
                         );
-                        if (filtered.length > 0) {
+                        if(filtered.length > 0) {
                           handleMajorSelect(filtered[0]);
                         }
                       }
@@ -839,7 +839,7 @@ export default function Signup() {
           strategy="afterInteractive"
           onLoad={() => {
             // @ts-ignore
-            if (window.onTurnstileLoad) window.onTurnstileLoad();
+            if(window.onTurnstileLoad) window.onTurnstileLoad();
           }}
         />
       </div>

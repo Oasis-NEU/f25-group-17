@@ -38,24 +38,24 @@ export default function OnboardingCourses() {
         const pageSize = 1000;
         let hasMore = true;
 
-        while (hasMore) {
+        while(hasMore) {
           const { data, error } = await supabase
             .from("ClassTime_Data")
             .select("courseName")
             .range(page * pageSize, (page + 1) * pageSize - 1);
 
-          if (error) {
+          if(error) {
             console.error("Error fetching classes:", error);
             hasMore = false;
             break;
           }
 
-          if (!data || data.length === 0) {
+          if(!data || data.length === 0) {
             hasMore = false;
           } else {
             allCourses = [...allCourses, ...data];
             page++;
-            if (data.length < pageSize) hasMore = false;
+            if(data.length < pageSize) hasMore = false;
           }
         }
 
@@ -65,7 +65,7 @@ export default function OnboardingCourses() {
         // Extract unique course names using Set and sort alphabetically
         const uniqueCoursesSet = new Set<string>();
         allCourses.forEach((item: any) => {
-          if (item.courseName && item.courseName.trim()) {
+          if(item.courseName && item.courseName.trim()) {
             uniqueCoursesSet.add(item.courseName.trim());
           }
         });
@@ -87,9 +87,9 @@ export default function OnboardingCourses() {
   useEffect(() => {
     try {
       const savedCourses = localStorage.getItem("userCourses");
-      if (savedCourses) {
+      if(savedCourses) {
         const parsedCourses = JSON.parse(savedCourses);
-        if (Array.isArray(parsedCourses) && parsedCourses.length > 0) {
+        if(Array.isArray(parsedCourses) && parsedCourses.length > 0) {
           // Store the saved courses separately
           setSavedCourses(parsedCourses);
           
@@ -162,7 +162,7 @@ export default function OnboardingCourses() {
     });
     
     // Store previous value in a way we can access it on blur
-    if (!window.previousCourseValues) {
+    if(!window.previousCourseValues) {
       window.previousCourseValues = {};
     }
     window.previousCourseValues[index] = previousValue;
@@ -184,7 +184,7 @@ export default function OnboardingCourses() {
       const search = courseSearch[index];
       
       // If search is empty, revert to previous value
-      if (!search || search.trim() === "") {
+      if(!search || search.trim() === "") {
         const previousValue = window.previousCourseValues?.[index] || "";
         setCourseSearch((prev) => {
           const next = [...prev];
@@ -205,7 +205,7 @@ export default function OnboardingCourses() {
         c.toLowerCase().includes(search.toLowerCase())
       );
       
-      if (filtered.length > 0 && search !== courses[index].courseName) {
+      if(filtered.length > 0 && search !== courses[index].courseName) {
         handleCourseSelect(index, filtered[0]);
       }
       
@@ -229,11 +229,11 @@ export default function OnboardingCourses() {
     const nonEmptyCourses = courses.filter((c) => c.courseName.trim() !== "");
     
     // If user has entered courses, check for duplicates
-    if (nonEmptyCourses.length > 0) {
+    if(nonEmptyCourses.length > 0) {
       const courseNames = nonEmptyCourses.map((c) => c.courseName.trim());
       const duplicates = courseNames.filter((name, index) => courseNames.indexOf(name) !== index);
       
-      if (duplicates.length > 0) {
+      if(duplicates.length > 0) {
         setError(`Duplicate courses found: ${duplicates.join(", ")}. Each course must be unique.`);
         return;
       }
@@ -327,11 +327,11 @@ export default function OnboardingCourses() {
                       onFocus={() => handleCourseFocus(index)}
                       onBlur={() => handleCourseBlur(index)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") {
+                        if(e.key === "Enter") {
                           e.preventDefault();
                           const search = courseSearch[index];
                           
-                          if (!search || search.trim() === "") {
+                          if(!search || search.trim() === "") {
                             setCourseSearch((prev) => {
                               const next = [...prev];
                               next[index] = "";
@@ -345,7 +345,7 @@ export default function OnboardingCourses() {
                             c.toLowerCase().includes(search.toLowerCase())
                           );
                           
-                          if (filtered.length > 0) {
+                          if(filtered.length > 0) {
                             handleCourseSelect(index, filtered[0]);
                           }
                         }
@@ -374,7 +374,7 @@ export default function OnboardingCourses() {
                                 disabled={isAlreadySelected}
                                 onMouseDown={(e) => {
                                   e.preventDefault();
-                                  if (!isAlreadySelected) {
+                                  if(!isAlreadySelected) {
                                     handleCourseSelect(index, cls);
                                   }
                                 }}

@@ -33,7 +33,7 @@ export default function Profile() {
         // Get current authenticated user
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         
-        if (authError || !user) {
+        if(authError || !user) {
           console.error('Auth error:', authError);
           setLoading(false);
           router.push("/login"); //preventing them from access this page if they arent the user and not logged in 
@@ -47,13 +47,13 @@ export default function Profile() {
           .eq('user_id', user.id)
           .single();
 
-        if (error) {
+        if(error) {
           console.error('Error fetching user data:', error);
           setLoading(false);
           return;
         }
 
-        if (data && typeof data === 'object') {
+        if(data && typeof data === 'object') {
           const userData = data as any;
           const fullNameValue = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
           const emailValue = userData.email || '';
@@ -78,26 +78,26 @@ export default function Profile() {
           const pageSize = 1000;
           let hasMore = true;
 
-          while (hasMore) {
+          while(hasMore) {
             const { data: pageData } = await supabase
               .from('ClassTime_Data')
               .select('courseName, building, beginTime, endTime')
               .range(page * pageSize, (page + 1) * pageSize - 1)
               .neq('courseName', null);
 
-            if (!pageData || pageData.length === 0) {
+            if(!pageData || pageData.length === 0) {
               hasMore = false;
             } else {
               allClassData = [...allClassData, ...pageData];
               page++;
-              if (pageData.length < pageSize) hasMore = false;
+              if(pageData.length < pageSize) hasMore = false;
             }
           }
 
           console.log(`📊 Total ClassTime_Data records fetched: ${allClassData.length}`);
           console.log('📚 User enrolled courses:', userData.courses);
 
-          if (allClassData && userData.courses && Array.isArray(userData.courses)) {
+          if(allClassData && userData.courses && Array.isArray(userData.courses)) {
             // Filter courses that match the user's enrolled courses
             const enrolledCourses = allClassData.filter((course: any) => 
               userData.courses.includes(course.courseName)
@@ -110,7 +110,7 @@ export default function Profile() {
             console.log('📚 Enrolled courses found in DB:', uniqueCourses.length);
             console.log('📚 Courses:', uniqueCourses.map((c: any) => c.courseName));
             setCourses(uniqueCourses);
-          } else if (userData.courses && Array.isArray(userData.courses)) {
+          } else if(userData.courses && Array.isArray(userData.courses)) {
             // Fallback: just use course names from UserData
             console.log('📚 Using fallback courses from UserData:', userData.courses.length);
             setCourses(userData.courses.map((name: string) => ({ courseName: name })));
@@ -153,13 +153,13 @@ export default function Profile() {
   };
 
   const handleSave = async () => {
-    if (!canSave) return;
+    if(!canSave) return;
 
     try {
       // Get current authenticated user
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       
-      if (authError || !user) {
+      if(authError || !user) {
         console.error('Auth error:', authError);
         return;
       }
@@ -184,7 +184,7 @@ export default function Profile() {
         .update(updates)
         .eq('user_id', user.id);
 
-      if (updateError) {
+      if(updateError) {
         console.error('Error updating user data:', updateError);
         return;
       }
@@ -209,7 +209,7 @@ export default function Profile() {
     try {
       const { error } = await supabase.auth.signOut();
       
-      if (error) {
+      if(error) {
         console.error('Error signing out:', error);
         return;
       }

@@ -32,7 +32,7 @@ EmptyNEU is a web application that helps Northeastern University students discov
 
 ```
 f25-group-17/
-├── FrontEnd/              # Next.js frontend application
+├── frontend/              # Next.js frontend application
 │   ├── app/
 │   │   ├── login/         # Login page with captcha & magic link
 │   │   ├── signup/        # Signup page with form validation
@@ -85,13 +85,13 @@ f25-group-17/
 ### 1. Clone & Install
 
 ```bash
-cd f25-group-17/FrontEnd
+cd f25-group-17/frontend
 npm install
 ```
 
 ### 2. Environment Variables
 
-Create `.env.local` in `FrontEnd/` directory:
+Create `.env.local` in `frontend/` directory:
 
 ```env
 # Supabase

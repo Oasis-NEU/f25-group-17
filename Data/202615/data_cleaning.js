@@ -5,8 +5,8 @@ async function insertClasses() {
   const rows = [];
 
   // Collect every record (no filtering)
-  for (const course of courses) {
-    for (const meeting of course.meetingTimes) {
+  for(const course of courses) {
+    for(const meeting of course.meetingTimes) {
       // Pad hour and minute with leading zeros
       const hour = String(meeting.beginTime.hour).padStart(2, '0');
       const minute = String(meeting.beginTime.minute).padStart(2, '0');
@@ -40,13 +40,13 @@ async function insertClasses() {
   let successCount = 0;
   let errorCount = 0;
 
-  for (let i = 0; i < rows.length; i += chunkSize) {
+  for(let i = 0; i < rows.length; i += chunkSize) {
     const chunk = rows.slice(i, i + chunkSize);
     console.log(`⏳ Inserting batch ${Math.ceil((i + 1) / chunkSize)} of ${Math.ceil(rows.length / chunkSize)} (rows ${i + 1}-${Math.min(i + chunkSize, rows.length)})...`);
     
     const { data, error } = await supabase.from('ClassTime_Data').insert(chunk);
     
-    if (error) {
+    if(error) {
       console.error(`❌ Error inserting rows ${i + 1}-${i + chunk.length}:`, error.message);
       console.error(`Error details:`, error);
       errorCount++;
@@ -56,7 +56,7 @@ async function insertClasses() {
     }
     
     // Add delay between batches to avoid rate limiting
-    if (i + chunkSize < rows.length) {
+    if(i + chunkSize < rows.length) {
       await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
     }
   }
@@ -78,7 +78,7 @@ async function clearDuplicates() {
     .from('ClassTime_Data')
     .select('*');
   
-  if (fetchError) {
+  if(fetchError) {
     console.error('❌ Error fetching records:', fetchError.message);
     return;
   }
@@ -89,29 +89,29 @@ async function clearDuplicates() {
   const seen = new Map();
   const duplicateIds = [];
   
-  for (const record of allRecords) {
+  for(const record of allRecords) {
     const key = `${record.building}|${record.roomNumber}|${record.beginTime}|${record.endTime}|${record.monday}|${record.tuesday}|${record.wednesday}|${record.thursday}|${record.friday}`;
     
-    if (seen.has(key)) {
+    if(seen.has(key)) {
       duplicateIds.push(record.id);
     } else {
       seen.set(key, record.id);
     }
   }
   
-  if (duplicateIds.length > 0) {
+  if(duplicateIds.length > 0) {
     console.log(`🔄 Found ${duplicateIds.length} duplicates, removing...`);
     
     // Delete duplicates in batches
     const batchSize = 500;
-    for (let i = 0; i < duplicateIds.length; i += batchSize) {
+    for(let i = 0; i < duplicateIds.length; i += batchSize) {
       const batch = duplicateIds.slice(i, i + batchSize);
       const { error: deleteError } = await supabase
         .from('ClassTime_Data')
         .delete()
         .in('id', batch);
       
-      if (deleteError) {
+      if(deleteError) {
         console.error(`❌ Error deleting duplicates:`, deleteError.message);
       } else {
         console.log(`✅ Deleted ${batch.length} duplicate records`);

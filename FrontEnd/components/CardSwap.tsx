@@ -111,7 +111,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         refs.forEach((r, i) => placeNow(r.current!, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
 
         const swap = () => {
-        if (order.current.length < 2) return;
+        if(order.current.length < 2) return;
 
         const [front, ...rest] = order.current;
         const elFront = refs[front].current!;
@@ -171,7 +171,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         swap();
         intervalRef.current = window.setInterval(swap, delay);
 
-        if (pauseOnHover) {
+        if(pauseOnHover) {
         const node = container.current!;
         const pause = () => {
             tlRef.current?.pause();

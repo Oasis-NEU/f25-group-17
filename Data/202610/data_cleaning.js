@@ -5,8 +5,8 @@ async function insertClasses() {
   const rows = [];
 
   // Collect every record (no filtering)
-  for (const course of courses) {
-    for (const meeting of course.meetingTimes) {
+  for(const course of courses) {
+    for(const meeting of course.meetingTimes) {
       const start = `${meeting.beginTime.hour}:${meeting.beginTime.minute}:00`;
       const end = `${meeting.endTime.hour}:${meeting.endTime.minute}:00`;
 
@@ -30,10 +30,10 @@ async function insertClasses() {
 
   // ⚡ Insert everything in batches to avoid payload limits
   const chunkSize = 1000;
-  for (let i = 0; i < rows.length; i += chunkSize) {
+  for(let i = 0; i < rows.length; i += chunkSize) {
     const chunk = rows.slice(i, i + chunkSize);
     const { error } = await supabase.from('ClassTime_Data').insert(chunk);
-    if (error) {
+    if(error) {
       console.error(`Error inserting rows ${i + 1}-${i + chunk.length}:`, error.message);
     } else {
       console.log(`Inserted rows ${i + 1}-${i + chunk.length}`);

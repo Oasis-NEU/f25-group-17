@@ -76,7 +76,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
   // Lock/unlock body scroll when menu opens/closes
   useEffect(() => {
-    if (open) {
+    if(open) {
       // Save current scroll position
       const scrollY = window.scrollY;
       document.body.style.position = 'fixed';
@@ -90,7 +90,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       document.body.style.top = '';
       document.body.style.width = '';
       document.body.style.overflow = '';
-      if (scrollY) {
+      if(scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
       }
     }
@@ -106,10 +106,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       const icon = iconRef.current;
       const textInner = textInnerRef.current;
 
-      if (!panel || !plusH || !plusV || !icon || !textInner) return;
+      if(!panel || !plusH || !plusV || !icon || !textInner) return;
 
       let preLayers: HTMLElement[] = [];
-      if (preContainer) {
+      if(preContainer) {
         preLayers = Array.from(preContainer.querySelectorAll('.sm-prelayer')) as HTMLElement[];
       }
       preLayerElsRef.current = preLayers;
@@ -123,7 +123,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
       gsap.set(textInner, { yPercent: 0 });
 
-      if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
+      if(toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
     return () => ctx.revert();
   }, [menuButtonColor, position]);
@@ -131,10 +131,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const buildOpenTimeline = useCallback(() => {
     const panel = panelRef.current;
     const layers = preLayerElsRef.current;
-    if (!panel) return null;
+    if(!panel) return null;
 
     openTlRef.current?.kill();
-    if (closeTweenRef.current) {
+    if(closeTweenRef.current) {
       closeTweenRef.current.kill();
       closeTweenRef.current = null;
     }
@@ -150,10 +150,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     const layerStates = layers.map(el => ({ el, start: Number(gsap.getProperty(el, 'xPercent')) }));
     const panelStart = Number(gsap.getProperty(panel, 'xPercent'));
 
-    if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
-    if (numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as any]: 0 });
-    if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
-    if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+    if(itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
+    if(numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as any]: 0 });
+    if(socialTitle) gsap.set(socialTitle, { opacity: 0 });
+    if(socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
 
     const tl = gsap.timeline({ paused: true });
 
@@ -172,7 +172,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       panelInsertTime
     );
 
-    if (itemEls.length) {
+    if(itemEls.length) {
       const itemsStartRatio = 0.15;
       const itemsStart = panelInsertTime + panelDuration * itemsStartRatio;
 
@@ -182,7 +182,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         itemsStart
       );
 
-      if (numberEls.length) {
+      if(numberEls.length) {
         tl.to(
           numberEls,
           { duration: 0.6, ease: 'power2.out', ['--sm-num-opacity' as any]: 1, stagger: { each: 0.08, from: 'start' } },
@@ -191,11 +191,11 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       }
     }
 
-    if (socialTitle || socialLinks.length) {
+    if(socialTitle || socialLinks.length) {
       const socialsStart = panelInsertTime + panelDuration * 0.4;
 
-      if (socialTitle) tl.to(socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
-      if (socialLinks.length) {
+      if(socialTitle) tl.to(socialTitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, socialsStart);
+      if(socialLinks.length) {
         tl.to(
           socialLinks,
           {
@@ -218,10 +218,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   }, [position]);
 
   const playOpen = useCallback(() => {
-    if (busyRef.current) return;
+    if(busyRef.current) return;
     busyRef.current = true;
     const tl = buildOpenTimeline();
-    if (tl) {
+    if(tl) {
       tl.eventCallback('onComplete', () => {
         busyRef.current = false;
       });
@@ -238,7 +238,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
     const panel = panelRef.current;
     const layers = preLayerElsRef.current;
-    if (!panel) return;
+    if(!panel) return;
 
     const all: HTMLElement[] = [...layers, panel];
     closeTweenRef.current?.kill();
@@ -252,17 +252,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       overwrite: 'auto',
       onComplete: () => {
         const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel')) as HTMLElement[];
-        if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
+        if(itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
 
         const numberEls = Array.from(
           panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item')
         ) as HTMLElement[];
-        if (numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as any]: 0 });
+        if(numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as any]: 0 });
 
         const socialTitle = panel.querySelector('.sm-socials-title') as HTMLElement | null;
         const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link')) as HTMLElement[];
-        if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
-        if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+        if(socialTitle) gsap.set(socialTitle, { opacity: 0 });
+        if(socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
 
         busyRef.current = false;
       }
@@ -273,11 +273,11 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     const icon = iconRef.current;
     const h = plusHRef.current;
     const v = plusVRef.current;
-    if (!icon || !h || !v) return;
+    if(!icon || !h || !v) return;
 
     spinTweenRef.current?.kill();
 
-    if (opening) {
+    if(opening) {
       // ensure container never rotates
       gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
       spinTweenRef.current = gsap
@@ -296,9 +296,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const animateColor = useCallback(
     (opening: boolean) => {
       const btn = toggleBtnRef.current;
-      if (!btn) return;
+      if(!btn) return;
       colorTweenRef.current?.kill();
-      if (changeMenuColorOnOpen) {
+      if(changeMenuColorOnOpen) {
         const targetColor = opening ? openMenuButtonColor : menuButtonColor;
         colorTweenRef.current = gsap.to(btn, { color: targetColor, delay: 0.18, duration: 0.3, ease: 'power2.out' });
       } else {
@@ -309,8 +309,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   );
 
   React.useEffect(() => {
-    if (toggleBtnRef.current) {
-      if (changeMenuColorOnOpen) {
+    if(toggleBtnRef.current) {
+      if(changeMenuColorOnOpen) {
         const targetColor = openRef.current ? openMenuButtonColor : menuButtonColor;
         gsap.set(toggleBtnRef.current, { color: targetColor });
       } else {
@@ -321,7 +321,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
   const animateText = useCallback((opening: boolean) => {
     const inner = textInnerRef.current;
-    if (!inner) return;
+    if(!inner) return;
 
     textCycleAnimRef.current?.kill();
 
@@ -331,11 +331,11 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
     const seq: string[] = [currentLabel];
     let last = currentLabel;
-    for (let i = 0; i < cycles; i++) {
+    for(let i = 0; i < cycles; i++) {
       last = last === 'Menu' ? 'Close' : 'Menu';
       seq.push(last);
     }
-    if (last !== targetLabel) seq.push(targetLabel);
+    if(last !== targetLabel) seq.push(targetLabel);
     seq.push(targetLabel);
 
     setTextLines(seq);
@@ -356,7 +356,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     openRef.current = target;
     setOpen(target);
 
-    if (target) {
+    if(target) {
       onMenuOpen?.();
       playOpen();
     } else {
@@ -405,7 +405,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           {(() => {
             const raw = colors && colors.length ? colors.slice(0, 4) : ['#1e1e22', '#35353c'];
             const arr = [...raw];
-            if (arr.length >= 3) {
+            if(arr.length >= 3) {
               const mid = Math.floor(arr.length / 2);
               arr.splice(mid, 1);
             }
