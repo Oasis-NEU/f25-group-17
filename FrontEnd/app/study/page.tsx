@@ -186,6 +186,9 @@ export default function Study() {
       setTimeout(() => {
         setNotification({ show: false, message: '' });
       }, 3000);
+      
+      // Refresh occupancy
+      await fetchAllRoomOccupancy();
     } catch (err: any) {
       console.error('Error joining room:', err);
       console.error('Error details:', err.message, err.details, err.hint);
@@ -239,43 +242,61 @@ export default function Study() {
       // Fetch user profiles for each booking
       const enrichedData = await Promise.all((data || []).map(async (booking: any) => {
         try {
-          // Try to fetch from profiles table first
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', booking.user)
-            .single();
+          let courses = booking.courses;
+          let firstName = 'Unknown';
+          let lastName = 'User';
           
-          if (profile) {
-            return { 
-              ...booking, 
-              first_name: (profile as any).first_name || (profile as any).firstName || 'Unknown', 
-              last_name: (profile as any).last_name || (profile as any).lastName || 'User' 
-            };
+          // Try to get user data from UserData table (primary source for courses)
+          try {
+            const { data: userData } = await supabase
+              .from('UserData')
+              .select('firstName, lastName, courses')
+              .eq('user_id', booking.user)
+              .single();
+            
+            if (userData) {
+              firstName = (userData as any).firstName || 'Unknown';
+              lastName = (userData as any).lastName || 'User';
+              courses = (userData as any).courses || courses;
+              console.log(`✅ Got UserData for ${booking.user}:`, courses);
+            }
+          } catch (err) {
+            console.log(`⚠️ No UserData found for ${booking.user}, trying profiles...`);
           }
-
-          // Fallback: try UserData table
-          const { data: userData } = await supabase
-            .from('UserData')
-            .select('*')
-            .eq('user_id', booking.user)
-            .single();
-
-          if (userData) {
-            return { 
-              ...booking, 
-              first_name: (userData as any).firstName || 'Unknown', 
-              last_name: (userData as any).lastName || 'User' 
-            };
+          
+          // Fallback to profiles table if needed
+          if (firstName === 'Unknown' && lastName === 'User') {
+            try {
+              const { data: profile } = await supabase
+                .from('profiles')
+                .select('first_name, last_name, courses')
+                .eq('id', booking.user)
+                .single();
+              
+              if (profile) {
+                firstName = (profile as any).first_name || 'Unknown';
+                lastName = (profile as any).last_name || 'User';
+                courses = (profile as any).courses || courses;
+                console.log(`✅ Got profile for ${booking.user}:`, courses);
+              }
+            } catch (err) {
+              console.log(`⚠️ No profile found for ${booking.user}`);
+            }
           }
-
-          return { ...booking, first_name: 'Unknown', last_name: 'User' };
+          
+          return { 
+            ...booking, 
+            first_name: firstName, 
+            last_name: lastName,
+            courses: courses
+          };
         } catch (err) {
-          console.error('Error fetching profile for user:', booking.user, err);
-          return { ...booking, first_name: 'Unknown', last_name: 'User' };
+          console.error('❌ Error enriching user:', booking.user, err);
+          return { ...booking, first_name: 'Unknown', last_name: 'User', courses: null };
         }
       }));
       
+      console.log('👥 Room users enriched:', enrichedData);
       setRoomUsers(enrichedData);
     } catch (err: any) {
       console.error('Error fetching room users:', err);
@@ -1270,11 +1291,19 @@ export default function Study() {
                     bg="red.600"
                     color="white"
                     _hover={{ bg: "red.700" }}
-                    onClick={() => setOpenDialogId(null)}
+                    onClick={() => {
+                      if (openDialogId !== null && uniqueSpaces[openDialogId]) {
+                        handleJoinRoom(uniqueSpaces[openDialogId]);
+                        setOpenDialogId(null);
+                      }
+                    }}
                     size="lg"
                     px={8}
+                    disabled={userBookingId ? true : false}
+                    opacity={userBookingId ? 0.5 : 1}
+                    cursor={userBookingId ? 'not-allowed' : 'pointer'}
                   >
-                    Join Space
+                    {userBookingId ? 'Already in a Room' : 'Join Space'}
                   </Button>
                 </Dialog.Footer>
 
