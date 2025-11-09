@@ -42,7 +42,8 @@ const useAvailableSpaces = () => {
           timeZone: 'America/New_York',
           hour12: false,
           hour: '2-digit',
-          minute: '2-digit'
+          minute: '2-digit',
+          second: '2-digit'
         });
         
         // Map JavaScript day (0-6) to day names for database columns
@@ -63,6 +64,11 @@ const useAvailableSpaces = () => {
           return;
         }
 
+        console.log('Current Day:', currentDayName);
+        console.log('Current Time:', currentTime);
+        console.log('Total Time Slots:', timeSlots.length);
+        console.log('Sample slot:', timeSlots[0]);
+
         // Filter time slots: keep only those available today within current time
         const filtered = timeSlots.filter((slot: any) => {
           // Check if available on current day (boolean check)
@@ -78,8 +84,16 @@ const useAvailableSpaces = () => {
 
           // Return true if current time is NOT within the class time
           // (i.e., the room is available because the class is NOT happening now)
-          return currentTime < begin || currentTime > end;
+          const isAvailable = currentTime < begin || currentTime > end;
+          
+          if (isAvailableToday) {
+            console.log(`Room ${slot.roomNumber} in ${slot.building}: ${begin}-${end}, Available: ${isAvailable}`);
+          }
+          
+          return isAvailable;
         });
+
+        console.log('Filtered Available Spaces:', filtered.length);
 
         setAvailableSpaces(filtered);
         setSpacesError(null);
