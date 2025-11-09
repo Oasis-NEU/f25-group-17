@@ -205,6 +205,9 @@ export default function Study() {
 
       setUserBookingId(null);
       console.log('✅ Left room successfully');
+      
+      // Refresh occupancy after leaving
+      await fetchAllRoomOccupancy();
     } catch (err: any) {
       console.error('Error leaving room:', err);
     }
@@ -225,21 +228,39 @@ export default function Study() {
       // Fetch user profiles for each booking
       const enrichedData = await Promise.all((data || []).map(async (booking: any) => {
         try {
+          // Try to fetch from profiles table first
           const { data: profile } = await supabase
             .from('profiles')
-            .select('first_name, last_name')
+            .select('*')
             .eq('id', booking.user)
             .single();
           
-          if (!profile) {
-            return { ...booking, first_name: 'Unknown', last_name: 'User' };
+          if (profile) {
+            return { 
+              ...booking, 
+              first_name: (profile as any).first_name || (profile as any).firstName || 'Unknown', 
+              last_name: (profile as any).last_name || (profile as any).lastName || 'User' 
+            };
           }
-          return { 
-            ...booking, 
-            first_name: (profile as any).first_name || 'Unknown', 
-            last_name: (profile as any).last_name || 'User' 
-          };
+
+          // Fallback: try UserData table
+          const { data: userData } = await supabase
+            .from('UserData')
+            .select('*')
+            .eq('user_id', booking.user)
+            .single();
+
+          if (userData) {
+            return { 
+              ...booking, 
+              first_name: (userData as any).firstName || 'Unknown', 
+              last_name: (userData as any).lastName || 'User' 
+            };
+          }
+
+          return { ...booking, first_name: 'Unknown', last_name: 'User' };
         } catch (err) {
+          console.error('Error fetching profile for user:', booking.user, err);
           return { ...booking, first_name: 'Unknown', last_name: 'User' };
         }
       }));

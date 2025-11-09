@@ -18,6 +18,7 @@ export default function Profile() {
   const [email, setEmail] = React.useState("john.doe@northeastern.edu");
   const [year, setYear] = React.useState("Junior");
   const [loading, setLoading] = React.useState(true);
+  const [courses, setCourses] = React.useState<any[]>([]);
 
   // Store original values for cancel functionality
   const [originalFullName, setOriginalFullName] = React.useState("John Doe");
@@ -70,6 +71,28 @@ export default function Profile() {
           setOriginalEmail(emailValue);
           setOriginalMajor(majorValue);
           setOriginalYear(yearValue);
+
+          // Fetch courses from ClassTime_Data table
+          const { data: coursesData } = await supabase
+            .from('ClassTime_Data')
+            .select('courseName, building, beginTime, endTime')
+            .neq('courseName', null);
+
+          if (coursesData && userData.courses && Array.isArray(userData.courses)) {
+            // Filter courses that match the user's enrolled courses
+            const enrolledCourses = coursesData.filter((course: any) => 
+              userData.courses.includes(course.courseName)
+            );
+            
+            // Remove duplicates by course name
+            const uniqueCourses = Array.from(
+              new Map(enrolledCourses.map((course: any) => [course.courseName, course])).values()
+            );
+            setCourses(uniqueCourses);
+          } else if (userData.courses && Array.isArray(userData.courses)) {
+            // Fallback: just use course names from UserData
+            setCourses(userData.courses.map((name: string) => ({ courseName: name })));
+          }
         }
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -380,6 +403,52 @@ export default function Profile() {
                   </Stack>
                 </CardBody>
               </CardRoot>
+
+              {/* Enrolled Courses Card */}
+              <CardRoot
+                bg="rgba(17, 24, 39, 0.9)"
+                backdropFilter="blur(20px)"
+                shadow="lg"
+                rounded="xl"
+                border="1px solid rgba(255,255,255,0.2)"
+                color="white"
+              >
+                <CardBody p={6}>
+                  <Heading size="lg" color="white" mb={6}>Enrolled Courses</Heading>
+                  
+                  {courses.length > 0 ? (
+                    <Stack gap={3}>
+                      {courses.map((course: any, idx: number) => (
+                        <Box
+                          key={idx}
+                          p={3}
+                          bg="rgba(0,0,0,0.3)"
+                          rounded="lg"
+                          border="1px solid rgba(255,255,255,0.1)"
+                          _hover={{ borderColor: "red.500", bg: "rgba(0,0,0,0.4)" }}
+                          transition="all 0.2s"
+                        >
+                          <Text fontSize="sm" fontWeight="600" color="white" mb={1}>
+                            {course.courseName || 'Unknown Course'}
+                          </Text>
+                          {course.building && (
+                            <Text fontSize="xs" color="gray.400">
+                              📍 {course.building}
+                            </Text>
+                          )}
+                          {course.beginTime && course.endTime && (
+                            <Text fontSize="xs" color="gray.400">
+                              🕐 {course.beginTime} - {course.endTime}
+                            </Text>
+                          )}
+                        </Box>
+                      ))}
+                    </Stack>
+                  ) : (
+                    <Text fontSize="sm" color="gray.400">No courses enrolled yet</Text>
+                  )}
+                </CardBody>
+              </CardRoot>
             </SimpleGrid>
 
             {/* Action Buttons - Single location for all edits */}
@@ -410,98 +479,6 @@ export default function Profile() {
                 </Button>
               </Box>
             )}
-
-            {/* Stats Cards - After Social Links */}
-            <SimpleGrid columns={[1, 1, 2, 3]} gap={6} mt={6}>
-              {/* Stats Card 1 */}
-              <CardRoot
-                bg="rgba(17, 24, 39, 0.9)"
-                backdropFilter="blur(20px)"
-                shadow="lg"
-                rounded="xl"
-                border="1px solid rgba(255,255,255,0.2)"
-                color="white"
-                p={6}
-              >
-                <Text fontSize="sm" color="gray.400" mb={2} fontWeight="bold">STUDY SESSIONS</Text>
-                <Heading size="3xl" color="red.400" mb={1}>42</Heading>
-                <Text fontSize="sm" color="green.400">↑ 12% from last month</Text>
-              </CardRoot>
-
-              {/* Stats Card 2 */}
-              <CardRoot
-                bg="rgba(17, 24, 39, 0.9)"
-                backdropFilter="blur(20px)"
-                shadow="lg"
-                rounded="xl"
-                border="1px solid rgba(255,255,255,0.2)"
-                color="white"
-                p={6}
-              >
-                <Text fontSize="sm" color="gray.400" mb={2} fontWeight="bold">TOTAL HOURS</Text>
-                <Heading size="3xl" color="red.400" mb={1}>87h</Heading>
-                <Text fontSize="sm" color="green.400">↑ 8% from last month</Text>
-              </CardRoot>
-
-              {/* Stats Card 3 */}
-              <CardRoot
-                bg="rgba(17, 24, 39, 0.9)"
-                backdropFilter="blur(20px)"
-                shadow="lg"
-                rounded="xl"
-                border="1px solid rgba(255,255,255,0.2)"
-                color="white"
-                p={6}
-              >
-                <Text fontSize="sm" color="gray.400" mb={2} fontWeight="bold">FAVORITE SPOTS</Text>
-                <Heading size="3xl" color="red.400" mb={1}>12</Heading>
-                <Text fontSize="sm" color="gray.400">Saved locations</Text>
-              </CardRoot>
-            </SimpleGrid>
-
-            {/* Recent Activity Card */}
-            <CardRoot
-              mt={6}
-              bg="rgba(17, 24, 39, 0.9)"
-              backdropFilter="blur(20px)"
-              shadow="lg"
-              rounded="xl"
-              border="1px solid rgba(255,255,255,0.2)"
-              color="white"
-            >
-              <CardBody p={6}>
-                <Heading size="lg" color="white" mb={6}>Recent Study Sessions</Heading>
-                <Stack gap={4}>
-                  {[
-                    { location: "Snell Library", room: "Room 302", time: "2 hours ago", duration: "3h 20m" },
-                    { location: "Curry Student Center", room: "Study Pod 12", time: "1 day ago", duration: "2h 15m" },
-                    { location: "Marino Recreation", room: "Study Area", time: "2 days ago", duration: "1h 45m" },
-                    { location: "Snell Library", room: "Room 450", time: "3 days ago", duration: "4h 10m" },
-                  ].map((session, i) => (
-                    <Box
-                      key={i}
-                      p={4}
-                      bg="rgba(0,0,0,0.3)"
-                      rounded="lg"
-                      border="1px solid rgba(255,255,255,0.1)"
-                      _hover={{ borderColor: "red.500", transform: "translateX(4px)" }}
-                      transition="all 0.2s"
-                    >
-                      <Stack direction="row" justify="space-between" align="center">
-                        <Box>
-                          <Text fontSize="md" fontWeight="bold" color="white">{session.location}</Text>
-                          <Text fontSize="sm" color="gray.400">{session.room}</Text>
-                        </Box>
-                        <Box textAlign="right">
-                          <Text fontSize="sm" color="red.400" fontWeight="bold">{session.duration}</Text>
-                          <Text fontSize="xs" color="gray.500">{session.time}</Text>
-                        </Box>
-                      </Stack>
-                    </Box>
-                  ))}
-                </Stack>
-              </CardBody>
-            </CardRoot>
           </Box>
         </div>
       </main>
