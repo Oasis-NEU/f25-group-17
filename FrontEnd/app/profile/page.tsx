@@ -400,53 +400,44 @@ export default function Profile() {
                         cursor={!isEditing ? "default" : "text"}
                       />
                     </Box>
-                  </Stack>
-                </CardBody>
-              </CardRoot>
 
-              {/* Enrolled Courses Card */}
-              <CardRoot
-                bg="rgba(17, 24, 39, 0.9)"
-                backdropFilter="blur(20px)"
-                shadow="lg"
-                rounded="xl"
-                border="1px solid rgba(255,255,255,0.2)"
-                color="white"
-              >
-                <CardBody p={6}>
-                  <Heading size="lg" color="white" mb={6}>Enrolled Courses</Heading>
-                  
-                  {courses.length > 0 ? (
-                    <Stack gap={3}>
-                      {courses.map((course: any, idx: number) => (
-                        <Box
-                          key={idx}
-                          p={3}
-                          bg="rgba(0,0,0,0.3)"
-                          rounded="lg"
-                          border="1px solid rgba(255,255,255,0.1)"
-                          _hover={{ borderColor: "red.500", bg: "rgba(0,0,0,0.4)" }}
-                          transition="all 0.2s"
-                        >
-                          <Text fontSize="sm" fontWeight="600" color="white" mb={1}>
-                            {course.courseName || 'Unknown Course'}
-                          </Text>
-                          {course.building && (
-                            <Text fontSize="xs" color="gray.400">
-                              📍 {course.building}
-                            </Text>
-                          )}
-                          {course.beginTime && course.endTime && (
-                            <Text fontSize="xs" color="gray.400">
-                              🕐 {course.beginTime} - {course.endTime}
-                            </Text>
-                          )}
-                        </Box>
-                      ))}
-                    </Stack>
-                  ) : (
-                    <Text fontSize="sm" color="gray.400">No courses enrolled yet</Text>
-                  )}
+                    <Box>
+                      <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={3}>
+                        ENROLLED COURSES ({courses.length})
+                      </Text>
+                      {courses.length > 0 ? (
+                        <Stack gap={2}>
+                          {courses.map((course: any, idx: number) => (
+                            <Box
+                              key={idx}
+                              p={2.5}
+                              bg="rgba(0,0,0,0.3)"
+                              rounded="lg"
+                              border="1px solid rgba(255,255,255,0.1)"
+                              _hover={{ borderColor: "red.500", bg: "rgba(0,0,0,0.4)" }}
+                              transition="all 0.2s"
+                            >
+                              <Text fontSize="xs" fontWeight="600" color="white" mb={1}>
+                                {course.courseName || 'Unknown Course'}
+                              </Text>
+                              {course.building && (
+                                <Text fontSize="xs" color="gray.400">
+                                  📍 {course.building}
+                                </Text>
+                              )}
+                              {course.beginTime && course.endTime && (
+                                <Text fontSize="xs" color="gray.400">
+                                  🕐 {course.beginTime} - {course.endTime}
+                                </Text>
+                              )}
+                            </Box>
+                          ))}
+                        </Stack>
+                      ) : (
+                        <Text fontSize="xs" color="gray.400">No courses enrolled yet</Text>
+                      )}
+                    </Box>
+                  </Stack>
                 </CardBody>
               </CardRoot>
             </SimpleGrid>
