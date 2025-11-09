@@ -24,11 +24,95 @@ import {
   createOverlay
 } from "@chakra-ui/react";
 
+// Hook to fetch and filter available study spaces
+const useAvailableSpaces = () => {
+  const [availableSpaces, setAvailableSpaces] = React.useState<any[]>([]);
+  const [spacesLoading, setSpacesLoading] = React.useState(true);
+  const [spacesError, setSpacesError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchAvailableSpaces = async () => {
+      try {
+        setSpacesLoading(true);
+        
+        // Get current day and time in EST
+        const now = new Date();
+        const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        const currentTime = now.toLocaleTimeString('en-US', {
+          timeZone: 'America/New_York',
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        // Map JavaScript day (0-6) to day names for database columns
+        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const currentDayName = dayNames[currentDay];
+
+        // Fetch all time slots from ClassTime_Data
+        const { data: timeSlots, error: fetchError } = await supabase
+          .from('ClassTime_Data')
+          .select('*');
+
+        if (fetchError) {
+          throw new Error(fetchError.message);
+        }
+
+        if (!timeSlots || timeSlots.length === 0) {
+          setAvailableSpaces([]);
+          return;
+        }
+
+        // Filter time slots: keep only those available today within current time
+        const filtered = timeSlots.filter((slot: any) => {
+          // Check if available on current day (boolean check)
+          const isAvailableToday = slot[currentDayName];
+          
+          if (!isAvailableToday) {
+            return false;
+          }
+
+          // Check if current time falls OUTSIDE the class time (room is FREE)
+          const begin = slot.beginTime;    // Expected: "HH:MM"
+          const end = slot.endTime;        // Expected: "HH:MM"
+
+          // Return true if current time is NOT within the class time
+          // (i.e., the room is available because the class is NOT happening now)
+          return currentTime < begin || currentTime > end;
+        });
+
+        setAvailableSpaces(filtered);
+        setSpacesError(null);
+      } catch (err: any) {
+        console.error('Error fetching available spaces:', err);
+        setSpacesError(err.message || 'Failed to fetch spaces');
+        setAvailableSpaces([]);
+      } finally {
+        setSpacesLoading(false);
+      }
+    };
+
+    fetchAvailableSpaces();
+  }, []);
+
+  return { availableSpaces, spacesLoading, spacesError };
+};
+
 export default function Study() {
   const router = useRouter();
+
   const [loading, setLoading] = React.useState(true);
   const [isMounted, setIsMounted] = React.useState(true);
   const [openDialogId, setOpenDialogId] = React.useState<number | null>(null);
+  
+  // Fetch available spaces from database
+  const { availableSpaces, spacesLoading, spacesError } = useAvailableSpaces();
+
+  const now = new Date();
+  const timeEST = now.toLocaleTimeString('en-US', {
+    timeZone: 'America/New_York',
+    hour12: false
+  });
 
   // Check if user is authenticated
   React.useEffect(() => {
@@ -177,70 +261,77 @@ export default function Study() {
 
           {/* Cards grid with clearer gaps */}
           <SimpleGrid columns={[1, 2, 3]} padding={24} gap={12} mb={12}>
-            {Array.from({ length: 15 }).map((_, i) => (
-              <CardRoot
-                key={i}
-                bg="gray.900"
-                shadow={"lg"}
-                rounded={"2xl"}
-                border="2px solid rgba(241, 37, 37, 0.3)"
-                _hover={{ transform: "scale(1.1)", transition: "0.2s ease-out", zIndex: 999 }}
-                transition="all 0.2s ease-out"
-                color="white"
-                position="relative"
-              >
-                <CardHeader>
-                  <Stack direction="row" gap={4} align="center">
-                    {/* Availability indicator via avatar color */}
-                    <Avatar.Root
-                      bg={i % 2 === 0 ? 'green' : 'red'}
-                      title={i % 2 === 0 ? 'Available' : 'Not available'}
-                    />
-                    <Box>
-                      <Heading size="md" color="white">Location {i + 1}</Heading>
-                      <Text fontSize="sm" color="gray.400">Room {100 + i}</Text>
-                      <Text fontSize="xs" color={i % 2 === 0 ? 'green.300' : 'red.300'}>
-                        {i % 2 === 0 ? 'Available' : 'Not available'}
-                      </Text>
-                    </Box>
-                  </Stack>
-                </CardHeader>
+            {availableSpaces.length > 0 ? (
+              availableSpaces.map((space: any, i: number) => (
+                <CardRoot
+                  key={space.id}
+                  bg="gray.900"
+                  shadow={"lg"}
+                  rounded={"2xl"}
+                  border="2px solid rgba(241, 37, 37, 0.3)"
+                  _hover={{ transform: "scale(1.1)", transition: "0.2s ease-out", zIndex: 999 }}
+                  transition="all 0.2s ease-out"
+                  color="white"
+                  position="relative"
+                >
+                  <CardHeader>
+                    <Stack direction="row" gap={4} align="center">
+                      {/* Availability indicator - all are available since filtered */}
+                      <Avatar.Root
+                        bg="green"
+                        title="Available"
+                      />
+                      <Box>
+                        <Heading size="md" color="white">{space.building}</Heading>
+                        <Text fontSize="sm" color="gray.400">Room {space.roomNumber}</Text>
+                        <Text fontSize="xs" color="green.300">
+                          {space.beginTime} - {space.endTime}
+                        </Text>
+                      </Box>
+                    </Stack>
+                  </CardHeader>
 
-                <CardBody>
-                  <Text color="gray.300">
-                    This is a cozy study area designed for productivity and focus.
-                    Equipped with fast Wi-Fi, ample outlets, and comfy seating.
-                  </Text>
-                </CardBody>
+                  <CardBody>
+                    <Text color="gray.300">
+                      {space.courseName} (CRN: {space.crn})
+                    </Text>
+                  </CardBody>
 
-                <CardFooter justifyContent="flex-end" gap={3}>
-                  <Button 
-                    variant="outline" 
-                    colorScheme="red"
-                    onClick={() => handleViewSpace(i)}
-                    color="white"
-                    borderColor="red.500"
-                    _hover={{ bg: "red.600", color: "white" }}
-                  >
-                    View 
-                  </Button>
-                  <Button 
-                    colorScheme="red"
-                    bg="red.600"
-                    color="white"
-                    _hover={{ bg: "red.700" }}
-                    onClick={() => handleJoinSpace(i)}
-                  >
-                    Join
-                  </Button>
-                </CardFooter>
-              </CardRoot>
-            ))}
+                  <CardFooter justifyContent="flex-end" gap={3}>
+                    <Button 
+                      variant="outline" 
+                      colorScheme="red"
+                      onClick={() => handleViewSpace(i)}
+                      color="white"
+                      borderColor="red.500"
+                      _hover={{ bg: "red.600", color: "white" }}
+                    >
+                      View 
+                    </Button>
+                    <Button 
+                      colorScheme="red"
+                      bg="red.600"
+                      color="white"
+                      _hover={{ bg: "red.700" }}
+                      onClick={() => handleJoinSpace(i)}
+                    >
+                      Join
+                    </Button>
+                  </CardFooter>
+                </CardRoot>
+              ))
+            ) : (
+              <Box gridColumn="1 / -1" textAlign="center" py={12}>
+                <Text fontSize="lg" color="gray.400">
+                  {spacesError ? `Error: ${spacesError}` : 'No available study spaces at this time'}
+                </Text>
+              </Box>
+            )}
           </SimpleGrid>
         </div>
 
         {/* Dialog for viewing space details */}
-        {openDialogId !== null && (
+        {openDialogId !== null && availableSpaces[openDialogId] && (
           <Dialog.Root open={true} onOpenChange={(details) => {
             if (!details.open) {
               handleCloseDialog();
@@ -260,7 +351,7 @@ export default function Study() {
               >
                 <Dialog.Header pb={4}>
                   <Dialog.Title fontSize="3xl" fontWeight="bold" color="white">
-                    Location {openDialogId + 1} - Room {100 + openDialogId}
+                    {availableSpaces[openDialogId].building} - Room {availableSpaces[openDialogId].roomNumber}
                   </Dialog.Title>
                 </Dialog.Header>
                 
@@ -268,31 +359,30 @@ export default function Study() {
                   <Stack gap={6}>
                     <Box>
                       <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">Status</Text>
-                      <Text color={openDialogId % 2 === 0 ? 'green.400' : 'red.400'} fontSize="lg">
-                        {openDialogId % 2 === 0 ? '✓ Available' : '✕ Currently Occupied'}
+                      <Text color="green.400" fontSize="lg">
+                        ✓ Available
                       </Text>
                     </Box>
-                    
+
                     <Box>
-                      <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">Description</Text>
+                      <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">Course</Text>
                       <Text>
-                        This is a cozy study area designed for productivity and focus.
-                        Equipped with fast Wi-Fi, ample outlets, and comfy seating.
+                        {availableSpaces[openDialogId].courseName}
                       </Text>
                     </Box>
 
                     <Box>
-                      <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">Amenities</Text>
-                      <Stack direction="row" gap={3} flexWrap="wrap">
-                        <Box px={4} py={2} bg="blue.600" rounded="full" fontSize="md">📶 WiFi</Box>
-                        <Box px={4} py={2} bg="yellow.600" rounded="full" fontSize="md">🔌 Outlets</Box>
-                        <Box px={4} py={2} bg="purple.600" rounded="full" fontSize="md">🤫 Quiet</Box>
-                      </Stack>
+                      <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">Time Slot</Text>
+                      <Text>
+                        {availableSpaces[openDialogId].beginTime} - {availableSpaces[openDialogId].endTime}
+                      </Text>
                     </Box>
 
                     <Box>
-                      <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">Capacity</Text>
-                      <Text>Up to 4 people</Text>
+                      <Text fontWeight="semibold" color="white" mb={3} fontSize="xl">CRN</Text>
+                      <Text>
+                        {availableSpaces[openDialogId].crn}
+                      </Text>
                     </Box>
                   </Stack>
                 </Dialog.Body>
