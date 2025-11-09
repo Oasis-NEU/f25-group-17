@@ -225,6 +225,16 @@ Test the application flow:
 5. **Failed Retry**: Verify captcha resets on failed login attempt
 6. **Profile**: View and update user profile
 
+## Updating course cache  
+**To obtain a local copy of the raw course cache, run the following:**  
+```bash
+cd .\catalogAPI\src\
+node .\main.js
+```  
+
+**To update the course time information on Supabase, run the following:**  
+*[to be implemented]*
+
 ## Known Issues & Fixes
 
 - **Captcha appears twice on page navigation**: Fixed by adding cleanup in useEffect
