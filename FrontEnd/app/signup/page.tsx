@@ -10,6 +10,7 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import json from "../../../Data/combineMajor.json";
 
+
 declare global {
   interface Window {
     turnstile?: any;
@@ -169,45 +170,31 @@ export default function Signup() {
   };
 
   useEffect(() => {
-    // Dynamically load and initialize Turnstile
-    const loadTurnstile = () => {
-      // @ts-ignore
+    const initializeTurnstile = () => {
       if (window.turnstile && !widgetRendered.current) {
         widgetRendered.current = true;
-        // @ts-ignore
         window.turnstile.render("#turnstile-widget", {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
-          callback: (token: string) => {
-            setCaptchaToken(token);
-          },
-          "error-callback": () => {
-            try {
-              console.warn("Captcha error occurred");
-            } catch (e) {
-              // Silently ignore
-            }
-          },
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+          callback: setCaptchaToken,
+          "error-callback": () => console.warn("Captcha error occurred"),
         });
       }
     };
 
-    // Check if script is already loaded
-    // @ts-ignore
     if (window.turnstile) {
-      loadTurnstile();
-    } else {
-      // Wait for script to load
-      const checkInterval = setInterval(() => {
-        // @ts-ignore
-        if (window.turnstile) {
-          clearInterval(checkInterval);
-          loadTurnstile();
-        }
-      }, 100);
-
-      return () => clearInterval(checkInterval);
+      initializeTurnstile();
+      return;
     }
-  }, []);
+
+    const interval = setInterval(() => {
+      if (window.turnstile) {
+        clearInterval(interval);
+        initializeTurnstile();
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [setCaptchaToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,16 +240,6 @@ export default function Signup() {
           );
         }
 
-        // Insert user data into UserData table
-        console.log("Attempting to insert user data:", {
-          firstName: formData.firstname,
-          lastName: formData.lastname,
-          email: formData.email,
-          major: formData.major,
-          year: formData.year,
-          user_id: authData.user.id,
-        });
-
         const { data: insertedData, error: userError } = await supabase
           .from("UserData")
           .insert([
@@ -283,8 +260,6 @@ export default function Signup() {
           setError(`Failed to store user profile: ${userError.message}`);
           return;
         }
-
-        console.log("User data inserted successfully:", insertedData);
         alert(
           "Account created successfully! Please check your email to verify your account."
         );
@@ -352,7 +327,6 @@ export default function Signup() {
         const parsedCourses = JSON.parse(savedCourses);
         if (Array.isArray(parsedCourses) && parsedCourses.length > 0) {
           setCourses(parsedCourses);
-          console.log("Loaded courses from localStorage:", parsedCourses);
         }
       }
     } catch (err) {

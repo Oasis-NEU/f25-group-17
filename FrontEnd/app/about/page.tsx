@@ -36,7 +36,6 @@ export default function About() {
     }
   };
 
-
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,

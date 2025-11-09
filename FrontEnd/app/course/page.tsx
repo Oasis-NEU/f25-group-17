@@ -226,12 +226,6 @@ export default function OnboardingCourses() {
       // Save courses (or empty array) to local storage
       localStorage.setItem("userCourses", JSON.stringify(hasCourses ? nonEmptyCourses : []));
       setSavedCourses(hasCourses ? nonEmptyCourses : []);
-      console.log(
-        hasCourses
-          ? "Courses saved to local storage:"
-          : "No courses saved - user chose to skip",
-        hasCourses ? nonEmptyCourses : []
-      );
 
       await new Promise(res => setTimeout(res, 400));
       router.push("/signup");
