@@ -32,21 +32,39 @@ export default function OnboardingCourses() {
       try {
         console.log("Fetching unique courseName from ClassTime_Data...");
         
-        // Fetch all data and deduplicate on client side
-        const { data, error } = await supabase
-          .from("ClassTime_Data")
-          .select("courseName");
+        // Fetch all data with pagination to get everything
+        let allCourses: any[] = [];
+        let page = 0;
+        const pageSize = 1000;
+        let hasMore = true;
 
-        if (error) {
-          console.error("Error fetching classes:", error);
-          return;
+        while (hasMore) {
+          const { data, error } = await supabase
+            .from("ClassTime_Data")
+            .select("courseName")
+            .range(page * pageSize, (page + 1) * pageSize - 1);
+
+          if (error) {
+            console.error("Error fetching classes:", error);
+            hasMore = false;
+            break;
+          }
+
+          if (!data || data.length === 0) {
+            hasMore = false;
+          } else {
+            allCourses = [...allCourses, ...data];
+            page++;
+            if (data.length < pageSize) hasMore = false;
+          }
         }
 
-        console.log("Raw data from database:", data);
+        console.log("Raw data from database:", allCourses);
+        console.log(`Total records fetched: ${allCourses.length}`);
 
         // Extract unique course names using Set and sort alphabetically
         const uniqueCoursesSet = new Set<string>();
-        data?.forEach((item: any) => {
+        allCourses.forEach((item: any) => {
           if (item.courseName && item.courseName.trim()) {
             uniqueCoursesSet.add(item.courseName.trim());
           }
@@ -394,14 +412,13 @@ export default function OnboardingCourses() {
             </div>
 
             {/* Add more */}
-            {/* Commented out auto-add feature - user can only manually remove extra fields */}
-            {/* <button
+            <button
               type="button"
               onClick={addCourse}
               className="text-sm text-red-300 hover:text-red-100 mb-6"
             >
               + Add another course
-            </button> */}
+            </button>
 
             {/* Error */}
             {error && (
