@@ -19,8 +19,11 @@ async function getCourseMeetingTimes() {
     return courseMeetingTimes;
 }
 
-// await updateCache();
+await updateCache();
 // console.log(await getCourseMeetingTimes());
 // console.log(currentCourseParsers.map(courseParser => courseParser.term))
 
 export default {updateCache: updateCache, getCourseMeetingTimes: getCourseMeetingTimes};
+// module.exports = {
+//     updateCache, getCourseMeetingTimes
+// };

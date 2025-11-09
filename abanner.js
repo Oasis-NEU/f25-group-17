@@ -1,3 +1,5 @@
+import Cache from "./catalogAPI/src/cache.js";
+
 async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20) {
   const base = "https://nubanner.neu.edu/StudentRegistrationSsb/ssb";
 
@@ -57,9 +59,9 @@ async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20)
   // console.log(searchResp.headers)
   // console.log(searchJson)
 
-  const instrResp = await fetch(`${base}/searchResults/getFacultyMeetingTimes?term=${termCode}&courseReferenceNumber=18390`)
+  const instrResp = await fetch(`${base}/searchResults/getFacultyMeetingTimes?term=${termCode}&courseReferenceNumber=34034`)
   let fmtjson = await instrResp.json()
-  console.log(fmtjson.fmt.map(fmt => fmt.faculty))
+  console.log(fmtjson.fmt.map(fmt => fmt))
 
   return {
     subjects: subjList,
@@ -68,14 +70,44 @@ async function searchClasses(termCode, subjectFilter = "", offset = 1, max = 20)
 }
 
 // Usage:
-searchClasses("202610", "")
-  .then(res => {
-    // console.log("Subjects:", res.subjects);
-    // console.log("Classes:", res.classes.data[0]);
-    // console.log("Classes:", res.classes);
-  })
-  .catch(err => {
-    console.error("Error:", err);
-  });
+// searchClasses("202630", "")
+//   .then(res => {
+//     // console.log("Subjects:", res.subjects);
+//     // console.log("Classes:", res.classes.data[0]);
+//     // console.log("Classes:", res.classes);
+//   })
+//   .catch(err => {
+//     console.error("Error:", err);
+//   });
 
 
+async function getFaculty(crn) {
+  const bannerURL = "https://nubanner.neu.edu/StudentRegistrationSsb/ssb";
+  const currentTermCode = 202630;
+  const instrResp = await fetch(`${bannerURL}/searchResults/getFacultyMeetingTimes?term=${currentTermCode}&courseReferenceNumber=${crn}`)
+  return await instrResp.json();
+}
+
+const c = new Cache("faculty.json");
+const cmtCache = new Cache("read.json");
+
+const cmts = [];
+let wait = 0;
+const courses = cmtCache.read();
+for(let i = 0; i < courses.length; i++) {
+  const course = courses[i];
+  console.log(course.CRN);
+  const faculty = await getFaculty(course.CRN);
+  wait += 100;
+  cmts.push(faculty);
+}
+// cmtCache.read().forEach(course => {
+//   console.log(course.CRN);
+//   const faculty = setTimeout(() => getFaculty(course.CRN), wait);
+//   wait += 100;
+//   cmts.push(faculty);
+// })
+await Promise.all(cmts);
+
+console.log(cmts[0].fmt[0].faculty)
+c.update(cmts)
