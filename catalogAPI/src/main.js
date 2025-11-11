@@ -1,5 +1,5 @@
 import termParser from "./termParser.js";
-import generateCourseParsers from "./courseParser.js"
+import generateCourseParsers from "./parser/courseParser.js"
 
 const currentCourseParsers = await termParser.getCurrentTerms()
     .then(currentTerms => currentTerms.map(term => term.code))

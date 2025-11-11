@@ -1,5 +1,5 @@
-import { bannerURL } from "./constants.js";
-import Cache from "./cache.js";
+import { bannerURL } from "../constants.js";
+import Cache from "../cache.js";
 
 const coursesRawCacheFilepath = "coursesRaw.json";
 const courseMeetingTimesCacheFilepath = "courseMeetingTimes.json";
