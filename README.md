@@ -242,6 +242,7 @@ node .\main.js
 - **Failed login prevents retry**: Fixed by resetting captcha token on error
 - **Hydration warnings**: Suppressed on captcha container
 - **RLS blocks profile insertion**: Solved using server-side API with service role
+- **Some missing class times in website**: Potentially caused by limits from Supabase, most class times are still visible
 - **Current version of cache generalizes start and end dates by class meeting type rather than determining boundaries day by day**: Currently no impact on website functionality, and only impacts dates at the beginning and end of each semester
 
 ## Dependencies
