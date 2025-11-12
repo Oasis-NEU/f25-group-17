@@ -15,7 +15,7 @@ class TimeHHMM {
         let hour = this.hour;
         let minute = String(this.minute).padStart(2, '0');
         let period = "";
-        if (!is24Hour) {
+        if(!is24Hour) {
             period = hour >= 12 ? "PM" : "AM";
             hour = hour % 12 || 12;
         }

@@ -9,11 +9,11 @@ class TimeBoundaries {
     push(timeBoundary) {
         for(let i = 0; i < this.boundaries.length; i++) {
             if(this.boundaries[i].compare(timeBoundary) == 0) {
-                console.log("Warning: Attempted to add duplicate TimeHHMM");
-                return;
+                // console.log("Warning: Attempted to add duplicate TimeHHMM " + timeBoundary.getTimeString());
+                return false;
             } else if(this.boundaries[i].compare(timeBoundary) > 0) {
                 this.boundaries.splice(i, 0, timeBoundary);
-                return;
+                return true;
             }
         }
         assert(false, "TimeBoundaries.push did not insert TimeHHMM");
