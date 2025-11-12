@@ -37,8 +37,8 @@ function getMeetingTypesMap() {
         const cmtCache = new Cache(`${term.code}/courseMeetingTimes.json`);
         cmtCache.read().forEach(course => {
             course.meetingTimes.forEach(meetingTime => {
-                if(meetingTime.meetingType && meetingTime.meetingTypeDescription) {
-                    meetingTypes[meetingTime.meetingType] = meetingTime.meetingTypeDescription;
+                if(meetingTime.meetingType && meetingTime.meetingTypeCode) {
+                    meetingTypes[meetingTime.meetingTypeCode] = meetingTime.meetingType;
                 }
             });
         });

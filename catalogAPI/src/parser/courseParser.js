@@ -253,8 +253,8 @@ class CourseParser {
                 const building = meetingTime.buildingDescription;
                 const buildingCode = meetingTime.building;
                 const room = meetingTime.room;
-                const meetingType = meetingTime.meetingType;
-                const meetingTypeDescription = meetingTime.meetingTypeDescription;
+                const meetingTypeCode = meetingTime.meetingType;
+                const meetingType = meetingTime.meetingTypeDescription;
                 delete meetingTime.beginTime;
                 delete meetingTime.building;
                 delete meetingTime.buildingDescription;
@@ -281,8 +281,8 @@ class CourseParser {
                 delete meetingTime.tuesday;
                 delete meetingTime.wednesday;
 
+                meetingTime.meetingTypeCode = meetingTypeCode;
                 meetingTime.meetingType = meetingType;
-                meetingTime.meetingTypeDescription = meetingTypeDescription;
                 meetingTime.building = building;
                 meetingTime.buildingCode = buildingCode;
                 meetingTime.room = room;
