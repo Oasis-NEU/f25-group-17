@@ -42,8 +42,10 @@ class TermSchedule {
         this.roomSchedules = {};
         Object.keys(getMeetingTypesMap()).forEach(meetingTypeCode => {
             this.roomSchedules[meetingTypeCode] = {};
-            this.roomSchedules[meetingTypeCode]["startDate"] = {year: null, month: null, day: null};
-            this.roomSchedules[meetingTypeCode]["endDate"] = {year: null, month: null, day: null};
+            this.roomSchedules[meetingTypeCode]["outerStartDate"] = {year: null, month: null, day: null};
+            this.roomSchedules[meetingTypeCode]["outerEndDate"] = {year: null, month: null, day: null};
+            this.roomSchedules[meetingTypeCode]["innerStartDate"] = {year: null, month: null, day: null};
+            this.roomSchedules[meetingTypeCode]["innerEndDate"] = {year: null, month: null, day: null};
                 this.roomSchedules[meetingTypeCode]["roomSchedules"] = {};
             Object.keys(getBuildingsMap()).forEach(buildingCode => {
                 this.roomSchedules[meetingTypeCode]["roomSchedules"][buildingCode] = {};
@@ -67,29 +69,52 @@ class TermSchedule {
                 new RoomSchedule(meetingTime.buildingCode, meetingTime.room);
         }
 
-        const meetingTypeStartDate = this.roomSchedules[meetingTime.meetingTypeCode]["startDate"];
-        const meetingTypeEndDate = this.roomSchedules[meetingTime.meetingTypeCode]["endDate"];
+        const meetingTypeOuterStartDate = this.roomSchedules[meetingTime.meetingTypeCode]["outerStartDate"];
+        const meetingTypeOuterEndDate = this.roomSchedules[meetingTime.meetingTypeCode]["outerEndDate"];
+        const meetingTypeInnerStartDate = this.roomSchedules[meetingTime.meetingTypeCode]["innerStartDate"];
+        const meetingTypeInnerEndDate = this.roomSchedules[meetingTime.meetingTypeCode]["innerEndDate"];
         const meetingStartDate = meetingTime.startDate;
         const meetingEndDate = meetingTime.endDate;
+        // TODO/warning: this takes the extreme ends of the terms and defines it for the meetingType rather than for each day specifically
         if(
-            !meetingTypeStartDate.year || !meetingTypeStartDate.month || !meetingTypeStartDate.day ||
-            (meetingStartDate.year < meetingTypeStartDate.year) ||
-            (meetingStartDate.year == meetingTypeStartDate.year && meetingStartDate.month < meetingTypeStartDate.month) ||
-            (meetingStartDate.year == meetingTypeStartDate.year && meetingStartDate.month == meetingTypeStartDate.month && meetingStartDate.day < meetingTypeStartDate.day)
+            !meetingTypeOuterStartDate.year || !meetingTypeOuterStartDate.month || !meetingTypeOuterStartDate.day ||
+            (meetingStartDate.year < meetingTypeOuterStartDate.year) ||
+            (meetingStartDate.year == meetingTypeOuterStartDate.year && meetingStartDate.month < meetingTypeOuterStartDate.month) ||
+            (meetingStartDate.year == meetingTypeOuterStartDate.year && meetingStartDate.month == meetingTypeOuterStartDate.month && meetingStartDate.day < meetingTypeOuterStartDate.day)
         ) {
-            meetingTypeStartDate.year = meetingStartDate.year;
-            meetingTypeStartDate.month = meetingStartDate.month;
-            meetingTypeStartDate.day = meetingStartDate.day;
+            meetingTypeOuterStartDate.year = meetingStartDate.year;
+            meetingTypeOuterStartDate.month = meetingStartDate.month;
+            meetingTypeOuterStartDate.day = meetingStartDate.day;
         }
         if(
-            !meetingTypeEndDate.year || !meetingTypeEndDate.month || !meetingTypeEndDate.day ||
-            (meetingEndDate.year > meetingTypeEndDate.year) ||
-            (meetingEndDate.year == meetingTypeEndDate.year && meetingEndDate.month > meetingTypeEndDate.month) ||
-            (meetingEndDate.year == meetingTypeEndDate.year && meetingEndDate.month == meetingTypeEndDate.month && meetingEndDate.day > meetingTypeEndDate.day)
+            !meetingTypeOuterEndDate.year || !meetingTypeOuterEndDate.month || !meetingTypeOuterEndDate.day ||
+            (meetingEndDate.year > meetingTypeOuterEndDate.year) ||
+            (meetingEndDate.year == meetingTypeOuterEndDate.year && meetingEndDate.month > meetingTypeOuterEndDate.month) ||
+            (meetingEndDate.year == meetingTypeOuterEndDate.year && meetingEndDate.month == meetingTypeOuterEndDate.month && meetingEndDate.day > meetingTypeOuterEndDate.day)
         ) {
-            meetingTypeEndDate.year = meetingEndDate.year;
-            meetingTypeEndDate.month = meetingEndDate.month;
-            meetingTypeEndDate.day = meetingEndDate.day;
+            meetingTypeOuterEndDate.year = meetingEndDate.year;
+            meetingTypeOuterEndDate.month = meetingEndDate.month;
+            meetingTypeOuterEndDate.day = meetingEndDate.day;
+        }
+        if(
+            !meetingTypeInnerStartDate.year || !meetingTypeInnerStartDate.month || !meetingTypeInnerStartDate.day ||
+            (meetingStartDate.year > meetingTypeInnerStartDate.year) ||
+            (meetingStartDate.year == meetingTypeInnerStartDate.year && meetingStartDate.month > meetingTypeInnerStartDate.month) ||
+            (meetingStartDate.year == meetingTypeInnerStartDate.year && meetingStartDate.month == meetingTypeInnerStartDate.month && meetingStartDate.day > meetingTypeInnerStartDate.day)
+        ) {
+            meetingTypeInnerStartDate.year = meetingStartDate.year;
+            meetingTypeInnerStartDate.month = meetingStartDate.month;
+            meetingTypeInnerStartDate.day = meetingStartDate.day;
+        }
+        if(
+            !meetingTypeInnerEndDate.year || !meetingTypeInnerEndDate.month || !meetingTypeInnerEndDate.day ||
+            (meetingEndDate.year < meetingTypeInnerEndDate.year) ||
+            (meetingEndDate.year == meetingTypeInnerEndDate.year && meetingEndDate.month < meetingTypeInnerEndDate.month) ||
+            (meetingEndDate.year == meetingTypeInnerEndDate.year && meetingEndDate.month == meetingTypeInnerEndDate.month && meetingEndDate.day < meetingTypeInnerEndDate.day)
+        ) {
+            meetingTypeInnerEndDate.year = meetingEndDate.year;
+            meetingTypeInnerEndDate.month = meetingEndDate.month;
+            meetingTypeInnerEndDate.day = meetingEndDate.day;
         }
 
         const roomSchedule = this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode][meetingTime.room];
