@@ -288,13 +288,15 @@ class CourseParser {
                 meetingTime.buildingCode = buildingCode;
                 meetingTime.room = room;
 
-                meetingTime.sunday = sunday;
-                meetingTime.monday = monday;
-                meetingTime.tuesday = tuesday;
-                meetingTime.wednesday = wednesday;
-                meetingTime.thursday = thursday;
-                meetingTime.friday = friday;
-                meetingTime.saturday = saturday;
+                meetingTime.days = {
+                    sunday: sunday,
+                    monday: monday,
+                    tuesday: tuesday,
+                    wednesday: wednesday,
+                    thursday: thursday,
+                    friday: friday,
+                    saturday: saturday
+                };
             });
         });
         return filteredCourseData;
