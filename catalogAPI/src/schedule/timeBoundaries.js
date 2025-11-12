@@ -6,17 +6,60 @@ class TimeBoundaries {
         this.boundaries = [new TimeHHMM(0, 0), new TimeHHMM(23, 59)];
     }
 
-    push(timeBoundary) {
+    push(beginTimeBoundary, endTimeBoundary) {
+        if(beginTimeBoundary.compare(endTimeBoundary) >= 0) {
+            throw new Error("endTimeBoundary must be strictly later than beginTimeBoundary!");
+        }
+        let beginDuplicate = false;
+        let endDuplicate = false;
+        let beginIndex = -1;
+        let endIndex = -1;
         for(let i = 0; i < this.boundaries.length; i++) {
-            if(this.boundaries[i].compare(timeBoundary) == 0) {
-                // console.log("Warning: Attempted to add duplicate TimeHHMM " + timeBoundary.getTimeString());
-                return false;
-            } else if(this.boundaries[i].compare(timeBoundary) > 0) {
-                this.boundaries.splice(i, 0, timeBoundary);
-                return true;
+            if(this.boundaries[i].compare(beginTimeBoundary) == 0) {
+                beginDuplicate = true;
+                beginIndex = i + 1; // dupes are always "placed" *after* the original
+                break;
+            } else if(this.boundaries[i].compare(beginTimeBoundary) > 0) {
+                beginIndex = i;
+                break;
             }
         }
-        assert(false, "TimeBoundaries.push did not insert TimeHHMM");
+        for(let i = beginIndex; i < this.boundaries.length; i++) {
+            if(this.boundaries[i].compare(endTimeBoundary) == 0) {
+                endDuplicate = true;
+                endIndex = i + 1; // dupes are always "placed" *after* the original
+                break;
+            } else if(this.boundaries[i].compare(endTimeBoundary) > 0) {
+                endIndex = i;
+                break;
+            }
+        }
+
+        const boundariesBetweenBeginEnd = endIndex - beginIndex;
+        const beginTimeDuringUnavailable = beginIndex % 2 == 0;
+        // see ./proofOfConcept/scheduleTest.js for logic behind splicing
+        if(!beginTimeDuringUnavailable && !beginDuplicate) {
+            this.boundaries.splice(beginIndex, 0, beginTimeBoundary);
+            if(boundariesBetweenBeginEnd % 2 == 0) {
+                this.boundaries.splice(beginIndex + 1, boundariesBetweenBeginEnd, endTimeBoundary);
+            } else {
+                this.boundaries.splice(beginIndex + 1, boundariesBetweenBeginEnd);
+            }
+        } else if(!beginTimeDuringUnavailable && beginDuplicate) {
+            if(boundariesBetweenBeginEnd % 2 == 0 && !endDuplicate) {
+                this.boundaries.splice(beginIndex - 1, boundariesBetweenBeginEnd + 1, endTimeBoundary);
+            } else if(boundariesBetweenBeginEnd % 2 == 0 && endDuplicate) {
+                this.boundaries.splice(beginIndex - 1, boundariesBetweenBeginEnd);
+            } else {
+                this.boundaries.splice(beginIndex - 1, boundariesBetweenBeginEnd + 1);
+            }
+        } else {
+            if(boundariesBetweenBeginEnd % 2 == 0) {
+                this.boundaries.splice(beginIndex, boundariesBetweenBeginEnd);
+            } else {
+                this.boundaries.splice(beginIndex, boundariesBetweenBeginEnd, endTimeBoundary);
+            }
+        }
     }
 
     checkFree(timeHHMM) {

@@ -11,12 +11,12 @@ class TermSchedule {
         this.cacheSchedule = new Cache(`${termCode}/roomSchedules.json`);
         this.startDate = {year: null, month: null, day: null};
         this.endDate = {year: null, month: null, day: null};
-        this.duplicates = 0;
 
         this.clearRoomSchedules();
     }
 
     loadRoomSchedules() {
+        console.log(`Converting course times to room schedules for term ${this.termCode}...`)
         if(this.cacheCourseMeetingTimes.isEmpty()) {
             throw new Error(
                 "Cannot read room schedules because course meeting times cache is empty."
@@ -26,7 +26,6 @@ class TermSchedule {
         courseMeetingTimes.forEach(course => {
             course.meetingTimes.forEach(meetingTime => this.#updateRoomScheduleWithMeetingTime(course, meetingTime));
         });
-        console.log(`Found ${this.duplicates} duplicate time boundaries in term ${this.termCode}.`);
     }
 
     updateCache() {
@@ -71,12 +70,7 @@ class TermSchedule {
         );
         Object.keys(meetingTime.days).forEach(day => {
             if(meetingTime.days[day]) {
-                const addedBegin = roomSchedule.timeBoundaries[day].push(beginTime);
-                const addedEnd = roomSchedule.timeBoundaries[day].push(endTime);
-                if(addedBegin != addedEnd) {
-                    this.duplicates += 1;
-                    console.log(`Warning: Mismatched begin/end time boundaries for ${course.CRN} on ${day} at ${meetingTime.buildingCode} ${meetingTime.room}.`);
-                }
+                roomSchedule.timeBoundaries[day].push(beginTime, endTime);
             }
         });
     }
