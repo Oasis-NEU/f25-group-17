@@ -2,8 +2,8 @@
 Webscrape for major data
 '''
 
-import requests
 import json 
+import requests
 from bs4 import BeautifulSoup
 
 url = 'https://admissions.northeastern.edu/academics/combined-majors'
@@ -25,7 +25,7 @@ l = []
 soup = BeautifulSoup(response.content, 'html.parser')
 all_links = soup.find_all('a')
 for link in all_links:
-    href = link.get('href') 
+    href = link.get('href')
     text = link.text
     if 'and' in text:
         if '(' in text:
@@ -34,7 +34,7 @@ for link in all_links:
 
 cleaned = []
 for course in l:
-    append_word = '' 
+    append_word = ''
     for i, word in enumerate(course.split()):
         if i != len(course.split()) - 1 :
             append_word += " " + word
@@ -52,5 +52,5 @@ major = list(set(combined))
 cleaned_major = sorted(major)
 print(cleaned_major, len(cleaned_major))
 
-with open('Data/combineMajor.json', 'w') as d:
+with open('Data/combineMajor.json', 'w', encoding='utf-8') as d:
     json.dump(cleaned_major, d)

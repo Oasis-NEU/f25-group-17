@@ -1,1 +1,0 @@
-export const bannerURL = "https://nubanner.neu.edu/StudentRegistrationSsb/ssb";

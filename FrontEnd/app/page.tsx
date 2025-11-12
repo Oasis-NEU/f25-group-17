@@ -17,7 +17,7 @@ export default function Home() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       
-      if (authError || !user) {
+      if(authError || !user) {
         console.error('Auth error:', authError);
         router.push("/login");
         return;

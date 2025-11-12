@@ -31,7 +31,7 @@ export default function Profile() {
   (async () => {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError || !user) {
+      if(authError || !user) {
         router.push("/login");
         return;
       }
@@ -42,7 +42,7 @@ export default function Profile() {
       .eq("user_id", user.id)
       .single();
 
-      if (userError || !userData) return;
+      if(userError || !userData) return;
 
       const fullName = `${(userData as any).firstName || ""} ${(userData as any).lastName || ""}`.trim();
       setFullName(fullName);
@@ -55,13 +55,13 @@ export default function Profile() {
       setOriginalYear((userData as any).year || "");
 
       let allClasses: any[] = [];
-      for (let page = 0, pageSize = 1000, more = true; more; page++) {
+      for(let page = 0, pageSize = 1000, more = true; more; page++) {
         const { data } = await supabase
           .from("ClassTime_Data")
           .select("courseName, building, beginTime, endTime")
           .range(page * pageSize, (page + 1) * pageSize - 1)
           .neq("courseName", null);
-        if (!data?.length) more = false;
+        if(!data?.length) more = false;
         else allClasses.push(...data);
       }
 
@@ -107,13 +107,13 @@ export default function Profile() {
   };
 
   const handleSave = async () => {
-    if (!canSave) return;
+    if(!canSave) return;
 
     try {
       // Get current authenticated user
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       
-      if (authError || !user) {
+      if(authError || !user) {
         console.error('Auth error:', authError);
         return;
       }
@@ -138,7 +138,7 @@ export default function Profile() {
         .update(updates)
         .eq('user_id', user.id);
 
-      if (updateError) {
+      if(updateError) {
         console.error('Error updating user data:', updateError);
         return;
       }
@@ -162,7 +162,7 @@ export default function Profile() {
     try {
       const { error } = await supabase.auth.signOut();
       
-      if (error) {
+      if(error) {
         console.error('Error signing out:', error);
         return;
       }

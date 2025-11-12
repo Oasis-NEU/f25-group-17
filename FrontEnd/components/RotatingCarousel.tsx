@@ -23,7 +23,7 @@ export default function RotatingCarousel({
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    if (!autoRotate || isHovered) return;
+    if(!autoRotate || isHovered) return;
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % cards.length);

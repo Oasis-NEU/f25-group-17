@@ -25,9 +25,9 @@ export default function TypeWriter({
     const currentText = texts[currentIndex];
 
     const timeout = setTimeout(() => {
-      if (!isDeleting) {
+      if(!isDeleting) {
         // Typing
-        if (displayText.length < currentText.length) {
+        if(displayText.length < currentText.length) {
           setDisplayText(currentText.slice(0, displayText.length + 1));
         } else {
           // Finished typing, pause then start deleting
@@ -35,7 +35,7 @@ export default function TypeWriter({
         }
       } else {
         // Deleting
-        if (displayText.length > 0) {
+        if(displayText.length > 0) {
           setDisplayText(currentText.slice(0, displayText.length - 1));
         } else {
           // Finished deleting, move to next text

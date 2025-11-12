@@ -40,14 +40,14 @@ export default function OnboardingCourses() {
       let hasMore = true;
 
       //Calling supabase and extracting all the course name from the database 
-      while (hasMore) {
+      while(hasMore) {
         const { data, error } = await supabase
         .from("ClassTime_Data")
         .select("courseName")
         .range(page * pageSize, (page + 1) * pageSize - 1)
 
-        if (error) throw new Error(error.message);
-        if (!data?.length) break;
+        if(error) throw new Error(error.message);
+        if(!data?.length) break;
 
         const typedData = data as ClassTimeRow[];
 
@@ -74,7 +74,7 @@ export default function OnboardingCourses() {
   useEffect(() => {
     type courseName = string;
     const parsed = JSON.parse(localStorage.getItem("userCourses") ?? "[]");
-    if (Array.isArray(parsed) || parsed.length === 0) return;
+    if(Array.isArray(parsed) || parsed.length === 0) return;
 
     setSavedCourses(parsed);
     setCourses([...parsed.map((c : string) => ({ courseName: c })), { courseName: "" }]);
@@ -141,7 +141,7 @@ export default function OnboardingCourses() {
     });
     
     // Store previous value in a way we can access it on blur
-    if (!window.previousCourseValues) {
+    if(!window.previousCourseValues) {
       window.previousCourseValues = {};
     }
     window.previousCourseValues[index] = previousValue;
@@ -163,7 +163,7 @@ export default function OnboardingCourses() {
       const search = courseSearch[index];
       
       // If search is empty, revert to previous value
-      if (!search || search.trim() === "") {
+      if(!search || search.trim() === "") {
         const previousValue = window.previousCourseValues?.[index] || "";
         setCourseSearch((prev) => {
           const next = [...prev];
@@ -184,7 +184,7 @@ export default function OnboardingCourses() {
         c.toLowerCase().includes(search.toLowerCase())
       );
       
-      if (filtered.length > 0 && search !== courses[index].courseName) {
+      if(filtered.length > 0 && search !== courses[index].courseName) {
         handleCourseSelectionIndex(index, filtered[0]);
       }
       
@@ -210,11 +210,11 @@ export default function OnboardingCourses() {
     const hasCourses = nonEmptyCourses.length > 0;
 
     // Check for duplicates if courses exist
-    if (hasCourses) {
+    if(hasCourses) {
       const duplicates = nonEmptyCourses.filter(
         (name, index) => nonEmptyCourses.indexOf(name) !== index
       );
-      if (duplicates.length > 0) {
+      if(duplicates.length > 0) {
         setError(`Duplicate courses found: ${duplicates.join(", ")}. Each course must be unique.`);
         return;
       }
@@ -291,11 +291,11 @@ export default function OnboardingCourses() {
                       onFocus={() => handleCourseFocus(index)}
                       onBlur={() => handleCourseBlur(index)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") {
+                        if(e.key === "Enter") {
                           e.preventDefault();
                           const search = courseSearch[index];
                           
-                          if (!search || search.trim() === "") {
+                          if(!search || search.trim() === "") {
                             setCourseSearch((prev) => {
                               const next = [...prev];
                               next[index] = "";
@@ -309,7 +309,7 @@ export default function OnboardingCourses() {
                             c.toLowerCase().includes(search.toLowerCase())
                           );
                           
-                          if (filtered.length > 0) {
+                          if(filtered.length > 0) {
                             handleCourseSelectionIndex(index, filtered[0]);
                           }
                         }
@@ -338,7 +338,7 @@ export default function OnboardingCourses() {
                                 disabled={isAlreadySelected}
                                 onMouseDown={(e) => {
                                   e.preventDefault();
-                                  if (!isAlreadySelected) {
+                                  if(!isAlreadySelected) {
                                     handleCourseSelectionIndex(index, cls);
                                   }
                                 }}

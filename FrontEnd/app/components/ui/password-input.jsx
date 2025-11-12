@@ -38,8 +38,8 @@ export const PasswordInput = React.forwardRef(
           <VisibilityTrigger
             disabled={rest.disabled}
             onPointerDown={(e) => {
-              if (rest.disabled) return
-              if (e.button !== 0) return
+              if(rest.disabled) return
+              if(e.button !== 0) return
               e.preventDefault()
               setVisible(!visible)
             }}

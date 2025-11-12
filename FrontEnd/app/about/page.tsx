@@ -22,7 +22,7 @@ export default function About() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       
-      if (authError || !user) {
+      if(authError || !user) {
         console.error('Auth error:', authError);
         router.push("/login");
         return;
@@ -44,7 +44,7 @@ export default function About() {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
+        if(entry.isIntersecting) {
           entry.target.classList.add('animate-fadeInUp');
           entry.target.classList.remove('opacity-0', 'translate-y-10');
         }
@@ -53,7 +53,7 @@ export default function About() {
 
     const refs = [heroRef, featuresRef, ctaRef];
     refs.forEach(ref => {
-      if (ref.current) {
+      if(ref.current) {
         ref.current.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
         observer.observe(ref.current);
       }
@@ -69,7 +69,7 @@ export default function About() {
       { threshold: 0.2 }
     );
 
-    if (cardSectionRef.current) {
+    if(cardSectionRef.current) {
       cardObserver.observe(cardSectionRef.current);
     }
 

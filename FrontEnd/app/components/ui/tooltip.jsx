@@ -13,7 +13,7 @@ export const Tooltip = React.forwardRef(function Tooltip(props, ref) {
     ...rest
   } = props
 
-  if (disabled) return children
+  if(disabled) return children
 
   return (
     <ChakraTooltip.Root {...rest}>
