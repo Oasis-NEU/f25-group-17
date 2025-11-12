@@ -62,6 +62,15 @@ class TimeBoundaries {
         }
     }
 
+    merge(otherTimeBoundaries) {
+        if(!(otherTimeBoundaries instanceof TimeBoundaries)) {
+            throw new Error("Must be merged with another TimeBoundaries!");
+        }
+        for(let i = 1; i < otherTimeBoundaries.boundaries.length - 2; i += 2) {
+            this.push(otherTimeBoundaries.boundaries[i], otherTimeBoundaries.boundaries[i + 1]);
+        }
+    }
+
     checkFree(timeHHMM) {
         // Pairs of boundaries define range [l,r) {left inclusive, right exclusive}
         if(!(timeHHMM instanceof TimeHHMM)) {
