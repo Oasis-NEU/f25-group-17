@@ -7,6 +7,7 @@ import PageTransition from '../../components/PageTransition';
 import { Avatar, Box, Heading, Text, Stack, CardRoot, CardBody, Input, Button, SimpleGrid } from '@chakra-ui/react';
 import { supabase } from "../../../supabase/lib/supabase";
 import { useRouter } from "next/navigation";
+import type { UserData } from "../../types/user"
 
 
 export default function Profile() {
@@ -26,117 +27,70 @@ export default function Profile() {
   const [originalEmail, setOriginalEmail] = React.useState("john.doe@northeastern.edu");
   const [originalYear, setOriginalYear] = React.useState("Junior");
 
-  // Fetch user profile data on component mount
   React.useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Get current authenticated user
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        
-        if(authError || !user) {
-          console.error('Auth error:', authError);
-          setLoading(false);
-          router.push("/login"); //preventing them from access this page if they arent the user and not logged in 
-          return;
-        }
-
-        // Fetch user profile from UserData table
-        const { data, error } = await supabase
-          .from('UserData')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
-
-        if(error) {
-          console.error('Error fetching user data:', error);
-          setLoading(false);
-          return;
-        }
-
-        if(data && typeof data === 'object') {
-          const userData = data as any;
-          const fullNameValue = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
-          const emailValue = userData.email || '';
-          const majorValue = userData.major || '';
-          const yearValue = userData.year || '';
-
-          // Set current values
-          setFullName(fullNameValue);
-          setEmail(emailValue);
-          setMajor(majorValue);
-          setYear(yearValue);
-
-          // Store original values for cancel functionality
-          setOriginalFullName(fullNameValue);
-          setOriginalEmail(emailValue);
-          setOriginalMajor(majorValue);
-          setOriginalYear(yearValue);
-
-          // Fetch courses from ClassTime_Data table with pagination to get all records
-          let allClassData: any[] = [];
-          let page = 0;
-          const pageSize = 1000;
-          let hasMore = true;
-
-          while(hasMore) {
-            const { data: pageData } = await supabase
-              .from('ClassTime_Data')
-              .select('courseName, building, beginTime, endTime')
-              .range(page * pageSize, (page + 1) * pageSize - 1)
-              .neq('courseName', null);
-
-            if(!pageData || pageData.length === 0) {
-              hasMore = false;
-            } else {
-              allClassData = [...allClassData, ...pageData];
-              page++;
-              if(pageData.length < pageSize) hasMore = false;
-            }
-          }
-
-          console.log(`📊 Total ClassTime_Data records fetched: ${allClassData.length}`);
-          console.log('📚 User enrolled courses:', userData.courses);
-
-          if(allClassData && userData.courses && Array.isArray(userData.courses)) {
-            // Filter courses that match the user's enrolled courses
-            const enrolledCourses = allClassData.filter((course: any) => 
-              userData.courses.includes(course.courseName)
-            );
-            
-            // Remove duplicates by course name
-            const uniqueCourses = Array.from(
-              new Map(enrolledCourses.map((course: any) => [course.courseName, course])).values()
-            );
-            console.log('📚 Enrolled courses found in DB:', uniqueCourses.length);
-            console.log('📚 Courses:', uniqueCourses.map((c: any) => c.courseName));
-            setCourses(uniqueCourses);
-          } else if(userData.courses && Array.isArray(userData.courses)) {
-            // Fallback: just use course names from UserData
-            console.log('📚 Using fallback courses from UserData:', userData.courses.length);
-            setCourses(userData.courses.map((name: string) => ({ courseName: name })));
-          }
-        }
-      } catch (err) {
-        console.error('Unexpected error:', err);
-      } finally {
-        setLoading(false);
+  (async () => {
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if(authError || !user) {
+        router.push("/login");
+        return;
       }
-    };
 
-    fetchUserData();
-  }, [router]);
+    const { data: userData, error: userError } = await (supabase as any)
+      .from("UserData")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+      if(userError || !userData) return;
+
+      const fullName = `${(userData as any).firstName || ""} ${(userData as any).lastName || ""}`.trim();
+      setFullName(fullName);
+      setEmail((userData as any).email || "");
+      setMajor((userData as any).major || "");
+      setYear((userData as any).year || "");
+      setOriginalFullName(fullName);
+      setOriginalEmail((userData as any).email || "");
+      setOriginalMajor((userData as any).major || "");
+      setOriginalYear((userData as any).year || "");
+
+      let allClasses: any[] = [];
+      for(let page = 0, pageSize = 1000, more = true; more; page++) {
+        const { data } = await supabase
+          .from("ClassTime_Data")
+          .select("courseName, building, beginTime, endTime")
+          .range(page * pageSize, (page + 1) * pageSize - 1)
+          .neq("courseName", null);
+        if(!data?.length) more = false;
+        else allClasses.push(...data);
+      }
+
+      const courses = Array.isArray((userData as any).courses)
+        ? allClasses.filter(c => (userData as any).courses.includes(c.courseName))
+        : [];
+
+      const uniqueCourses = Array.from(
+        new Map(courses.map(c => [c.courseName, c])).values()
+      );
+
+      setCourses(
+        uniqueCourses.length
+          ? uniqueCourses
+          : (userData as any).courses?.map((n: string) => ({ courseName: n })) || []
+      );
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, [router]);
 
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
     { label: 'Study', ariaLabel: 'View our services', link: '/study' },
     { label: 'Profile', ariaLabel: 'View your profile', link: '/profile' }
-  ];
-
-  const socialItems = [
-    { label: 'Twitter', link: 'https://twitter.com' },
-    { label: 'GitHub', link: 'https://github.com' },
-    { label: 'LinkedIn', link: 'https://linkedin.com' }
   ];
 
   // Check if required fields are filled
@@ -190,7 +144,6 @@ export default function Profile() {
       }
 
       setIsEditing(false);
-      console.log('Profile updated successfully');
     } catch (err) {
       console.error('Unexpected error:', err);
     }
@@ -237,8 +190,6 @@ export default function Profile() {
               isFixed={true}
               position="left"
               items={menuItems}
-              socialItems={socialItems}
-              displaySocials={false}
               displayItemNumbering={true}
               menuButtonColor="#fff"
               openMenuButtonColor="#fff"

@@ -13,7 +13,6 @@ import { usePathname } from "next/navigation";
 
 declare global {
   interface Window {
-    turnstile?: any;
     onTurnstileLoad?: () => void;
   }
 } 

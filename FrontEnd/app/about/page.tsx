@@ -36,7 +36,6 @@ export default function About() {
     }
   };
 
-
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -87,12 +86,6 @@ export default function About() {
     { label: 'Profile', ariaLabel: 'View your profile', link: '/profile' }
   ];
 
-  const socialItems = [
-  { label: 'Twitter', link: 'https://twitter.com' },
-  { label: 'GitHub', link: 'https://github.com' },
-  { label: 'LinkedIn', link: 'https://linkedin.com' }
-  ];
-
   return (
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-auto">
@@ -106,8 +99,6 @@ export default function About() {
                 isFixed={true}
                 position="left"
                 items={menuItems}
-                socialItems={socialItems}
-                displaySocials={false}
                 displayItemNumbering={true}
                 menuButtonColor="#fff"
                 openMenuButtonColor="#fff"
@@ -122,7 +113,7 @@ export default function About() {
         {/* Page content */}
         <div className="relative z-10 flex flex-col w-full pt-32 pb-20 px-12 max-w-7xl mx-auto">
           
-          {/* ============ SECTION 1: HERO + MISSION ============ */}
+          {/* SECTION 1: HERO + MISSION */}
           <div ref={heroRef} className="w-full mb-12 transition-all duration-700">
             <Box maxW="6xl" mx="auto">
               <div className="mb-10 text-center">
@@ -171,7 +162,7 @@ export default function About() {
 
           <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-4" />
 
-          {/* ============ SECTION 2: STUDY SPACES ============ */}
+          {/* SECTION 2: STUDY SPACES */}
           <div ref={cardSectionRef} className="w-full relative transition-all duration-300" style={{ minHeight: '850px', paddingBottom: '75px', marginBottom: '20px' }}>
             {/* Two Column Layout */}
             <div className="grid grid-cols-5 gap-12 pt-8" style={{ minHeight: '750px' }}>
@@ -314,7 +305,7 @@ export default function About() {
 
           <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-8" />
 
-          {/* ============ SECTION 3: STUDENT REVIEWS ============ */}
+          {/* SECTION 3: STUDENT REVIEWS */}
           <div ref={featuresRef} className="w-full mb-24 pt-8 transition-all duration-700">
             <div className="text-center mb-12">
               <Text fontSize="md" color="red.400" fontWeight="bold" letterSpacing="widest" mb={4} textTransform="uppercase">
@@ -362,7 +353,7 @@ export default function About() {
 
           <div className="w-full h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent mb-20" />
 
-          {/* ============ SECTION 4: CALL TO ACTION ============ */}
+          {/* SECTION 4: Footer */}
           <div ref={ctaRef} className="w-full mb-20 py-12 transition-all duration-700">
             <Box 
               textAlign="center" 

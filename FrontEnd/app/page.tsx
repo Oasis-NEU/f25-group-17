@@ -47,21 +47,22 @@ export default function Home() {
             </div>
           </div>
 
-                  {/* Floating particles effect (stars) */}
-                  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                    {[...Array(60)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute w-2 h-2 bg-red-500/40 rounded-full animate-float"
-                        style={{
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
-                          animationDelay: `${Math.random() * 5}s`,
-                          animationDuration: `${5 + Math.random() * 10}s`
-                        }}
-                      />
-                    ))}
-                  </div>
+                          {/* A little gift from your favorite programmer Jackson You get this goofy ahh div structure */}
+                          {/* Floating particles effect (stars) */}
+                          <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                            {[...Array(60)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="absolute w-2 h-2 bg-red-500/40 rounded-full animate-float"
+                                style={{
+                                  left: `${Math.random() * 100}%`,
+                                  top: `${Math.random() * 100}%`,
+                                  animationDelay: `${Math.random() * 5}s`,
+                                  animationDuration: `${5 + Math.random() * 10}s`
+                                }}
+                              />
+                            ))}
+                          </div>
 
           {/* Main Content */}
           <div className="relative z-10 flex flex-col items-center justify-center gap-4 text-center">
