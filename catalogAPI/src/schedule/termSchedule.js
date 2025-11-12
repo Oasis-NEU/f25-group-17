@@ -29,14 +29,21 @@ class TermSchedule {
     }
 
     updateCache() {
-        this.cacheSchedule.update(this.roomSchedules);
+        this.cacheSchedule.update({
+            startDate: this.startDate,
+            endDate: this.endDate,
+            roomSchedules: this.roomSchedules
+        });
     }
 
     updateFromCache() {
         if(this.cacheSchedule.isEmpty()) {
             throw new Error("Cannot update TermSchedule from cache because cache is empty.");
         }
-        this.roomSchedules = this.cacheSchedule.read();
+        const cacheContents = this.cacheSchedule.read();
+        this.startDate = cacheContents.startDate;
+        this.endDate = cacheContents.endDate;
+        this.roomSchedules = cacheContents.roomSchedules;
     }
 
     clearRoomSchedules() {
