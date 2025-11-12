@@ -1,0 +1,303 @@
+[
+    {
+        "CRN": "20010",
+        "courseName": "Programming Foundations for Digital Media",
+        "courseCode": "DGM6108",
+        "subject": "DGM",
+        "courseNumber": "6108",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "beginTime": {
+                    "hour": 13,
+                    "minute": 0
+                },
+                "endTime": {
+                    "hour": 14,
+                    "minute": 50
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": true,
+                    "wednesday": false,
+                    "thursday": false,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    },
+    {
+        "CRN": "20053",
+        "courseName": "Usability and Human Interaction",
+        "courseCode": "DGM6168",
+        "subject": "DGM",
+        "courseNumber": "6168",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "beginTime": {
+                    "hour": 17,
+                    "minute": 50
+                },
+                "endTime": {
+                    "hour": 19,
+                    "minute": 40
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": true,
+                    "wednesday": false,
+                    "thursday": false,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    },
+    {
+        "CRN": "20207",
+        "courseName": "Lab for DGM 6108",
+        "courseCode": "DGM6109",
+        "subject": "DGM",
+        "courseNumber": "6109",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "beginTime": {
+                    "hour": 13,
+                    "minute": 30
+                },
+                "endTime": {
+                    "hour": 15,
+                    "minute": 0
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": false,
+                    "wednesday": false,
+                    "thursday": true,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    },
+    {
+        "CRN": "20210",
+        "courseName": "Web Creation Boot Camp",
+        "courseCode": "DGM6501",
+        "subject": "DGM",
+        "courseNumber": "6501",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "109",
+                "beginTime": {
+                    "hour": 14,
+                    "minute": 5
+                },
+                "endTime": {
+                    "hour": 15,
+                    "minute": 45
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 2,
+                    "day": 15
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": false,
+                    "wednesday": false,
+                    "thursday": true,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    },
+    {
+        "CRN": "20740",
+        "courseName": "Foundations of Digital Storytelling",
+        "courseCode": "DGM6122",
+        "subject": "DGM",
+        "courseNumber": "6122",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "beginTime": {
+                    "hour": 19,
+                    "minute": 50
+                },
+                "endTime": {
+                    "hour": 21,
+                    "minute": 40
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": false,
+                    "wednesday": false,
+                    "thursday": true,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    },
+    {
+        "CRN": "21383",
+        "courseName": "Intermediate Programming for Digital Media",
+        "courseCode": "DGM6308",
+        "subject": "DGM",
+        "courseNumber": "6308",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "beginTime": {
+                    "hour": 15,
+                    "minute": 0
+                },
+                "endTime": {
+                    "hour": 16,
+                    "minute": 50
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": true,
+                    "wednesday": false,
+                    "thursday": false,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    },
+    {
+        "CRN": "21581",
+        "courseName": "Intermediate Programming for Digital Media",
+        "courseCode": "DGM6308",
+        "subject": "DGM",
+        "courseNumber": "6308",
+        "meetingTimes": [
+            {
+                "meetingTypeCode": "CLAS",
+                "meetingType": "Class",
+                "building": "Snell Library",
+                "buildingCode": "SL",
+                "room": "107",
+                "beginTime": {
+                    "hour": 15,
+                    "minute": 50
+                },
+                "endTime": {
+                    "hour": 17,
+                    "minute": 40
+                },
+                "startDate": {
+                    "year": 2026,
+                    "month": 1,
+                    "day": 5
+                },
+                "endDate": {
+                    "year": 2026,
+                    "month": 3,
+                    "day": 29
+                },
+                "days": {
+                    "sunday": false,
+                    "monday": false,
+                    "tuesday": false,
+                    "wednesday": false,
+                    "thursday": true,
+                    "friday": false,
+                    "saturday": false
+                }
+            }
+        ]
+    }
+]
