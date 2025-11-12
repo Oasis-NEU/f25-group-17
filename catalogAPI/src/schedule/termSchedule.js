@@ -61,12 +61,12 @@ class TermSchedule {
         }
         const roomSchedule = this.roomSchedules[meetingTime.buildingCode][meetingTime.room];
         const beginTime = new TimeHHMM(
-            Number(meetingTime.beginTime.hour),
-            Number(meetingTime.beginTime.minute)
+            meetingTime.beginTime.hour,
+            meetingTime.beginTime.minute
         );
         const endTime = new TimeHHMM(
-            Number(meetingTime.endTime.hour),
-            Number(meetingTime.endTime.minute)
+            meetingTime.endTime.hour,
+            meetingTime.endTime.minute
         );
         Object.keys(meetingTime.days).forEach(day => {
             if(meetingTime.days[day]) {

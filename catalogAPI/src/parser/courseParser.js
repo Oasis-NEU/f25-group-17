@@ -240,12 +240,12 @@ class CourseParser {
                     day: endDateObj.getDate()
                 };
                 const beginTime = {
-                    hour: meetingTime.beginTime.slice(0, 2),
-                    minute: meetingTime.beginTime.slice(2, 4)
+                    hour: Number(meetingTime.beginTime.slice(0, 2)),
+                    minute: Number(meetingTime.beginTime.slice(2, 4))
                 };
                 const endTime = {
-                    hour: meetingTime.endTime.slice(0, 2),
-                    minute: meetingTime.endTime.slice(2, 4)
+                    hour: Number(meetingTime.endTime.slice(0, 2)),
+                    minute: Number(meetingTime.endTime.slice(2, 4))
                 };
                 if(beginTime == null || endTime == null) {
                     console.log(course.CRN);
