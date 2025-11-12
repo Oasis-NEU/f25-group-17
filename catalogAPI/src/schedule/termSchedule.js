@@ -1,7 +1,7 @@
 import Cache from "../cache.js";
 import RoomSchedule from "./roomSchedule.js";
 import TimeHHMM from "./timeHHMM.js";
-import { buildingsMap } from "../constants.js";
+import { getBuildingsMap, getMeetingTypesMap } from "../constants.js";
 
 class TermSchedule {
     constructor(termCode) {
@@ -9,8 +9,6 @@ class TermSchedule {
         this.roomSchedules = {};
         this.cacheCourseMeetingTimes = new Cache(`${termCode}/courseMeetingTimes.json`);
         this.cacheSchedule = new Cache(`${termCode}/roomSchedules.json`);
-        this.startDate = {year: null, month: null, day: null};
-        this.endDate = {year: null, month: null, day: null};
 
         this.clearRoomSchedules();
     }
@@ -29,44 +27,46 @@ class TermSchedule {
     }
 
     updateCache() {
-        this.cacheSchedule.update({
-            startDate: this.startDate,
-            endDate: this.endDate,
-            roomSchedules: this.roomSchedules
-        });
+        console.log(`Updating room schedule cache for term ${this.termCode}...`)
+        this.cacheSchedule.update(this.roomSchedules);
     }
 
     updateFromCache() {
         if(this.cacheSchedule.isEmpty()) {
             throw new Error("Cannot update TermSchedule from cache because cache is empty.");
         }
-        const cacheContents = this.cacheSchedule.read();
-        this.startDate = cacheContents.startDate;
-        this.endDate = cacheContents.endDate;
-        this.roomSchedules = cacheContents.roomSchedules;
+        this.roomSchedules = this.cacheSchedule.read();
     }
 
     clearRoomSchedules() {
         this.roomSchedules = {};
-        Object.keys(buildingsMap).forEach((buildingCode) => {
-            this.roomSchedules[buildingCode] = {};
+        Object.keys(getMeetingTypesMap()).forEach(meetingTypeCode => {
+            this.roomSchedules[meetingTypeCode] = {};
+            this.roomSchedules[meetingTypeCode]["startDate"] = {year: null, month: null, day: null};
+            this.roomSchedules[meetingTypeCode]["endDate"] = {year: null, month: null, day: null};
+                this.roomSchedules[meetingTypeCode]["roomSchedules"] = {};
+            Object.keys(getBuildingsMap()).forEach(buildingCode => {
+                this.roomSchedules[meetingTypeCode]["roomSchedules"][buildingCode] = {};
+            });
         });
     }
 
     #updateRoomScheduleWithMeetingTime(course, meetingTime) {
-        if(!meetingTime.buildingCode || !meetingTime.room) {
-            console.log(`${course.CRN} has missing meeting time building or room number.`);
+        if(!meetingTime.buildingCode || !meetingTime.room || !meetingTime.meetingTypeCode) {
+            console.log(`${course.CRN} has missing meeting time building, room number, or meeting type code.`);
             return;
         }
-        if(!(meetingTime.buildingCode in this.roomSchedules)) {
-            this.roomSchedules[meetingTime.buildingCode] = {};
-            console.log(`Warning: Found building code ${meetingTime.buildingCode} not in buildingsMap.`);
+        if(!(meetingTime.meetingTypeCode in this.roomSchedules)) {
+            this.roomSchedules[meetingTime.meetingTypeCode] = {};
         }
-        if(!(meetingTime.room in this.roomSchedules[meetingTime.buildingCode])) {
-            this.roomSchedules[meetingTime.buildingCode][meetingTime.room] =
+        if(!(meetingTime.buildingCode in this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"])) {
+            this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode] = {};
+        }
+        if(!(meetingTime.room in this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode])) {
+            this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode][meetingTime.room] =
                 new RoomSchedule(meetingTime.buildingCode, meetingTime.room);
         }
-        const roomSchedule = this.roomSchedules[meetingTime.buildingCode][meetingTime.room];
+        const roomSchedule = this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode][meetingTime.room];
         const beginTime = new TimeHHMM(
             meetingTime.beginTime.hour,
             meetingTime.beginTime.minute

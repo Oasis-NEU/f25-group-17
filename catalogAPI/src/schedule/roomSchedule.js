@@ -1,9 +1,9 @@
 import TimeBoundaries from "./timeBoundaries.js";
-import { buildingsMap } from "../constants.js";
+import { getBuildingsMap } from "../constants.js";
 
 class RoomSchedule {
     constructor(buildingCode, roomNumber) {
-        this.building = buildingsMap[buildingCode] || "Unknown Building Code";
+        this.building = getBuildingsMap()[buildingCode] || "Unknown Building Code";
         this.buildingCode = buildingCode;
         this.roomNumber = roomNumber;
         this.timeBoundaries = {

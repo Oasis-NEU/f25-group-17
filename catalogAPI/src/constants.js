@@ -1,10 +1,8 @@
 import Cache from "./cache.js";
 
 export const bannerURL = "https://nubanner.neu.edu/StudentRegistrationSsb/ssb";
-export const buildingsMap = getBuildingsMap();
-export const meetingTypesMap = getMeetingTypesMap();
 
-function getBuildingsMap() {
+export function getBuildingsMap() {
     const termsCache = new Cache("currentTerms.json");
     const terms = termsCache.read();
     const buildings = {};
@@ -28,7 +26,7 @@ function getBuildingsMap() {
     return orderedBuildings;
 }
 
-function getMeetingTypesMap() {
+export function getMeetingTypesMap() {
     const termsCache = new Cache("currentTerms.json");
     const terms = termsCache.read();
     const meetingTypes = {};

@@ -305,9 +305,11 @@ class CourseParser {
         return filteredCourseData;
     }
 
-    async updateCourseMeetingTimes() {
+    async updateCourseMeetingTimes({ allowCacheUse = true, updateRawCache = true } = {}) {
         console.log(`Updating course meeting times cache for term ${this.term}...`);
-        this.cacheCourseMeetingTimes.update(await this.fetchCourseMeetingTimes());
+        this.cacheCourseMeetingTimes.update(await this.fetchCourseMeetingTimes(
+            { allowCacheUse: allowCacheUse, updateRawCache: updateRawCache }
+        ));
     }
 
     async getCourseMeetingTimes(updateCache = true) {
