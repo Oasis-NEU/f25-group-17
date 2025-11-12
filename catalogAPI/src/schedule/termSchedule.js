@@ -66,6 +66,32 @@ class TermSchedule {
             this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode][meetingTime.room] =
                 new RoomSchedule(meetingTime.buildingCode, meetingTime.room);
         }
+
+        const meetingTypeStartDate = this.roomSchedules[meetingTime.meetingTypeCode]["startDate"];
+        const meetingTypeEndDate = this.roomSchedules[meetingTime.meetingTypeCode]["endDate"];
+        const meetingStartDate = meetingTime.startDate;
+        const meetingEndDate = meetingTime.endDate;
+        if(
+            !meetingTypeStartDate.year || !meetingTypeStartDate.month || !meetingTypeStartDate.day ||
+            (meetingStartDate.year < meetingTypeStartDate.year) ||
+            (meetingStartDate.year == meetingTypeStartDate.year && meetingStartDate.month < meetingTypeStartDate.month) ||
+            (meetingStartDate.year == meetingTypeStartDate.year && meetingStartDate.month == meetingTypeStartDate.month && meetingStartDate.day < meetingTypeStartDate.day)
+        ) {
+            meetingTypeStartDate.year = meetingStartDate.year;
+            meetingTypeStartDate.month = meetingStartDate.month;
+            meetingTypeStartDate.day = meetingStartDate.day;
+        }
+        if(
+            !meetingTypeEndDate.year || !meetingTypeEndDate.month || !meetingTypeEndDate.day ||
+            (meetingEndDate.year > meetingTypeEndDate.year) ||
+            (meetingEndDate.year == meetingTypeEndDate.year && meetingEndDate.month > meetingTypeEndDate.month) ||
+            (meetingEndDate.year == meetingTypeEndDate.year && meetingEndDate.month == meetingTypeEndDate.month && meetingEndDate.day > meetingTypeEndDate.day)
+        ) {
+            meetingTypeEndDate.year = meetingEndDate.year;
+            meetingTypeEndDate.month = meetingEndDate.month;
+            meetingTypeEndDate.day = meetingEndDate.day;
+        }
+
         const roomSchedule = this.roomSchedules[meetingTime.meetingTypeCode]["roomSchedules"][meetingTime.buildingCode][meetingTime.room];
         const beginTime = new TimeHHMM(
             meetingTime.beginTime.hour,
