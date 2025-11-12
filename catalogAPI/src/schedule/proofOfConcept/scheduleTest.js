@@ -2,7 +2,7 @@
 
 class Schedule {
     constructor() {
-        this.bounds = [0, 100]
+        this.bounds = [0, 100];
     }
 
     show() {
@@ -11,6 +11,7 @@ class Schedule {
     }
 
     push(l, r) {
+        // assumes r > l and l, r element of (0, 100) {exclusively in original bounds}
         let lDupe = false;
         let rDupe = false;
         let lInd = -1;
