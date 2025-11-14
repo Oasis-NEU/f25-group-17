@@ -270,7 +270,7 @@ export default function About() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-3 mb-3">
-                        <h3 className="text-3xl font-black text-white">Chirchill Hall</h3>
+                        <h3 className="text-3xl font-black text-white">Churchill Hall</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
                         Flexible seating, study pods, café access, and a vibrant atmosphere for productivity.
