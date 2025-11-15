@@ -116,6 +116,15 @@ export default function OnboardingCourses() {
     setCourses(prev => prev.filter((_, i) => i !== index));
   };
 
+  const removeAllCourses = () => {
+    setCourses([{ courseName: "" }]);
+    setCourseSearch([""]);
+    setShowCourseDropdown([false]);
+    setIsSelectingCourse([false]);
+    setSavedCourses([]);
+    console.log("🗑️ Removed all courses");
+  };
+
   const handleCourseNameInputChange = (index: number, value: string) => {
     setCourses(prev => {
       const next = [...prev];
@@ -274,7 +283,7 @@ export default function OnboardingCourses() {
     <main className="flex flex-col items-center justify-center bg-gray-900 min-h-screen">
       <div className="w-screen min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]">
         <div className="relative z-10 w-full max-w-2xl mx-auto p-[1px] rounded-3xl bg-gradient-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
-          <div className="relative bg-gradient-to-br from-black/90 via-gray-900/90 to-black/90 rounded-3xl p-10 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8)]">
+          <div className="relative bg-gradient-to-br from-black-900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-10 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8)]">
             
             {/* Header */}
             <div className="text-center mb-8">
@@ -409,13 +418,24 @@ export default function OnboardingCourses() {
             </div>
 
             {/* Add more */}
-            <button
-              type="button"
-              onClick={addEmptyCourseInput}
-              className="text-sm text-red-300 hover:text-red-100 mb-6"
-            >
-              + Add another course
-            </button>
+            <div className="flex gap-3 mb-6">
+              <button
+                type="button"
+                onClick={addEmptyCourseInput}
+                className="text-sm text-red-300 hover:text-red-100"
+              >
+                + Add another course
+              </button>
+              {courses.length > 1 && (
+                <button
+                  type="button"
+                  onClick={removeAllCourses}
+                  className="text-sm text-red-300 hover:text-red-100 ml-auto"
+                >
+                  Remove all courses
+                </button>
+              )}
+            </div>
 
             {/* Error */}
             {error && (

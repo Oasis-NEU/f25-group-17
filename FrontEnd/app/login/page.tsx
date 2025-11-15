@@ -204,7 +204,7 @@ export default function Login() {
         
         {/* Card with gradient border */}
         <div className="relative z-10 w-full max-w-2xl mx-auto p-[1px] rounded-3xl bg-gradient-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
-          <div className="relative bg-gradient-to-br from-black/90 via-gray-900/90 to-black/90 rounded-3xl p-12 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8),0_0_50px_rgba(30,41,59,0.6),inset_0_0_60px_rgba(15,23,42,0.3)]">
+          <div className="relative bg-gradient-to-br from--900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-12 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8),0_0_50px_rgba(30,41,59,0.6),inset_0_0_60px_rgba(15,23,42,0.3)]">
             
             {/* Header with gradient accent */}
             <div className="text-center mb-10">
