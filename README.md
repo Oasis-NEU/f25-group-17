@@ -114,27 +114,27 @@ Set up your Supabase project with the following tables:
 - id, email, password
 
 **UserData**
-- user_id (foreign key to auth.users) (primary key) #UUID
-- firstName #Text
-- lastName  #Text
-- email #Text
-- major #Text
-- year  #Numeric
-- course #JSON
+- user_id    #UUID
+- firstName  #Text
+- lastName   #Text
+- email      #Text
+- major      #Text
+- year       #Numeric
+- course     #JSON
 
 **CourseData**
-- id    #UUID
-- courseName    #Time
-- beginTime #Time
-- endTime   #Text
-- building  #Text
-- roomNumber #Text
-- crn   #Numeric
-- monday #Bool
-- tuesday #Bool
-- wednesday #Bool
-- thursday #Bool
-- friday #Bool
+- id          #UUID
+- courseName  #Time
+- beginTime   #Time
+- endTime     #Text
+- building    #Text
+- roomNumber  #Text
+- crn         #Numeric
+- monday      #Bool
+- tuesday     #Bool
+- wednesday   #Bool
+- thursday    #Bool
+- friday      #Bool
 
 Enable RLS (Row Level Security) on UserData and CourseData table with appropriate policies.
 
