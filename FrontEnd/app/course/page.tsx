@@ -285,7 +285,7 @@ export default function OnboardingCourses() {
       
       setSavedCourses(hasCourses ? nonEmptyCourses : []);
       console.log("💾 Saved courses:", hasCourses ? nonEmptyCourses : []);
-      
+
       await new Promise(res => setTimeout(res, 400));
       router.push(redirectPath);
       } catch (err) {
@@ -306,6 +306,7 @@ export default function OnboardingCourses() {
             <div className="text-center mb-8">
               <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full mx-auto mb-4" />
               <h1 className="text-3xl font-bold text-white">Add your courses</h1>
+              <p className="text-gray-300 text-sm mt-2">
               <p className="text-gray-300 text-sm mt-2">
                 Add the classes you&apos;re taking this term so we can tailor your space.
               </p>
@@ -474,6 +475,8 @@ export default function OnboardingCourses() {
             <div className="mt-4 text-center">
               <Link href={redirectPath} className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
                 ← {isSignedIn ? "Back to Profile" : "Back to Sign Up"}
+              <Link href="/signup" className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
+                ← Back to Sign Up
               </Link>
             </div>
           </div>
