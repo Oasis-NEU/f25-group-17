@@ -7,19 +7,30 @@ import PageTransition from '../../components/PageTransition';
 import { Avatar, Box, Heading, Text, Stack, CardRoot, CardBody, Input, Button, SimpleGrid } from '@chakra-ui/react';
 import { supabase } from "../../../supabase/lib/supabase";
 import { useRouter } from "next/navigation";
+import json from "../../../Data/combineMajor.json";
+
 import type { UserData } from "../../types/user"
 
 
 export default function Profile() {
   const router = useRouter();
 
+  const FullMajorOption = json
+
   const [isEditing, setIsEditing] = React.useState(false);
   const [fullName, setFullName] = React.useState("John Doe");
   const [major, setMajor] = React.useState("Computer Science");
+  const [majorSearch, setMajorSearch] = React.useState("");
+  const [showMajorDropdown, setShowMajorDropdown] = React.useState(false);
   const [email, setEmail] = React.useState("john.doe@northeastern.edu");
   const [year, setYear] = React.useState("Junior");
+  const [yearSearch, setYearSearch] = React.useState("");
+  const [showYearDropdown, setShowYearDropdown] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [courses, setCourses] = React.useState<any[]>([]);
+
+  // Year options
+  const YearOptions = ["Freshmen", "Sophmore", "Junior", "Senior", "Fifth Year", "Graduate Student"];
 
   // Store original values for cancel functionality
   const [originalFullName, setOriginalFullName] = React.useState("John Doe");
@@ -32,7 +43,7 @@ export default function Profile() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if(authError || !user) {
-        router.push("/login");
+        router.push("/profile");
         return;
       }
 
@@ -92,6 +103,82 @@ export default function Profile() {
     { label: 'Study', ariaLabel: 'View our services', link: '/study' },
     { label: 'Profile', ariaLabel: 'View your profile', link: '/profile' }
   ];
+
+  // Filter majors based on search
+  const filteredMajors = FullMajorOption.filter((m) =>
+    m.toLowerCase().includes(majorSearch.toLowerCase())
+  );
+
+  const handleMajorSelect = (selectedMajor: string) => {
+    setMajor(selectedMajor);
+    setMajorSearch(selectedMajor);
+    setShowMajorDropdown(false);
+  };
+
+  const handleMajorFocus = () => {
+    setMajorSearch("");
+    setShowMajorDropdown(true);
+  };
+
+  const handleMajorBlur = () => {
+    setTimeout(() => {
+      const search = majorSearch;
+      
+      // If search is empty, revert to previous value
+      if(!search || search.trim() === "") {
+        setMajorSearch(major);
+        setShowMajorDropdown(false);
+        return;
+      }
+
+      // If there's text, get filtered list and auto-select first match
+      const filtered = filteredMajors;
+      
+      if(filtered.length > 0 && search !== major) {
+        handleMajorSelect(filtered[0]);
+      }
+      
+      setShowMajorDropdown(false);
+    }, 150);
+  };
+
+  // Filter years based on search
+  const filteredYears = YearOptions.filter((y) =>
+    y.toLowerCase().includes(yearSearch.toLowerCase())
+  );
+
+  const handleYearSelect = (selectedYear: string) => {
+    setYear(selectedYear);
+    setYearSearch(selectedYear);
+    setShowYearDropdown(false);
+  };
+
+  const handleYearFocus = () => {
+    setYearSearch("");
+    setShowYearDropdown(true);
+  };
+
+  const handleYearBlur = () => {
+    setTimeout(() => {
+      const search = yearSearch;
+      
+      // If search is empty, revert to previous value
+      if(!search || search.trim() === "") {
+        setYearSearch(year);
+        setShowYearDropdown(false);
+        return;
+      }
+
+      // If there's text, get filtered list and auto-select first match
+      const filtered = filteredYears;
+      
+      if(filtered.length > 0 && search !== year) {
+        handleYearSelect(filtered[0]);
+      }
+      
+      setShowYearDropdown(false);
+    }, 150);
+  };
 
   // Check if required fields are filled
   const canSave = fullName.trim() !== "" && major.trim() !== "";
@@ -154,8 +241,12 @@ export default function Profile() {
     // Reset to original values
     setFullName(originalFullName);
     setMajor(originalMajor);
+    setMajorSearch(originalMajor); // Keep the search in sync
+    setShowMajorDropdown(false);
     setEmail(originalEmail);
     setYear(originalYear);
+    setYearSearch(originalYear); // Keep the search in sync
+    setShowYearDropdown(false);
   };
 
   const handleSignOut = async () => {
@@ -171,7 +262,7 @@ export default function Profile() {
       localStorage.removeItem('userCourses');
       
       // Redirect to home
-      router.push('/login');
+      router.push('/profile');
     } catch (err) {
       console.error('Unexpected error signing out:', err);
     }
@@ -319,19 +410,87 @@ export default function Profile() {
                       <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={1}>
                         YEAR
                       </Text>
-                      <Input
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                        variant="outline"
-                        bg="rgba(0,0,0,0.3)"
-                        color="white"
-                        border="1px solid rgba(255,255,255,0.1)"
-                        _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                        _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                        size="md"
-                        readOnly={!isEditing}
-                        cursor={!isEditing ? "default" : "text"}
-                      />
+                      <Box position="relative">
+                        <Input
+                          value={isEditing ? yearSearch : year}
+                          onChange={(e) => {
+                            if(isEditing) {
+                              setYearSearch(e.target.value);
+                            }
+                          }}
+                          onFocus={() => isEditing && handleYearFocus()}
+                          onBlur={() => isEditing && handleYearBlur()}
+                          onKeyDown={(e) => {
+                            if(isEditing && e.key === "Enter") {
+                              e.preventDefault();
+                              const search = yearSearch;
+                              
+                              if(!search || search.trim() === "") {
+                                setYearSearch(year);
+                                setShowYearDropdown(false);
+                                return;
+                              }
+
+                              const filtered = YearOptions.filter((y) =>
+                                y.toLowerCase().includes(search.toLowerCase())
+                              );
+                              
+                              if(filtered.length > 0) {
+                                handleYearSelect(filtered[0]);
+                              }
+                              setShowYearDropdown(false);
+                            }
+                          }}
+                          variant="outline"
+                          bg="rgba(0,0,0,0.3)"
+                          color="white"
+                          border="1px solid rgba(255,255,255,0.1)"
+                          _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
+                          _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
+                          size="md"
+                          readOnly={!isEditing}
+                          cursor={!isEditing ? "default" : "text"}
+                          placeholder={isEditing ? "Search your year" : ""}
+                        />
+                        
+                        {/* Dropdown list */}
+                        {isEditing && showYearDropdown && filteredYears.length > 0 && (
+                          <Box
+                            position="absolute"
+                            top="100%"
+                            left={0}
+                            right={0}
+                            mt={2}
+                            maxH="60"
+                            overflowY="auto"
+                            bg="rgba(17, 24, 39, 0.95)"
+                            border="1px solid rgba(220,20,60,0.3)"
+                            borderRadius="lg"
+                            boxShadow="0 0 30px rgba(220,20,60,0.2)"
+                            backdropFilter="blur(12px)"
+                            zIndex={50}
+                          >
+                            {filteredYears.map((yr, idx) => (
+                              <Box
+                                key={idx}
+                                px={4}
+                                py={3}
+                                color="white"
+                                borderBottom="1px solid rgba(255,255,255,0.1)"
+                                _last={{ borderBottom: "none" }}
+                                _hover={{ bg: "rgba(220,20,60,0.2)", cursor: "pointer" }}
+                                transition="all 0.2s"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  handleYearSelect(yr);
+                                }}
+                              >
+                                {yr}
+                              </Box>
+                            ))}
+                          </Box>
+                        )}
+                      </Box>
                     </Box>
                   </Stack>
                 </CardBody>
@@ -359,19 +518,87 @@ export default function Profile() {
                       <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={1}>
                         MAJOR <Text as="span" color="red.400">*</Text>
                       </Text>
-                      <Input
-                        value={major}
-                        onChange={(e) => setMajor(e.target.value)}
-                        variant="outline"
-                        bg="rgba(0,0,0,0.3)"
-                        color="white"
-                        border="1px solid rgba(255,255,255,0.1)"
-                        _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                        _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
-                        size="md"
-                        readOnly={!isEditing}
-                        cursor={!isEditing ? "default" : "text"}
-                      />
+                      <Box position="relative">
+                        <Input
+                          value={isEditing ? majorSearch : major}
+                          onChange={(e) => {
+                            if(isEditing) {
+                              setMajorSearch(e.target.value);
+                            }
+                          }}
+                          onFocus={() => isEditing && handleMajorFocus()}
+                          onBlur={() => isEditing && handleMajorBlur()}
+                          onKeyDown={(e) => {
+                            if(isEditing && e.key === "Enter") {
+                              e.preventDefault();
+                              const search = majorSearch;
+                              
+                              if(!search || search.trim() === "") {
+                                setMajorSearch(major);
+                                setShowMajorDropdown(false);
+                                return;
+                              }
+
+                              const filtered = FullMajorOption.filter((m) =>
+                                m.toLowerCase().includes(search.toLowerCase())
+                              );
+                              
+                              if(filtered.length > 0) {
+                                handleMajorSelect(filtered[0]);
+                              }
+                              setShowMajorDropdown(false);
+                            }
+                          }}
+                          variant="outline"
+                          bg="rgba(0,0,0,0.3)"
+                          color="white"
+                          border="1px solid rgba(255,255,255,0.1)"
+                          _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
+                          _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
+                          size="md"
+                          readOnly={!isEditing}
+                          cursor={!isEditing ? "default" : "text"}
+                          placeholder={isEditing ? "Search your major" : ""}
+                        />
+                        
+                        {/* Dropdown list */}
+                        {isEditing && showMajorDropdown && filteredMajors.length > 0 && (
+                          <Box
+                            position="absolute"
+                            top="100%"
+                            left={0}
+                            right={0}
+                            mt={2}
+                            maxH="60"
+                            overflowY="auto"
+                            bg="rgba(17, 24, 39, 0.95)"
+                            border="1px solid rgba(220,20,60,0.3)"
+                            borderRadius="lg"
+                            boxShadow="0 0 30px rgba(220,20,60,0.2)"
+                            backdropFilter="blur(12px)"
+                            zIndex={50}
+                          >
+                            {filteredMajors.map((maj, idx) => (
+                              <Box
+                                key={idx}
+                                px={4}
+                                py={3}
+                                color="white"
+                                borderBottom="1px solid rgba(255,255,255,0.1)"
+                                _last={{ borderBottom: "none" }}
+                                _hover={{ bg: "rgba(220,20,60,0.2)", cursor: "pointer" }}
+                                transition="all 0.2s"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  handleMajorSelect(maj);
+                                }}
+                              >
+                                {maj}
+                              </Box>
+                            ))}
+                          </Box>
+                        )}
+                      </Box>
                     </Box>
 
                     <Box>

@@ -40,14 +40,14 @@ export default function OnboardingCourses() {
       let hasMore = true;
 
       //Calling supabase and extracting all the course name from the database 
-      while(hasMore) {
+      while (hasMore) {
         const { data, error } = await supabase
         .from("ClassTime_Data")
         .select("courseName")
         .range(page * pageSize, (page + 1) * pageSize - 1)
 
-        if(error) throw new Error(error.message);
-        if(!data?.length) break;
+        if (error) throw new Error(error.message);
+        if (!data?.length) break;
 
         const typedData = data as ClassTimeRow[];
 
@@ -72,13 +72,35 @@ export default function OnboardingCourses() {
 
   // Load saved courses from localStorage on component mount
   useEffect(() => {
-    type courseName = string;
-    const parsed = JSON.parse(localStorage.getItem("userCourses") ?? "[]");
-    if(Array.isArray(parsed) || parsed.length === 0) return;
-
-    setSavedCourses(parsed);
-    setCourses([...parsed.map((c : string) => ({ courseName: c })), { courseName: "" }]);
-    setCourseSearch([...parsed, ""]);
+    console.log("📂 Loading courses from localStorage...");
+    
+    try {
+      const saved = localStorage.getItem("signupFormData");
+      if(saved) {
+        const parsed = JSON.parse(saved);
+        const savedUserCourses = parsed.courses || [];
+        
+        console.log("✅ Loaded courses from signupFormData:", savedUserCourses);
+        
+        if(Array.isArray(savedUserCourses) && savedUserCourses.length > 0) {
+          setSavedCourses(savedUserCourses);
+          // Load courses with one empty field at the end
+          setCourses([
+            ...savedUserCourses.map((c: string) => ({ courseName: c })), 
+            { courseName: "" }
+          ]);
+          setCourseSearch([...savedUserCourses, ""]);
+          setShowCourseDropdown(Array(savedUserCourses.length + 1).fill(false));
+          setIsSelectingCourse(Array(savedUserCourses.length + 1).fill(false));
+          
+          console.log("✅ Initialized form with", savedUserCourses.length, "courses");
+        } else {
+          console.log("⚠️ No courses found in signupFormData");
+        }
+      }
+    } catch (err) {
+      console.error("❌ Error loading courses:", err);
+    }
   }, []);
 
   const addEmptyCourseInput = () => {
@@ -92,6 +114,15 @@ export default function OnboardingCourses() {
 
   const removeCourseInput = (index: number) => {
     setCourses(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeAllCourses = () => {
+    setCourses([{ courseName: "" }]);
+    setCourseSearch([""]);
+    setShowCourseDropdown([false]);
+    setIsSelectingCourse([false]);
+    setSavedCourses([]);
+    console.log("🗑️ Removed all courses");
   };
 
   const handleCourseNameInputChange = (index: number, value: string) => {
@@ -141,7 +172,7 @@ export default function OnboardingCourses() {
     });
     
     // Store previous value in a way we can access it on blur
-    if(!window.previousCourseValues) {
+    if (!window.previousCourseValues) {
       window.previousCourseValues = {};
     }
     window.previousCourseValues[index] = previousValue;
@@ -163,7 +194,7 @@ export default function OnboardingCourses() {
       const search = courseSearch[index];
       
       // If search is empty, revert to previous value
-      if(!search || search.trim() === "") {
+      if (!search || search.trim() === "") {
         const previousValue = window.previousCourseValues?.[index] || "";
         setCourseSearch((prev) => {
           const next = [...prev];
@@ -184,7 +215,7 @@ export default function OnboardingCourses() {
         c.toLowerCase().includes(search.toLowerCase())
       );
       
-      if(filtered.length > 0 && search !== courses[index].courseName) {
+      if (filtered.length > 0 && search !== courses[index].courseName) {
         handleCourseSelectionIndex(index, filtered[0]);
       }
       
@@ -210,11 +241,11 @@ export default function OnboardingCourses() {
     const hasCourses = nonEmptyCourses.length > 0;
 
     // Check for duplicates if courses exist
-    if(hasCourses) {
+    if (hasCourses) {
       const duplicates = nonEmptyCourses.filter(
         (name, index) => nonEmptyCourses.indexOf(name) !== index
       );
-      if(duplicates.length > 0) {
+      if (duplicates.length > 0) {
         setError(`Duplicate courses found: ${duplicates.join(", ")}. Each course must be unique.`);
         return;
       }
@@ -223,9 +254,20 @@ export default function OnboardingCourses() {
     setIsSaving(true);
 
     try {
-      // Save courses (or empty array) to local storage
+      // Update both userCourses and signupFormData with courses
       localStorage.setItem("userCourses", JSON.stringify(hasCourses ? nonEmptyCourses : []));
+      
+      // Also update the courses in signupFormData
+      const saved = localStorage.getItem("signupFormData");
+      if(saved) {
+        const parsed = JSON.parse(saved);
+        parsed.courses = hasCourses ? nonEmptyCourses : [];
+        localStorage.setItem("signupFormData", JSON.stringify(parsed));
+        console.log("✅ Updated signupFormData with courses:", parsed.courses);
+      }
+      
       setSavedCourses(hasCourses ? nonEmptyCourses : []);
+      console.log("💾 Saved courses:", hasCourses ? nonEmptyCourses : []);
 
       await new Promise(res => setTimeout(res, 400));
       router.push("/signup");
@@ -241,13 +283,13 @@ export default function OnboardingCourses() {
     <main className="flex flex-col items-center justify-center bg-gray-900 min-h-screen">
       <div className="w-screen min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]">
         <div className="relative z-10 w-full max-w-2xl mx-auto p-[1px] rounded-3xl bg-gradient-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
-          <div className="relative bg-gradient-to-br from-black/90 via-gray-900/90 to-black/90 rounded-3xl p-10 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8)]">
+          <div className="relative bg-gradient-to-br from-black-900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-10 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8)]">
             
             {/* Header */}
             <div className="text-center mb-8">
               <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full mx-auto mb-4" />
               <h1 className="text-3xl font-bold text-white">Add your courses</h1>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-300 text-sm mt-2">
                 Add the classes you&apos;re taking this term so we can tailor your space.
               </p>
             </div>
@@ -275,7 +317,7 @@ export default function OnboardingCourses() {
                 >
                 <div className="relative course-dropdown-container">
                     <label className="block text-red-400 text-xs font-semibold mb-1">
-                      Class name
+                      Course {index + 1} {index < savedCourses.length && <span className="text-gray-400">(Saved)</span>}
                     </label>
                     <Input
                       placeholder="Search your class"
@@ -291,11 +333,11 @@ export default function OnboardingCourses() {
                       onFocus={() => handleCourseFocus(index)}
                       onBlur={() => handleCourseBlur(index)}
                       onKeyDown={(e) => {
-                        if(e.key === "Enter") {
+                        if (e.key === "Enter") {
                           e.preventDefault();
                           const search = courseSearch[index];
                           
-                          if(!search || search.trim() === "") {
+                          if (!search || search.trim() === "") {
                             setCourseSearch((prev) => {
                               const next = [...prev];
                               next[index] = "";
@@ -309,7 +351,7 @@ export default function OnboardingCourses() {
                             c.toLowerCase().includes(search.toLowerCase())
                           );
                           
-                          if(filtered.length > 0) {
+                          if (filtered.length > 0) {
                             handleCourseSelectionIndex(index, filtered[0]);
                           }
                         }
@@ -338,7 +380,7 @@ export default function OnboardingCourses() {
                                 disabled={isAlreadySelected}
                                 onMouseDown={(e) => {
                                   e.preventDefault();
-                                  if(!isAlreadySelected) {
+                                  if (!isAlreadySelected) {
                                     handleCourseSelectionIndex(index, cls);
                                   }
                                 }}
@@ -376,13 +418,24 @@ export default function OnboardingCourses() {
             </div>
 
             {/* Add more */}
-            <button
-              type="button"
-              onClick={addEmptyCourseInput}
-              className="text-sm text-red-300 hover:text-red-100 mb-6"
-            >
-              + Add another course
-            </button>
+            <div className="flex gap-3 mb-6">
+              <button
+                type="button"
+                onClick={addEmptyCourseInput}
+                className="text-sm text-red-300 hover:text-red-100"
+              >
+                + Add another course
+              </button>
+              {courses.length > 1 && (
+                <button
+                  type="button"
+                  onClick={removeAllCourses}
+                  className="text-sm text-red-300 hover:text-red-100 ml-auto"
+                >
+                  Remove all courses
+                </button>
+              )}
+            </div>
 
             {/* Error */}
             {error && (
@@ -402,7 +455,7 @@ export default function OnboardingCourses() {
 
             {/* Link to home */}
             <div className="mt-4 text-center">
-              <Link href="/signup" className="text-gray-500 hover:text-gray-300 text-sm transition-colors">
+              <Link href="/signup" className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
                 ← Back to Sign Up
               </Link>
             </div>
