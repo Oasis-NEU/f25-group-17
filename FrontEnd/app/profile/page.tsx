@@ -181,7 +181,7 @@ export default function Profile() {
   };
 
   // Check if required fields are filled
-  const canSave = fullName.trim() !== "" && major.trim() !== "";
+  const canSave = fullName.trim() !== "" && fullName.trim().split(' ').length >= 2 && major.trim() !== "";
 
   // Get initials from full name
   const getInitials = (name: string) => {
@@ -209,6 +209,9 @@ export default function Profile() {
       const nameParts = fullName.trim().split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ') || '';
+      
+      // Reconstruct full name with proper spacing
+      const fullNameFormatted = lastName ? `${firstName} ${lastName}` : firstName;
 
       // Update user data in UserData table
       const updates: Record<string, string> = {
@@ -330,7 +333,9 @@ export default function Profile() {
 
           {/* Dashboard Grid */}
           <Box maxW="7xl" mx="auto">
-            <SimpleGrid columns={[1, 1, 2]} gap={6}>
+            <SimpleGrid columns={[1, 1, 2]} gap={6} alignItems="start">
+              {/* Profile Info Card Container */}
+              <Box minH={isEditing && showYearDropdown ? "675px" : "auto"}>
               {/* Profile Info Card */}
               <CardRoot
                 bg="rgba(17, 24, 39, 0.9)"
@@ -339,8 +344,9 @@ export default function Profile() {
                 rounded="xl"
                 border="1px solid rgba(255,255,255,0.2)"
                 color="white"
+                minH={isEditing && showYearDropdown ? "675px" : "auto"}
               >
-                <CardBody p={6}>
+                <CardBody p={6} overflow="visible">
                   <Stack direction="row" justify="space-between" align="center" mb={6}>
                     <Heading size="lg" color="white">Profile Information</Heading>
                     {isEditing && (
@@ -391,17 +397,16 @@ export default function Profile() {
                       </Text>
                       <Input
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         type="email"
                         variant="outline"
                         bg="rgba(0,0,0,0.3)"
                         color="white"
                         border="1px solid rgba(255,255,255,0.1)"
-                        _hover={{ borderColor: isEditing ? "red.500" : "rgba(255,255,255,0.1)" }}
-                        _focus={{ borderColor: "red.600", boxShadow: "0 0 0 1px rgba(220,20,60,0.5)" }}
+                        _hover={{ borderColor: "rgba(255,255,255,0.1)" }}
+                        _focus={{ borderColor: "rgba(255,255,255,0.1)" }}
                         size="md"
-                        readOnly={!isEditing}
-                        cursor={!isEditing ? "default" : "text"}
+                        readOnly={true}
+                        cursor="default"
                       />
                     </Box>
                     
@@ -468,7 +473,7 @@ export default function Profile() {
                             borderRadius="lg"
                             boxShadow="0 0 30px rgba(220,20,60,0.2)"
                             backdropFilter="blur(12px)"
-                            zIndex={50}
+                            zIndex={9999}
                           >
                             {filteredYears.map((yr, idx) => (
                               <Box
@@ -495,8 +500,10 @@ export default function Profile() {
                   </Stack>
                 </CardBody>
               </CardRoot>
+              </Box>
 
-              {/* Academic Info Card */}
+              {/* Academic Info Card Container */}
+              <Box minH={isEditing && showMajorDropdown ? "650px" : "auto"}>
               <CardRoot
                 bg="rgba(17, 24, 39, 0.9)"
                 backdropFilter="blur(20px)"
@@ -505,7 +512,7 @@ export default function Profile() {
                 border="1px solid rgba(255,255,255,0.2)"
                 color="white"
               >
-                <CardBody p={6}>
+                <CardBody p={6} overflow="visible">
                   <Stack direction="row" justify="space-between" align="center" mb={6}>
                     <Heading size="lg" color="white">Academic Information</Heading>
                     {isEditing && (
@@ -576,7 +583,7 @@ export default function Profile() {
                             borderRadius="lg"
                             boxShadow="0 0 30px rgba(220,20,60,0.2)"
                             backdropFilter="blur(12px)"
-                            zIndex={50}
+                            zIndex={9999}
                           >
                             {filteredMajors.map((maj, idx) => (
                               <Box
@@ -601,7 +608,7 @@ export default function Profile() {
                       </Box>
                     </Box>
 
-                    <Box>
+                    <Box mt={isEditing && showMajorDropdown ? "250px" : "0"}>
                       <Text fontSize="xs" fontWeight="bold" color="gray.400" mb={3}>
                         ENROLLED COURSES ({courses.length})
                       </Text>
@@ -640,6 +647,7 @@ export default function Profile() {
                   </Stack>
                 </CardBody>
               </CardRoot>
+              </Box>
             </SimpleGrid>
 
             {/* Action Buttons - Single location for all edits */}
