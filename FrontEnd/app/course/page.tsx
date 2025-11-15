@@ -289,7 +289,7 @@ export default function OnboardingCourses() {
             <div className="text-center mb-8">
               <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full mx-auto mb-4" />
               <h1 className="text-3xl font-bold text-white">Add your courses</h1>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-300 text-sm mt-2">
                 Add the classes you&apos;re taking this term so we can tailor your space.
               </p>
             </div>
@@ -455,7 +455,7 @@ export default function OnboardingCourses() {
 
             {/* Link to home */}
             <div className="mt-4 text-center">
-              <Link href="/signup" className="text-gray-500 hover:text-gray-300 text-sm transition-colors">
+              <Link href="/signup" className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
                 ← Back to Sign Up
               </Link>
             </div>
