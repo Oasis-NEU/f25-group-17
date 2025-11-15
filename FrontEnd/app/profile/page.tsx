@@ -474,6 +474,7 @@ export default function Profile() {
                             boxShadow="0 0 30px rgba(220,20,60,0.2)"
                             backdropFilter="blur(12px)"
                             zIndex={9999}
+
                           >
                             {filteredYears.map((yr, idx) => (
                               <Box
@@ -584,6 +585,7 @@ export default function Profile() {
                             boxShadow="0 0 30px rgba(220,20,60,0.2)"
                             backdropFilter="blur(12px)"
                             zIndex={9999}
+
                           >
                             {filteredMajors.map((maj, idx) => (
                               <Box
