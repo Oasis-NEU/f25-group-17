@@ -97,6 +97,44 @@ export default function Profile() {
   })();
 }, [router]);
 
+  // Save editing state and form data to localStorage
+  React.useEffect(() => {
+    const editingStateData = {
+      isEditing,
+      fullName,
+      email,
+      major,
+      majorSearch,
+      year,
+      yearSearch,
+      showMajorDropdown,
+      showYearDropdown
+    };
+    localStorage.setItem("profileEditingState", JSON.stringify(editingStateData));
+  }, [isEditing, fullName, email, major, majorSearch, year, yearSearch, showMajorDropdown, showYearDropdown]);
+
+  // Restore editing state from localStorage on mount
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("profileEditingState");
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.isEditing) {
+          setIsEditing(true);
+          setFullName(data.fullName);
+          setMajor(data.major);
+          setMajorSearch(data.majorSearch);
+          setYear(data.year);
+          setYearSearch(data.yearSearch);
+          setShowMajorDropdown(data.showMajorDropdown);
+          setShowYearDropdown(data.showYearDropdown);
+        }
+      }
+    } catch (err) {
+      console.error("Error restoring editing state:", err);
+    }
+  }, []);
+
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
