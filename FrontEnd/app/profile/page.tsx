@@ -43,7 +43,7 @@ export default function Profile() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if(authError || !user) {
-        router.push("/login");
+        router.push("/profile");
         return;
       }
 
@@ -303,7 +303,7 @@ export default function Profile() {
       localStorage.removeItem('userCourses');
       
       // Redirect to home
-      router.push('/login');
+      router.push('/profile');
     } catch (err) {
       console.error('Unexpected error signing out:', err);
     }
