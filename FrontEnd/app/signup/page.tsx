@@ -424,7 +424,7 @@ export default function Signup() {
               {/* First Name */}
               <div className="relative group">
                 <label className="block text-red-400 text-sm font-semibold mb-2">
-                  Name
+                  First Name
                 </label>
                 <Input
                   placeholder="Enter Your First Name"
@@ -452,7 +452,7 @@ export default function Signup() {
               {/* Last Name */}
               <div className="relative group">
                 <label className="block text-red-400 text-sm font-semibold mb-2">
-                  Name
+                  Last Name
                 </label>
                 <Input
                   placeholder="Enter Your Last Name"
