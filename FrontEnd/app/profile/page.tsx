@@ -43,7 +43,7 @@ export default function Profile() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if(authError || !user) {
-        router.push("/profile");
+        router.push("/login");
         return;
       }
 
@@ -265,7 +265,7 @@ export default function Profile() {
       localStorage.removeItem('userCourses');
       
       // Redirect to home
-      router.push('/profile');
+      router.push('/login');
     } catch (err) {
       console.error('Unexpected error signing out:', err);
     }
@@ -644,6 +644,19 @@ export default function Profile() {
                         </Stack>
                       ) : (
                         <Text fontSize="xs" color="gray.400">No courses enrolled yet</Text>
+                      )}
+                      {isEditing && (
+                        <Button
+                          size="sm"
+                          bg="rgba(220,20,60,0.2)"
+                          color="red.400"
+                          border="1px solid rgba(220,20,60,0.5)"
+                          _hover={{ bg: "rgba(220,20,60,0.3)" }}
+                          mt={4}
+                          onClick={() => router.push('/course')}
+                        >
+                          Edit Courses
+                        </Button>
                       )}
                     </Box>
                   </Stack>

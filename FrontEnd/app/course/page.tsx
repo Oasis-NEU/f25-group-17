@@ -26,6 +26,23 @@ export default function OnboardingCourses() {
   const [courseSearch, setCourseSearch] = useState<string[]>([]);
   const [showCourseDropdown, setShowCourseDropdown] = useState<boolean[]>([false]);
   const [isSelectingCourse, setIsSelectingCourse] = useState<boolean[]>([false]);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [redirectPath, setRedirectPath] = useState("/signup");
+
+  // Check if user is signed in and set redirect path
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (user) {
+        setIsSignedIn(true);
+        setRedirectPath("/profile");
+      } else {
+        setIsSignedIn(false);
+        setRedirectPath("/signup");
+      }
+    }
+    checkAuth();
+  }, []);
 
   // Fetch class names from ClassTime_Data table
   useEffect(() => {
@@ -270,7 +287,7 @@ export default function OnboardingCourses() {
       console.log("💾 Saved courses:", hasCourses ? nonEmptyCourses : []);
 
       await new Promise(res => setTimeout(res, 400));
-      router.push("/signup");
+      router.push(redirectPath);
       } catch (err) {
         console.error("Unexpected error:", err);
         setError("An error occurred while saving courses.");
@@ -455,8 +472,8 @@ export default function OnboardingCourses() {
 
             {/* Link to home */}
             <div className="mt-4 text-center">
-              <Link href="/signup" className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
-                ← Back to Sign Up
+              <Link href={redirectPath} className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
+                ← {isSignedIn ? "Back to Profile" : "Back to Sign Up"}
               </Link>
             </div>
           </div>
