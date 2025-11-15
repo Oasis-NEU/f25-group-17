@@ -219,7 +219,7 @@ export default function About() {
                         <h3 className="text-3xl font-black text-white">East Village</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
-                        Modern study lounges with floor-to-ceiling windows, collaborative spaces, and 24/7 access.
+                        Spacious classrooms in the basement of EV, perfect for a small group get together. 
                       </p>
                     </div>
                   </div>
@@ -237,7 +237,7 @@ export default function About() {
                         <h3 className="text-3xl font-black text-white">International Village</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
-                        Spacious common areas perfect for group projects, quiet study rooms, and stunning city views.
+                        Spacious classrooms for group study sessions or quiet lone lock in sessions.
                       </p>
                     </div>
                   </div>
@@ -255,7 +255,7 @@ export default function About() {
                         <h3 className="text-3xl font-black text-white">Northeastern University Interdisciplinary Science and Engineering Complex</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
-                        The heart of campus studying with multiple floors, private rooms, and extensive resources.
+                        ISEC is a great building for studying with classrooms on multiple floors and a quiet environment!
                       </p>
                     </div>
                   </div>
@@ -273,7 +273,7 @@ export default function About() {
                         <h3 className="text-3xl font-black text-white">Churchill Hall</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
-                        Flexible seating, study pods, café access, and a vibrant atmosphere for productivity.
+                        Flexible seating, large rooms, perfect for a group study session!
                       </p>
                     </div>
                   </div>
@@ -291,7 +291,7 @@ export default function About() {
                         <h3 className="text-3xl font-black text-white">Richards Hall</h3>
                       </div>
                       <p className="text-gray-200 text-sm leading-relaxed">
-                        Quiet study zones near fitness facilities for those who balance work and wellness.
+                        Study zone right near Krentzman Quad. Ideal for a nearby study location!
                       </p>
                     </div>
                   </div>
@@ -331,7 +331,7 @@ export default function About() {
                   description: "As someone who prefers quiet study spaces, this app is a lifesaver. I can filter by noise level and find the perfect spot every time. Absolutely game-changing for finals week."
                 },
                 {
-                  icon: "🥵",
+                  icon: "😛",
                   title: "Matt",
                   description: "The real-time updates are incredibly accurate. I've been using EMPTY NEU for group projects, and it's so much easier to coordinate meeting spots with my team. Highly recommend!"
                 },
