@@ -60,6 +60,23 @@ export default function Signup() {
 
   const [courses, setCourses] = React.useState<string[]>([]);
   const [showCoursesSection, setShowCoursesSection] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false); // Flag to track if initial load is complete
+
+  // Auto-save form data to localStorage whenever it changes (only after initial load)
+  React.useEffect(() => {
+    if (!isLoaded) return; // Don't auto-save until initial load is complete
+    
+    const dataToSave = {
+      firstName: formData.firstname,
+      lastName: formData.lastname,
+      email: formData.email,
+      major: formData.major,
+      year: formData.year,
+      courses: courses
+    };
+    localStorage.setItem("signupFormData", JSON.stringify(dataToSave));
+    console.log("Auto-saved form data to localStorage:", dataToSave);
+  }, [formData, courses, isLoaded]);
 
   const filteredMajors = MAJORS.filter((major) =>
     major.toLowerCase().includes(majorSearch.toLowerCase())
@@ -85,7 +102,7 @@ export default function Signup() {
 
   const handleMajorBlur = () => {
     setTimeout(() => {
-      if(
+      if (
         !isSelectingFromDropdown &&
         majorSearch &&
         filteredMajors.length > 0 &&
@@ -115,7 +132,7 @@ export default function Signup() {
 
   const handleYearBlur = () => {
     setTimeout(() => {
-      if(
+      if (
         !isSelectingYear &&
         yearSearch &&
         filteredYears.length > 0 &&
@@ -132,35 +149,35 @@ export default function Signup() {
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if(!formData.firstname.trim()) {
+    if (!formData.firstname.trim()) {
       newErrors.username = "First name is required";
     }
 
-    if(!formData.lastname.trim()) {
+    if (!formData.lastname.trim()) {
       newErrors.username = "Last name is required";
     }
 
-    if(!formData.email.trim()) {
+    if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-    } else if(!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
 
-    if(!formData.password) {
+    if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if(formData.password.length < 8) {
+    } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
     }
 
-    if(formData.password !== formData.confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-    if(!formData.year) {
+    if (!formData.year) {
       newErrors.year = "Please select your year";
     }
 
-    if(!formData.major) {
+    if (!formData.major) {
       newErrors.major = "Please select your major";
     }
 
@@ -170,7 +187,7 @@ export default function Signup() {
 
   useEffect(() => {
     const initializeTurnstile = () => {
-      if(window.turnstile && !widgetRendered.current) {
+      if (window.turnstile && !widgetRendered.current) {
         widgetRendered.current = true;
         window.turnstile.render("#turnstile-widget", {
           sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
@@ -180,13 +197,13 @@ export default function Signup() {
       }
     };
 
-    if(window.turnstile) {
+    if (window.turnstile) {
       initializeTurnstile();
       return;
     }
 
     const interval = setInterval(() => {
-      if(window.turnstile) {
+      if (window.turnstile) {
         clearInterval(interval);
         initializeTurnstile();
       }
@@ -199,11 +216,11 @@ export default function Signup() {
     e.preventDefault();
     setError("");
 
-    if(!validateForm()) {
+    if (!validateForm()) {
       return;
     }
 
-    if(!captchaToken) {
+    if (!captchaToken) {
       setError("Please complete the captcha verification");
       return;
     }
@@ -211,15 +228,15 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      // Sign up with Supabase Auth
+      // Sign up with Supabase Auth FIRST
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: { captchaToken },
       });
 
-      if(authError) {
-        if(
+      if (authError) {
+        if (
           authError.message.includes("already registered") ||
           authError.message.includes("already exists") ||
           authError.message.includes("User already registered")
@@ -231,9 +248,9 @@ export default function Signup() {
         throw authError;
       }
 
-      if(authData.user) {
+      if (authData.user) {
         // Check if user was actually created
-        if(authData.user.identities && authData.user.identities.length === 0) {
+        if (authData.user.identities && authData.user.identities.length === 0) {
           throw new Error(
             "This email is already registered. Please use a different email or try logging in."
           );
@@ -254,21 +271,23 @@ export default function Signup() {
           ] as any)
           .select();
 
-        if(userError) {
+        if (userError) {
           console.error("Error inserting user data:", userError);
           setError(`Failed to store user profile: ${userError.message}`);
           return;
         }
+
         alert(
           "Account created successfully! Please check your email to verify your account."
         );
         router.push("/login");
+        
       }
     } catch (err: any) {
       const errorMessage = err.message || "An error occurred during signup";
       setError(errorMessage);
 
-      if(
+      if (
         errorMessage.toLowerCase().includes("email") &&
         (errorMessage.toLowerCase().includes("already") ||
           errorMessage.toLowerCase().includes("registered"))
@@ -286,7 +305,7 @@ export default function Signup() {
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if(!target.closest(".major-dropdown-container")) {
+      if (!target.closest(".major-dropdown-container")) {
         setShowMajorDropdown(false);
       }
     };
@@ -300,7 +319,7 @@ export default function Signup() {
     return () => {
       try {
         // @ts-ignore
-        if(window.turnstile && window.turnstile._widgetMap) {
+        if (window.turnstile && window.turnstile._widgetMap) {
           // @ts-ignore
           const widgets = window.turnstile._widgetMap;
           Object.keys(widgets).forEach((key) => {
@@ -322,16 +341,61 @@ export default function Signup() {
   React.useEffect(() => {
     try {
       const savedCourses = localStorage.getItem("userCourses");
-      if(savedCourses) {
+      if (savedCourses) {
         const parsedCourses = JSON.parse(savedCourses);
-        if(Array.isArray(parsedCourses) && parsedCourses.length > 0) {
+        if (Array.isArray(parsedCourses) && parsedCourses.length > 0) {
           setCourses(parsedCourses);
         }
       }
+
+      // Also load saved form data
+      const saved = localStorage.getItem("signupFormData");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setFormData((prev) => ({
+          ...prev,
+          firstname: parsed.firstName || "",
+          lastname: parsed.lastName || "",
+          email: parsed.email || "",
+          major: parsed.major || "",
+          year: parsed.year || "",
+        }));
+      } else {
+        console.log("No signupFormData found in localStorage");
+      }
+      
+      // Mark load as complete to enable auto-save
+      setIsLoaded(true);
+      console.log("Component load complete, auto-save enabled");
     } catch (err) {
-      console.error("Error loading courses from localStorage:", err);
+      console.error("Error loading from localStorage:", err);
     }
   }, []);
+
+  // Ensure data persists when navigating away
+  React.useEffect(() => {
+    const saveBeforeLeave = () => {
+      try {
+        const dataToSave = {
+          firstName: formData.firstname,
+          lastName: formData.lastname,
+          email: formData.email,
+          major: formData.major,
+          year: formData.year,
+          courses: courses
+        };
+        localStorage.setItem("signupFormData", JSON.stringify(dataToSave));
+        console.log("Data saved before navigation:", dataToSave);
+      } catch (err) {
+        console.error("Error saving before navigation:", err);
+      }
+    };
+
+    window.addEventListener("beforeunload", saveBeforeLeave);
+    return () => window.removeEventListener("beforeunload", saveBeforeLeave);
+  }, [formData, courses]);
+
+  
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-900 m-0 p-0 min-h-screen">
@@ -426,10 +490,10 @@ export default function Signup() {
                   onChange={(e) => {
                     setFormData((prev) => ({ ...prev, email: e.target.value }));
                     // Clear email error when user starts typing
-                    if(errors.email) {
+                    if (errors.email) {
                       setErrors((prev) => ({ ...prev, email: "" }));
                     }
-                    if(error && error.toLowerCase().includes("email")) {
+                    if (error && error.toLowerCase().includes("email")) {
                       setError("");
                     }
                   }}
@@ -602,16 +666,16 @@ export default function Signup() {
                 </label>
                 <Input
                   onKeyDown={(e) => {
-                    if(e.key === "Enter") {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       const search = yearSearch;
-                      if(!search || search.trim() === "") {
+                      if (!search || search.trim() === "") {
                         setFormData((prev) => ({ ...prev, year: "" }));
                       } else {
                         const filtered = YEARS.filter((y) =>
                           y.toLowerCase().includes(search.toLowerCase())
                         );
-                        if(filtered.length > 0) {
+                        if (filtered.length > 0) {
                           handleYearSelect(filtered[0]);
                         }
                       }
@@ -665,16 +729,16 @@ export default function Signup() {
                 </label>
                 <Input
                   onKeyDown={(e) => {
-                    if(e.key === "Enter") {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       const search = majorSearch;
-                      if(!search || search.trim() === "") {
+                      if (!search || search.trim() === "") {
                         setFormData((prev) => ({ ...prev, major: "" }));
                       } else {
                         const filtered = MAJORS.filter((m) =>
                           m.toLowerCase().includes(search.toLowerCase())
                         );
-                        if(filtered.length > 0) {
+                        if (filtered.length > 0) {
                           handleMajorSelect(filtered[0]);
                         }
                       }
@@ -736,12 +800,12 @@ export default function Signup() {
                     ))}
                   </div>
                 )}
-
+                
                 <Link href="/course">
                   <div
                     className="
-                      w-full h-12 rounded-md bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 flex items-center justify-center text-gray-300 font-semibold tracking-wide cursor-pointer transition-all hover:border-red-500/70 hover:text-white hover:bg-gray-900/70 backdrop-blur-sm
-                    "
+                    w-full h-12 rounded-md bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 flex items-center justify-center text-gray-300 
+                    font-semibold tracking-wide cursor-pointer transition-all hover:border-red-500/70 hover:text-white hover:bg-gray-900/70 backdrop-blur-sm"
                   >
                     {courses.length > 0 ? "Edit Courses" : "+ Add Course"}
                   </div>
@@ -812,7 +876,7 @@ export default function Signup() {
           strategy="afterInteractive"
           onLoad={() => {
             // @ts-ignore
-            if(window.onTurnstileLoad) window.onTurnstileLoad();
+            if (window.onTurnstileLoad) window.onTurnstileLoad();
           }}
         />
       </div>
