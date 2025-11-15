@@ -804,8 +804,8 @@ export default function Signup() {
                 <Link href="/course">
                   <div
                     className="
-                    w-full h-12 rounded-md bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 flex items-center justify-center text-gray-300 
-                    font-semibold tracking-wide cursor-pointer transition-all hover:border-red-500/70 hover:text-white hover:bg-gray-900/70 backdrop-blur-sm"
+                    w-full h-12 rounded-md bg-red-700 flex items-center justify-center text-gray-300 
+                    font-semibold tracking-wide cursor-pointer transition-all hover:border-red-500/70 hover:text-white hover:bg-gray-500/70 backdrop-blur-sm"
                   >
                     {courses.length > 0 ? "Edit Courses" : "+ Add Course"}
                   </div>
