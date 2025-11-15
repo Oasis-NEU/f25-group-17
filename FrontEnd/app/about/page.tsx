@@ -331,7 +331,7 @@ export default function About() {
                   description: "As someone who prefers quiet study spaces, this app is a lifesaver. I can filter by noise level and find the perfect spot every time. Absolutely game-changing for finals week."
                 },
                 {
-                  icon: "😛",
+                  icon: "🥵",
                   title: "Matt",
                   description: "The real-time updates are incredibly accurate. I've been using EMPTY NEU for group projects, and it's so much easier to coordinate meeting spots with my team. Highly recommend!"
                 },
