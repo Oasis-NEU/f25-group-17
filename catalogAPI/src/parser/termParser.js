@@ -27,6 +27,7 @@ class TermParser {
     async fetchCurrentTerms() {
         const terms = await this.fetchTerms();
         const currentTerms = terms.filter(term => !term.description.includes("(View Only)"));
+        currentTerms.sort((a, b) => a.code - b.code);
         return currentTerms;
     }
 
