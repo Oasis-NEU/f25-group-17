@@ -406,7 +406,7 @@ export default function Study() {
   // Update current time every second
   React.useEffect(() => {
     const updateTime = () => {
-      const now = new Date();
+      const now = new Date("2025-11-18");
       const time = now.toLocaleTimeString('en-US', {
         timeZone: 'America/New_York',
         hour12: false,
@@ -490,7 +490,7 @@ export default function Study() {
         console.log(`🔍 All "program" courses:`, allProgram.map((p: any) => p.courseName));
 
         // Get current time (EST)
-        const now = new Date();
+        const now = new Date("2025-11-18");
         const currentDayIndex = now.getDay();
 
         const dayNames = [
@@ -606,9 +606,9 @@ export default function Study() {
         
         // Apply availability filter
         if (filterAvailability !== 'all') {
-          const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
+          const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date("2025-11-18").getDay();
           const classesInRoom = getClassesForRoom(space.building, space.roomNumber, currentDayIndex);
-          const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date().toLocaleTimeString('en-US', {
+          const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date("2025-11-18").toLocaleTimeString('en-US', {
             timeZone: 'America/New_York',
             hour12: false,
             hour: '2-digit',
@@ -1016,7 +1016,7 @@ export default function Study() {
 
                 // Filter to only show spaces with classes and limit to cardsToDisplay
                 const displayedSpaces = allFilteredSpaces.filter((space: any) => {
-                  const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
+                  const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date("2025-11-18").getDay();
                   // For Saturday (6) and Sunday (0), show all rooms
                   // For other days, only show rooms with classes
                   if (currentDayIndex === 6 || currentDayIndex === 0) {
@@ -1030,11 +1030,11 @@ export default function Study() {
                   <>
                     <SimpleGrid columns={[1, 1, 3]} gap={6} w="full">
                       {displayedSpaces.map((space: any, displayIndex: number) => {
-                        const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
+                        const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date("2025-11-18").getDay();
                         const classesInRoom = getClassesForRoom(space.building, space.roomNumber, currentDayIndex);
                         
                         // Check if room is currently available
-                        const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date().toLocaleTimeString('en-US', {
+                        const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date("2025-11-18").toLocaleTimeString('en-US', {
                           timeZone: 'America/New_York',
                           hour12: false,
                           hour: '2-digit',
@@ -1225,9 +1225,9 @@ export default function Study() {
                         Status
                       </Text>
                       {(() => {
-                        const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
+                        const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date("2025-11-18").getDay();
                         const classesInRoom = getClassesForRoom(uniqueSpaces[openDialogId].building, uniqueSpaces[openDialogId].roomNumber, currentDayIndex);
-                        const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date().toLocaleTimeString('en-US', {
+                        const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date("2025-11-18").toLocaleTimeString('en-US', {
                           timeZone: 'America/New_York',
                           hour12: false,
                           hour: '2-digit',
@@ -1248,9 +1248,11 @@ export default function Study() {
                         Classes Today
                       </Text>
                       {(() => {
-                        const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
+                        // const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date("2025-11-18").getDay();
+                        const currentDayIndex = new Date("2025-11-18").getDay();
                         // Don't show classes for Saturday and Sunday
                         if (currentDayIndex === 6 || currentDayIndex === 0) {
+                          console.log('IM GONNA KILL MYSELF');
                           return <Text color="gray.400">No classes scheduled (Weekend)</Text>;
                         }
                         const classesInRoom = getClassesForRoom(uniqueSpaces[openDialogId].building, uniqueSpaces[openDialogId].roomNumber, currentDayIndex);
