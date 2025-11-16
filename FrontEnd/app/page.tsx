@@ -6,7 +6,7 @@ import PageBackground from "../components/PageBackground";
 import HeroOrb from "@/components/HeroOrb";
 import FloatingParticles from "@/components/FloatingParticles";
 import HeroContent from "@/components/HeroContent";
-import MoveTo from "@/ReactHook/redirect";
+import MoveTo from "@/hooks/useRedirect";
 import "./globals.css";
 
 export default function Home() {

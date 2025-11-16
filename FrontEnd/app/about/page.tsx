@@ -6,7 +6,7 @@ import PageTransition from '../../components/PageTransition';
 import CardSwap, { Card } from '../../components/CardSwap';
 import { Text, Heading } from '@chakra-ui/react';
 import SideBar from '@/components/SideBar';
-import MoveTo from '@/ReactHook/redirect';
+import MoveTo from '@/hooks/useRedirect';
 import MissionSection from '@/components/MissionSection';
 import CTASection from '@/components/CTASection';
 import TestimonialsSection from '@/components/TestimonialsSection';
