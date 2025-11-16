@@ -280,11 +280,11 @@ export default function OnboardingCourses() {
         const parsed = JSON.parse(saved);
         parsed.courses = hasCourses ? nonEmptyCourses : [];
         localStorage.setItem("signupFormData", JSON.stringify(parsed));
-        console.log("✅ Updated signupFormData with courses:", parsed.courses);
+        console.log("Updated signupFormData with courses:", parsed.courses);
       }
       
       setSavedCourses(hasCourses ? nonEmptyCourses : []);
-      console.log("💾 Saved courses:", hasCourses ? nonEmptyCourses : []);
+      console.log("Saved courses:", hasCourses ? nonEmptyCourses : []);
 
       await new Promise(res => setTimeout(res, 400));
       router.push(redirectPath);
@@ -473,8 +473,8 @@ export default function OnboardingCourses() {
 
             {/* Link to home */}
             <div className="mt-4 text-center">
-              <Link href="/signup" className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
-                ← Back to Sign Up
+              <Link href={redirectPath} className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
+                ← {isSignedIn ? "Back to Profile" : "Back to Sign Up"}
               </Link>
             </div>
           </div>

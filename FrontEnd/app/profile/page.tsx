@@ -41,7 +41,7 @@ export default function Profile() {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if(authError || !user) {
-        router.push("/profile");
+        router.push("/login");
         return;
       }
 
@@ -301,7 +301,7 @@ export default function Profile() {
       localStorage.removeItem('userCourses');
       
       // Redirect to home
-      router.push('/profile');
+      router.push('/login');
     } catch (err) {
       console.error('Unexpected error signing out:', err);
     }
@@ -493,7 +493,8 @@ export default function Profile() {
                             borderRadius="lg"
                             boxShadow="0 0 30px rgba(220,20,60,0.2)"
                             backdropFilter="blur(12px)"
-                            zIndex={50}
+                            zIndex={9999}
+
                           >
                             {filteredYears.map((yr, idx) => (
                               <Box
@@ -603,7 +604,8 @@ export default function Profile() {
                             borderRadius="lg"
                             boxShadow="0 0 30px rgba(220,20,60,0.2)"
                             backdropFilter="blur(12px)"
-                            zIndex={50}
+                            zIndex={9999}
+
                           >
                             {filteredMajors.map((maj, idx) => (
                               <Box
