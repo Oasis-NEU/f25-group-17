@@ -272,16 +272,12 @@ class TermSchedule {
                     `${inclusiveEndDate.getFullYear()}`+
                     `${String(inclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
                     `${String(inclusiveEndDate.getDate()).padStart(2, '0')}`;
-                const overlappedSchedule = this.roomSchedules[`${dateBoundaries[i - 1]}-${inclusiveEndDateStr}`]
+                const overlappedSchedule = this.roomSchedules[`${dateBoundaries[i - 1]}-${inclusiveEndDateStr}`];
                 this.roomSchedules[dateStr] = {};
                 Object.keys(this.rawRoomSchedules[dateKey]).forEach(buildingCode => {
                     Object.keys(this.rawRoomSchedules[dateKey][buildingCode]).forEach(roomNumber => {
                         if(!this.roomSchedules[dateStr][buildingCode]) {
                             this.roomSchedules[dateStr][buildingCode] = {};
-                        }
-                        if(!this.roomSchedules[dateStr][buildingCode][roomNumber]) {
-                            this.roomSchedules[dateStr][buildingCode][roomNumber] =
-                                new RoomSchedule(buildingCode, roomNumber);
                         }
                         if(!this.roomSchedules[dateStr][buildingCode][roomNumber]) {
                             this.roomSchedules[dateStr][buildingCode][roomNumber] =
