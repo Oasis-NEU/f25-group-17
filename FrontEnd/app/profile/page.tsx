@@ -313,7 +313,7 @@ export default function Profile() {
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-auto">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0" />
+        <div className="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0" />
 
         {/* Staggered Menu */}
         <div className="absolute top-0 left-0">

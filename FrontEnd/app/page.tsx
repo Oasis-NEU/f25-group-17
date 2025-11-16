@@ -35,7 +35,7 @@ export default function Home() {
     <PageTransition>
       <main className="flex flex-col h-screen w-screen items-center justify-center bg-gray-900 m-0 p-0 overflow-hidden">
         <div className="relative w-screen h-screen flex items-center justify-center 
-            bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]">
+            bg-linear-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]">
           {/* Background Orb */}
           <div className="absolute inset h-screen w-screen flex items-center justify-center translate-x-0 z-0">
             <div className="h-screen w-screen" >
@@ -82,9 +82,9 @@ export default function Home() {
                 pauseDuration={200}
               />
             </h2>
-                    <div className="pt-6">
-                      <Button text="Find Now" onClick={handleFindNow} />
-                    </div>
+              <div className="pt-6">
+                <Button text="Find Now" onClick={handleFindNow} />
+              </div>
           </div>
         </div>
       </main>
