@@ -229,6 +229,32 @@ export default function Study() {
     }
   };
 
+  const leaveRoomWithUserId = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if(!user) {
+        setNotification({ show: true, message: 'Please log in to leave a room' });
+        return;
+      }
+      console.log('Attempting to leave room for user ID:', user.id);
+      
+      const { error } = await (supabase as any)
+        .from('RoomBooking')
+        .update({ inUse: false })
+        .eq('user_id', user.id);
+
+      if(error) {
+        console.error('❌ Error updating inUse:', error);
+        throw error;
+      }
+
+      console.log('✅ Successfully marked as inUse: false');
+    } catch(err: any) {
+      console.error('❌ Error leaving room:', err);
+      setNotification({ show: true, message: 'Failed to leave room. Please try again.' });
+    }
+  }
+
   // Fetch users in a specific room with their course info
   const fetchRoomUsers = async (building: string, roomNumber: string) => {
     try {
@@ -939,13 +965,11 @@ export default function Study() {
             {/* Leave Room Button - Always visible */}
             <Button
               onClick={() => {
-                if(userBookingId) {
-                  handleLeaveRoom(userBookingId);
-                  setNotification({ show: true, message: 'You have left the room' });
-                  setTimeout(() => {
-                    setNotification({ show: false, message: '' });
-                  }, 2000);
-                }
+                leaveRoomWithUserId();
+                setNotification({ show: true, message: 'You have left the room' });
+                setTimeout(() => {
+                  setNotification({ show: false, message: '' });
+                }, 2000);
               }}
               bg="red.600"
               color="white"
