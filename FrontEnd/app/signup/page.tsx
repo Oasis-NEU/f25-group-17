@@ -401,20 +401,20 @@ export default function Signup() {
     <main className="flex flex-col items-center justify-center bg-gray-900 m-0 p-0 min-h-screen">
       <div
         className="w-screen min-h-screen flex items-center justify-center py-20 px-6
-          bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]"
+          bg-linear-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]"
       >
         {/* Unique card with gradient border */}
-        <div className="relative z-10 w-full max-w-2xl mx-auto p-[1px] rounded-3xl bg-gradient-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
-          <div className="relative bg-gradient-to-br from-black-900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-12 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8),0_0_50px_rgba(30,41,59,0.6),inset_0_0_60px_rgba(15,23,42,0.3)]">
+        <div className="relative z-10 w-full max-w-2xl mx-auto p-px rounded-3xl bg-linear-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
+          <div className="relative bg-linear-to-br from-black-900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-12 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8),0_0_50px_rgba(30,41,59,0.6),inset_0_0_60px_rgba(15,23,42,0.3)]">
             {/* Header with gradient accent */}
             <div className="text-center mb-12">
               <div className="inline-block mb-4">
-                <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full"></div>
+                <div className="w-16 h-1 bg-linear-to-r from-transparent via-red-500 to-transparent rounded-full"></div>
               </div>
-              <h1 className="text-5xl font-black text-white bg-clip-text bg-gradient-to-r from-white via-gray-100 to-white mb-3">
+              <h1 className="text-5xl font-black text-white bg-clip-text bg-linear-to-r from-white via-gray-100 to-white mb-3">
                 EmptyNEU
               </h1>
-              <p className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-red-400 to-gray-400 text-sm font-medium">
+              <p className="text-transparent bg-clip-text bg-linear-to-r from-gray-400 via-red-400 to-gray-400 text-sm font-medium">
                 Sign Up, Your study space awaits
               </p>
             </div>
@@ -433,7 +433,7 @@ export default function Signup() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, firstname: e.target.value }))
                   }
-                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: "rgba(220,20,60,0.3)",
                   }}
@@ -461,7 +461,7 @@ export default function Signup() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, lastname: e.target.value }))
                   }
-                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: "rgba(220,20,60,0.3)",
                   }}
@@ -497,7 +497,7 @@ export default function Signup() {
                       setError("");
                     }
                   }}
-                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: "rgba(220,20,60,0.3)",
                   }}
@@ -527,7 +527,7 @@ export default function Signup() {
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, password: e.target.value }))
                     }
-                    className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm pr-12"
+                    className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm pr-12"
                     _hover={{
                       borderColor: "rgba(220,20,60,0.3)",
                     }}
@@ -600,7 +600,7 @@ export default function Signup() {
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))
                     }
-                    className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm pr-12"
+                    className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm pr-12"
                     _hover={{
                       borderColor: "rgba(220,20,60,0.3)",
                     }}
@@ -688,7 +688,7 @@ export default function Signup() {
                   onChange={(e) => setYearSearch(e.target.value)}
                   onFocus={handleYearFocus}
                   onBlur={handleYearBlur}
-                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: "rgba(220,20,60,0.3)",
                   }}
@@ -751,7 +751,7 @@ export default function Signup() {
                   onChange={(e) => setMajorSearch(e.target.value)}
                   onFocus={handleMajorFocus}
                   onBlur={handleMajorBlur}
-                  className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
+                  className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500 transition-all backdrop-blur-sm"
                   _hover={{
                     borderColor: "rgba(220,20,60,0.3)",
                   }}
@@ -829,7 +829,7 @@ export default function Signup() {
             )}
 
             {/* Divider */}
-            <div className="my-8 w-full h-[1px] bg-gradient-to-r from-transparent via-red-900/40 to-transparent"></div>
+            <div className="my-8 w-full h-px bg-linear-to-r from-transparent via-red-900/40 to-transparent"></div>
 
             {/* Button */}
             <div className="flex justify-center">
@@ -848,7 +848,7 @@ export default function Signup() {
                 Already part of the community?{" "}
                 <Link
                   href="/login"
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600 font-semibold hover:from-red-300 hover:to-red-500 transition-all"
+                  className="text-transparent bg-clip-text bg-linear-to-r from-red-400 to-red-600 font-semibold hover:from-red-300 hover:to-red-500 transition-all"
                 >
                   Sign In
                 </Link>
@@ -857,7 +857,7 @@ export default function Signup() {
               <p className="text-gray-500 text-sm">
                 <Link
                   href="/about"
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600 font-semibold hover:from-red-300 hover:to-red-500 transition-all"
+                  className="text-transparent bg-clip-text bg-linear-to-r from-red-400 to-red-600 font-semibold hover:from-red-300 hover:to-red-500 transition-all"
                 >
                   Learn More
                 </Link>

@@ -18,6 +18,7 @@ import {
   Box,
   Dialog,
 } from "@chakra-ui/react";
+import SideBar from "@/components/SideBar";
 
 export default function Study() {
   const router = useRouter();
@@ -674,24 +675,7 @@ export default function Study() {
       <main className="relative flex flex-col min-h-screen bg-black text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.6)] via-[rgba(0,0,0,0.8)] to-[rgba(0,0,0,0.9)] z-0" />
 
-        <div className="position-sticky absolute top-0 left-0">
-          <div style={{ height: '100vh', background: '#1a1a1a' }}>
-            <StaggeredMenu
-              isFixed={false}
-              position="left"
-              items={menuItems}
-              socialItems={socialItems}
-              displaySocials={false}
-              displayItemNumbering={true}
-              menuButtonColor="#fff"
-              openMenuButtonColor="#fff"
-              changeMenuColorOnOpen={true}
-              colors={["#FF0000", "#FF8A8A"]}
-              logoUrl="https://www.svgrepo.com/show/499592/close-x.svg"
-              accentColor="#ff6b6b"
-            />
-          </div>
-        </div>
+        <SideBar/>
 
         <div className="relative z-10 flex flex-col items-center justify-start w-full pt-16 px-8 overflow-y-auto">
           {/* Hero Section */}
