@@ -160,7 +160,7 @@ export default function Profile() {
 
       const updates = { firstName, lastName, email, major, year};
 
-      const { error: updateError } = await (supabase as any).from('UserData').update(updates).eq('user_id', user.id);
+      const { error: updateError } = await (supabase as any).from('UserData').update(updates).eq('email', email);
 
       if (updateError) {
         console.error('Error updating user data:', updateError);
