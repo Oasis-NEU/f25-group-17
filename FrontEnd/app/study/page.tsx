@@ -16,6 +16,7 @@ import {
   CardRoot,
   Box,
   Dialog,
+  Alert,
 } from "@chakra-ui/react";
 import SideBar from "@/components/SideBar";
 
@@ -891,7 +892,7 @@ export default function Study() {
                   transition="all 0.2s"
                   border="1.5px solid rgba(239, 68, 68, 0.3)"
                 >
-                  ✓ Available
+                  Available
                 </Button>
                 <Button
                   onClick={() => setTempFilterAvailability('in-use')}
@@ -902,7 +903,7 @@ export default function Study() {
                   transition="all 0.2s"
                   border="1.5px solid rgba(239, 68, 68, 0.3)"
                 >
-                  ✗ In Use
+                  In Use
                 </Button>
               </SimpleGrid>
             </Box>
@@ -933,7 +934,7 @@ export default function Study() {
                   transition="all 0.2s"
                   border="1.5px solid rgba(239, 68, 68, 0.3)"
                 >
-                  📍 Most Empty
+                  Most Empty
                 </Button>
                 <Button
                   onClick={() => setTempFilterCapacity('medium')}
@@ -955,7 +956,7 @@ export default function Study() {
                   transition="all 0.2s"
                   border="1.5px solid rgba(239, 68, 68, 0.3)"
                 >
-                  👥 Most Full
+                  Most Full
                 </Button>
               </SimpleGrid>
             </Box>
@@ -996,7 +997,7 @@ export default function Study() {
               w="100%"
               mt={0}
             >
-              🚪 Leave Current Room
+              Leave Current Room
             </Button>
           </motion.div>
 
@@ -1289,11 +1290,11 @@ export default function Study() {
                               px={3}
                             >
                               <Text color="gray.200" fontWeight="500" mb={1}>
-                                👤 {booking.first_name} {booking.last_name}
+                                {booking.first_name} {booking.last_name}
                               </Text>
                               {booking.courses ? (
                                 <Text fontSize="sm" color="gray.400">
-                                  📚 {Array.isArray(booking.courses) ? booking.courses.join(', ') : booking.courses}
+                                  {Array.isArray(booking.courses) ? booking.courses.join(', ') : booking.courses}
                                 </Text>
                               ) : (
                                 <Text fontSize="sm" color="gray.500" fontStyle="italic">
