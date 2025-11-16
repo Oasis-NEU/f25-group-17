@@ -4,7 +4,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../supabase/lib/supabase";
 import "../globals.css";
-import StaggeredMenu from "../../components/StaggeredMenu";
 import PageTransition from "../../components/PageTransition";
 import { motion } from "framer-motion";
 import {
@@ -673,7 +672,7 @@ export default function Study() {
   return (
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-black text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.6)] via-[rgba(0,0,0,0.8)] to-[rgba(0,0,0,0.9)] z-0" />
+        <div className="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.6)] via-[rgba(0,0,0,0.8)] to-[rgba(0,0,0,0.9)] z-0" />
 
         <SideBar/>
 
