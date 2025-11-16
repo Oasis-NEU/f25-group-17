@@ -360,6 +360,8 @@ export default function Signup() {
           major: parsed.major || "",
           year: parsed.year || "",
         }));
+        setMajorSearch(parsed.major || "");
+        setYearSearch(parsed.year || "");
       } else {
         console.log("No signupFormData found in localStorage");
       }
