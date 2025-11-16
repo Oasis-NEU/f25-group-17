@@ -121,15 +121,19 @@ export default function Study() {
       // Check if user is already in this specific room
       const { data: existingBooking, error: checkError } = await supabase
         .from('RoomBooking')
-        .select('id')
-        .eq('user', user.id)
-        .eq('buildingName', space.building)
-        .eq('roomNumber', space.roomNumber)
-        .eq('inUse', true)
-        .single();
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('inUse', true);
 
-      if (existingBooking) {
-        setNotification({ show: true, message: `You are already in ${space.building} Room ${space.roomNumber}` });
+      if(existingBooking && existingBooking.length > 0) {
+        console.log(existingBooking);
+        setNotification({
+          show: true,
+          message: `You are already in ${(existingBooking[0] as any).buildingName} Room ${(existingBooking[0] as any).roomNumber}`
+        });
+        setTimeout(() => {
+          setNotification({ show: false, message: '' });
+        }, 3000);
         return;
       }
 
@@ -141,6 +145,35 @@ export default function Study() {
         user: user.id,
         inUse: true
       });
+
+      const { data: existing, error: err } = await supabase.from('RoomBooking')
+        .select('*')
+        .eq('space_id', space.id)
+        .eq('buildingName', space.building)
+        .eq('roomNumber', space.roomNumber)
+        .eq('user_id', user.id)
+        .single() as any;
+
+      if(err) {
+        console.error('❌ Error checking existing bookings:', err);
+      }
+      if(existing) {
+        console.log('⚠️ Existing booking found:', existing);
+        const {data: updatedBooking, error: error0 } = await (supabase as any)
+          .from('RoomBooking')
+          .update({ inUse: true })
+          .eq('space_id', existing.space_id)
+          .select();
+        if(error0) {
+          console.error('❌ Error updating existing booking:', error0);
+        }
+        console.log(updatedBooking);
+        setNotification({ 
+          show: true, 
+          message: `You joined ${updatedBooking[0].buildingName} Room ${updatedBooking[0].roomNumber}` 
+        });
+        return;
+      }
 
       const { data, error } = await supabase.from('RoomBooking').insert([
         {
@@ -160,13 +193,14 @@ export default function Study() {
       console.log('Insert successful:', data);
 
       // Store the booking ID for later logout
-      if (data && data[0]) {
-        setUserBookingId((data[0] as any).id);
+      if(data) {
+        console.log(data)
+        setUserBookingId((data as any).id);
 
         // Auto-logout after 2 hours (7200 seconds)
         const autoLogoutTime = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
         const timeoutId = setTimeout(() => {
-          handleLeaveRoom((data[0] as any).id);
+          handleLeaveRoom((data as any).id);
           setNotification({ 
             show: true, 
             message: `Auto-logged out from ${space.building} Room ${space.roomNumber}` 
@@ -226,6 +260,35 @@ export default function Study() {
       setNotification({ show: true, message: 'Failed to leave room. Please try again.' });
     }
   };
+
+  const leaveRoomWithUserId = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if(!user) {
+        setNotification({ show: true, message: 'Please log in to leave a room' });
+        return;
+      }
+      console.log('Attempting to leave room for user ID:', user.id);
+      
+      const { data, error } = await (supabase as any)
+        .from('RoomBooking')
+        .update({ inUse: false })
+        .eq('user_id', user.id)
+        .eq('inUse', true)
+        .select() as any;
+
+      if(error) {
+        console.error('❌ Error updating inUse:', error);
+        throw error;
+      }
+
+      console.log('✅ Successfully marked as inUse: false');
+      setNotification({ show: true, message: `You have left ${data[0].buildingName} Room ${data[0].roomNumber}` });
+    } catch(err: any) {
+      console.error('❌ Error leaving room:', err);
+      setNotification({ show: true, message: 'Failed to leave room. Please try again.' });
+    }
+  }
 
   // Fetch users in a specific room with their course info
   const fetchRoomUsers = async (building: string, roomNumber: string) => {
@@ -373,7 +436,7 @@ export default function Study() {
           const { data: userBooking } = await (supabase as any)
             .from('RoomBooking')
             .select('id')
-            .eq('user', user.id)
+            .eq('user_id', user.id)
             .eq('inUse', true)
             .single();
           
@@ -919,13 +982,10 @@ export default function Study() {
             {/* Leave Room Button - Always visible */}
             <Button
               onClick={() => {
-                if (userBookingId) {
-                  handleLeaveRoom(userBookingId);
-                  setNotification({ show: true, message: 'You have left the room' });
-                  setTimeout(() => {
-                    setNotification({ show: false, message: '' });
-                  }, 2000);
-                }
+                leaveRoomWithUserId();
+                setTimeout(() => {
+                  setNotification({ show: false, message: '' });
+                }, 5000);
               }}
               bg="red.600"
               color="white"

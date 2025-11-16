@@ -1,5 +1,6 @@
 import TimeBoundaries from "./timeBoundaries.js";
 import { getBuildingsMap } from "../constants.js";
+import { assert } from "console";
 
 class RoomSchedule {
     constructor(buildingCode, roomNumber) {
@@ -15,6 +16,14 @@ class RoomSchedule {
             saturday:  new TimeBoundaries(),
             sunday:    new TimeBoundaries()
         };
+    }
+
+    merge(otherRoomSchedule) {
+        assert(this.buildingCode === otherRoomSchedule.buildingCode, "Cannot merge RoomSchedules from different buildings");
+        assert(this.roomNumber === otherRoomSchedule.roomNumber, "Cannot merge RoomSchedules from different rooms");
+        Object.keys(this.timeBoundaries).forEach(day => {
+            this.timeBoundaries[day].merge(otherRoomSchedule.timeBoundaries[day]);
+        });
     }
 }
 
