@@ -298,15 +298,15 @@ export default function OnboardingCourses() {
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-900 min-h-screen">
-      <div className="w-screen min-h-screen flex items-center justify-center py-20 px-6 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]">
-        <div className="relative z-10 w-full max-w-2xl mx-auto p-[1px] rounded-3xl bg-gradient-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
-          <div className="relative bg-gradient-to-br from-black-900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-10 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8)]">
+      <div className="w-screen min-h-screen flex items-center justify-center py-20 px-6 bg-linear-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)]">
+        <div className="relative z-10 w-full max-w-2xl mx-auto p-px rounded-3xl bg-linear-to-br from-red-600/30 via-gray-700/20 to-red-900/30">
+          <div className="relative bg-linear-to-br from-black-900/90 via-gray-800/90 to-black-700/90 rounded-3xl p-10 backdrop-blur-sm shadow-[0_0_100px_rgba(15,23,42,0.8)]">
             
             {/* Header */}
             <div className="text-center mb-8">
               <div className="w-16 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent rounded-full mx-auto mb-4" />
               <h1 className="text-3xl font-bold text-white">Add your courses</h1>
-              <p className="text-gray-300 text-sm mt-2">
+              <p className="text-gray-300 text-sm mt-2"/>
               <p className="text-gray-300 text-sm mt-2">
                 Add the classes you&apos;re taking this term so we can tailor your space.
               </p>
@@ -473,8 +473,6 @@ export default function OnboardingCourses() {
 
             {/* Link to home */}
             <div className="mt-4 text-center">
-              <Link href={redirectPath} className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
-                ← {isSignedIn ? "Back to Profile" : "Back to Sign Up"}
               <Link href="/signup" className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
                 ← Back to Sign Up
               </Link>
