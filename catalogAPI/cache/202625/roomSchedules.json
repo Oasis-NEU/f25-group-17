@@ -1,0 +1,433 @@
+{
+    "CLAS": {
+        "outerStartDate": {
+            "year": 2026,
+            "month": 1,
+            "day": 5
+        },
+        "outerEndDate": {
+            "year": 2026,
+            "month": 3,
+            "day": 29
+        },
+        "innerStartDate": {
+            "year": 2026,
+            "month": 1,
+            "day": 5
+        },
+        "innerEndDate": {
+            "year": 2026,
+            "month": 2,
+            "day": 15
+        },
+        "roomSchedules": {
+            "271": {},
+            "BK": {},
+            "CA": {},
+            "CG": {},
+            "CH": {},
+            "CN": {},
+            "DA": {},
+            "DG": {},
+            "DK": {},
+            "EL": {},
+            "EV": {},
+            "EXP": {},
+            "FC": {},
+            "FR": {},
+            "HA": {},
+            "HO": {},
+            "HS": {},
+            "HT": {},
+            "INV": {},
+            "ISEC": {},
+            "KA": {},
+            "KN": {},
+            "LA": {},
+            "ME": {},
+            "MU": {},
+            "NI": {},
+            "RB": {},
+            "RG": {},
+            "RI": {},
+            "RY": {},
+            "SE": {},
+            "SH": {},
+            "SL": {
+                "107": {
+                    "building": "Snell Library",
+                    "buildingCode": "SL",
+                    "roomNumber": "107",
+                    "timeBoundaries": {
+                        "monday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "tuesday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 13,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 14,
+                                    "minute": 50
+                                },
+                                {
+                                    "hour": 15,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 16,
+                                    "minute": 50
+                                },
+                                {
+                                    "hour": 17,
+                                    "minute": 50
+                                },
+                                {
+                                    "hour": 19,
+                                    "minute": 40
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "wednesday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "thursday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 13,
+                                    "minute": 30
+                                },
+                                {
+                                    "hour": 15,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 15,
+                                    "minute": 50
+                                },
+                                {
+                                    "hour": 17,
+                                    "minute": 40
+                                },
+                                {
+                                    "hour": 19,
+                                    "minute": 50
+                                },
+                                {
+                                    "hour": 21,
+                                    "minute": 40
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "friday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "saturday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "sunday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        }
+                    }
+                },
+                "109": {
+                    "building": "Snell Library",
+                    "buildingCode": "SL",
+                    "roomNumber": "109",
+                    "timeBoundaries": {
+                        "monday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "tuesday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "wednesday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "thursday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 14,
+                                    "minute": 5
+                                },
+                                {
+                                    "hour": 15,
+                                    "minute": 45
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "friday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "saturday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        },
+                        "sunday": {
+                            "boundaries": [
+                                {
+                                    "hour": 0,
+                                    "minute": 0
+                                },
+                                {
+                                    "hour": 23,
+                                    "minute": 59
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "SN": {},
+            "ST": {},
+            "WGV": {},
+            "WVC": {},
+            "WVF": {},
+            "WVG": {},
+            "WVH": {}
+        }
+    },
+    "FNEX": {
+        "outerStartDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "outerEndDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "innerStartDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "innerEndDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "roomSchedules": {
+            "271": {},
+            "BK": {},
+            "CA": {},
+            "CG": {},
+            "CH": {},
+            "CN": {},
+            "DA": {},
+            "DG": {},
+            "DK": {},
+            "EL": {},
+            "EV": {},
+            "EXP": {},
+            "FC": {},
+            "FR": {},
+            "HA": {},
+            "HO": {},
+            "HS": {},
+            "HT": {},
+            "INV": {},
+            "ISEC": {},
+            "KA": {},
+            "KN": {},
+            "LA": {},
+            "ME": {},
+            "MU": {},
+            "NI": {},
+            "RB": {},
+            "RG": {},
+            "RI": {},
+            "RY": {},
+            "SE": {},
+            "SH": {},
+            "SL": {},
+            "SN": {},
+            "ST": {},
+            "WGV": {},
+            "WVC": {},
+            "WVF": {},
+            "WVG": {},
+            "WVH": {}
+        }
+    },
+    "LAB": {
+        "outerStartDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "outerEndDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "innerStartDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "innerEndDate": {
+            "year": null,
+            "month": null,
+            "day": null
+        },
+        "roomSchedules": {
+            "271": {},
+            "BK": {},
+            "CA": {},
+            "CG": {},
+            "CH": {},
+            "CN": {},
+            "DA": {},
+            "DG": {},
+            "DK": {},
+            "EL": {},
+            "EV": {},
+            "EXP": {},
+            "FC": {},
+            "FR": {},
+            "HA": {},
+            "HO": {},
+            "HS": {},
+            "HT": {},
+            "INV": {},
+            "ISEC": {},
+            "KA": {},
+            "KN": {},
+            "LA": {},
+            "ME": {},
+            "MU": {},
+            "NI": {},
+            "RB": {},
+            "RG": {},
+            "RI": {},
+            "RY": {},
+            "SE": {},
+            "SH": {},
+            "SL": {},
+            "SN": {},
+            "ST": {},
+            "WGV": {},
+            "WVC": {},
+            "WVF": {},
+            "WVG": {},
+            "WVH": {}
+        }
+    }
+}

@@ -4,7 +4,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../supabase/lib/supabase";
 import "../globals.css";
-import StaggeredMenu from "../../components/StaggeredMenu";
 import PageTransition from "../../components/PageTransition";
 import { motion } from "framer-motion";
 import {
@@ -18,6 +17,7 @@ import {
   Box,
   Dialog,
 } from "@chakra-ui/react";
+import SideBar from "@/components/SideBar";
 
 export default function Study() {
   const router = useRouter();
@@ -43,18 +43,16 @@ export default function Study() {
   const [userBookingId, setUserBookingId] = React.useState<string | null>(null);
   const [currentTime, setCurrentTime] = React.useState<string>('');
 
-  const authCheckEnabled = true;
-
   // Helper: Convert time string to minutes
   const timeToMinutes = (timeStr: string): number => {
-    if(!timeStr) return 0;
+    if (!timeStr) return 0;
     const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
   };
 
   // Helper: Convert 24-hour to 12-hour format
   const convertTo12Hour = (time24: string) => {
-    if(!time24) return '';
+    if (!time24) return '';
     const [hours, minutes] = time24.split(':');
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -105,17 +103,17 @@ export default function Study() {
   // Handle Join Room
   const handleJoinRoom = async (space: any) => {
     try {
-      console.log('🚀 Attempting to join room:', space);
+      console.log('Attempting to join room:', space);
       
       const { data: { user } } = await supabase.auth.getUser();
       
-      if(!user) {
+      if (!user) {
         setNotification({ show: true, message: 'Please log in to join a room' });
         return;
       }
 
       // Check if user already has an active booking
-      if(userBookingId) {
+      if (userBookingId) {
         setNotification({ show: true, message: 'You are already in a room. Please leave first.' });
         return;
       }
@@ -187,12 +185,12 @@ export default function Study() {
         }
       ] as any).select();
 
-      if(error) {
-        console.error('❌ Insert error:', error);
+      if (error) {
+        console.error('Insert error:', error);
         throw error;
       }
 
-      console.log('✅ Insert successful:', data);
+      console.log('Insert successful:', data);
 
       // Store the booking ID for later logout
       if(data) {
@@ -242,12 +240,12 @@ export default function Study() {
         .update({ inUse: false })
         .eq('id', bookingId);
 
-      if(error) {
-        console.error('❌ Error updating inUse:', error);
+      if (error) {
+        console.error('Error updating inUse:', error);
         throw error;
       }
 
-      console.log('✅ Successfully marked as inUse: false');
+      console.log('Successfully marked as inUse: false');
       setUserBookingId(null);
       
       // Refresh occupancy after leaving
@@ -258,7 +256,7 @@ export default function Study() {
         setNotification({ show: false, message: '' });
       }, 2000);
     } catch (err: any) {
-      console.error('❌ Error leaving room:', err);
+      console.error('Error leaving room:', err);
       setNotification({ show: true, message: 'Failed to leave room. Please try again.' });
     }
   };
@@ -302,7 +300,7 @@ export default function Study() {
         .eq('roomNumber', roomNumber)
         .eq('inUse', true);
 
-      if(error) throw error;
+      if (error) throw error;
       
       // Fetch user profiles for each booking
       const enrichedData = await Promise.all((data || []).map(async (booking: any) => {
@@ -319,7 +317,7 @@ export default function Study() {
               .eq('user_id', booking.user)
               .single();
             
-            if(userData) {
+            if (userData) {
               firstName = (userData as any).firstName || 'Unknown';
               lastName = (userData as any).lastName || 'User';
               courses = (userData as any).courses || courses;
@@ -330,7 +328,7 @@ export default function Study() {
           }
           
           // Fallback to profiles table if needed
-          if(firstName === 'Unknown' && lastName === 'User') {
+          if (firstName === 'Unknown' && lastName === 'User') {
             try {
               const { data: profile } = await supabase
                 .from('profiles')
@@ -338,14 +336,14 @@ export default function Study() {
                 .eq('id', booking.user)
                 .single();
               
-              if(profile) {
+              if (profile) {
                 firstName = (profile as any).first_name || 'Unknown';
                 lastName = (profile as any).last_name || 'User';
                 courses = (profile as any).courses || courses;
-                console.log(`✅ Got profile for ${booking.user}:`, courses);
+                console.log(`Got profile for ${booking.user}:`, courses);
               }
             } catch (err) {
-              console.log(`⚠️ No profile found for ${booking.user}`);
+              console.log(`No profile found for ${booking.user}`);
             }
           }
           
@@ -356,7 +354,7 @@ export default function Study() {
             courses: courses
           };
         } catch (err) {
-          console.error('❌ Error enriching user:', booking.user, err);
+          console.error('Error enriching user:', booking.user, err);
           return { ...booking, first_name: 'Unknown', last_name: 'User', courses: null };
         }
       }));
@@ -377,7 +375,7 @@ export default function Study() {
         .select('buildingName, roomNumber, inUse')
         .eq('inUse', true);
 
-      if(error) throw error;
+      if (error) throw error;
 
       // Count users per room
       const occupancyMap: any = {};
@@ -433,7 +431,7 @@ export default function Study() {
         // Get current user to fetch their booking
         const { data: { user } } = await supabase.auth.getUser();
         
-        if(user) {
+        if (user) {
           // Check if user has an active booking
           const { data: userBooking } = await (supabase as any)
             .from('RoomBooking')
@@ -442,7 +440,7 @@ export default function Study() {
             .eq('inUse', true)
             .single();
           
-          if(userBooking) {
+          if (userBooking) {
             setUserBookingId((userBooking as any).id);
             console.log('✅ User has active booking:', (userBooking as any).id);
           }
@@ -454,20 +452,20 @@ export default function Study() {
         const pageSize = 1000;
         let hasMore = true;
 
-        while(hasMore) {
+        while (hasMore) {
           const { data: pageData, error: fetchError } = await supabase
             .from('ClassTime_Data')
             .select('*')
             .range(page * pageSize, (page + 1) * pageSize - 1);
 
-          if(fetchError) throw new Error(fetchError.message);
+          if (fetchError) throw new Error(fetchError.message);
           
-          if(!pageData || pageData.length === 0) {
+          if (!pageData || pageData.length === 0) {
             hasMore = false;
           } else {
             allTimeSlots = [...allTimeSlots, ...pageData];
             page++;
-            if(pageData.length < pageSize) hasMore = false;
+            if (pageData.length < pageSize) hasMore = false;
           }
         }
 
@@ -515,10 +513,10 @@ export default function Study() {
           const hasClassToday = slot[currentDayName];
 
           // Saturday and Sunday: all rooms available (return all slots without class filtering)
-          if(currentDayIndex === 6 || currentDayIndex === 0) return true;
+          if (currentDayIndex === 6 || currentDayIndex === 0) return true;
 
           // No class today = available all day
-          if(!hasClassToday) return true;
+          if (!hasClassToday) return true;
 
           // Has class = check if current time is OUTSIDE the class period
           const isOutsideClass = currentTime < slot.beginTime || currentTime > slot.endTime;
@@ -533,7 +531,7 @@ export default function Study() {
           const key = `${slot.building}|${slot.roomNumber}`;
           const existing = seenRooms.get(key);
 
-          if(!existing || slot.endTime > existing.endTime) {
+          if (!existing || slot.endTime > existing.endTime) {
             seenRooms.set(key, slot);
           }
         });
@@ -541,7 +539,7 @@ export default function Study() {
         // Convert to array and sort
         const unique = Array.from(seenRooms.values()).sort((a: any, b: any) => {
           const buildingCompare = a.building.localeCompare(b.building);
-          if(buildingCompare !== 0) return buildingCompare;
+          if (buildingCompare !== 0) return buildingCompare;
           return parseInt(a.roomNumber) - parseInt(b.roomNumber);
         });
 
@@ -567,11 +565,10 @@ export default function Study() {
   // Auth check and redirect if not logged in
   React.useEffect(() => {
     const checkAuth = async () => {
-      if(!authCheckEnabled) return;
       try {
         const { data: { user } } = await supabase.auth.getUser();
         
-        if(!user) {
+        if (!user) {
           // Redirect to login page if not authenticated
           router.push('/login');
         }
@@ -581,7 +578,7 @@ export default function Study() {
       }
     };
 
-    if(isMounted) {
+    if (isMounted) {
       checkAuth();
     }
   }, [isMounted, router]);
@@ -594,7 +591,7 @@ export default function Study() {
 
   // Group by building - moved before useEffect
   const grouped = uniqueSpaces.reduce((acc: any, space: any) => {
-    if(!acc[space.building]) acc[space.building] = [];
+    if (!acc[space.building]) acc[space.building] = [];
     acc[space.building].push(space);
     return acc;
   }, {});
@@ -607,7 +604,7 @@ export default function Study() {
         const matchesSearch = building.toLowerCase().includes(searchLower) || space.roomNumber.toString().includes(searchLower);
         
         // Apply availability filter
-        if(filterAvailability !== 'all') {
+        if (filterAvailability !== 'all') {
           const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
           const classesInRoom = getClassesForRoom(space.building, space.roomNumber, currentDayIndex);
           const currentTime = selectedDayIndex !== null ? '11:00:00' : new Date().toLocaleTimeString('en-US', {
@@ -619,12 +616,12 @@ export default function Study() {
           });
           const isAvailable = !classesInRoom.some((cls: any) => currentTime >= cls.beginTime && currentTime <= cls.endTime);
           
-          if(filterAvailability === 'available' && !isAvailable) return false;
-          if(filterAvailability === 'in-use' && isAvailable) return false;
+          if (filterAvailability === 'available' && !isAvailable) return false;
+          if (filterAvailability === 'in-use' && isAvailable) return false;
         }
 
         // Apply capacity filter based on how empty the room is
-        if(filterCapacity !== 'all') {
+        if (filterCapacity !== 'all') {
           // Get user count for this room from allRoomOccupancy map
           const roomKey = `${space.building}|${space.roomNumber}`;
           const usersInRoom = allRoomOccupancy[roomKey] || 0;
@@ -635,14 +632,14 @@ export default function Study() {
           const occupancyRate = (usersInRoom / maxCapacity) * 100;
 
           // High = 0-33% occupied (mostly empty), Medium = 34-66%, Low = 67%+ (mostly full)
-          if(filterCapacity === 'high' && occupancyRate > 33) return false;
-          if(filterCapacity === 'medium' && (occupancyRate <= 33 || occupancyRate > 66)) return false;
-          if(filterCapacity === 'low' && occupancyRate <= 66) return false;
+          if (filterCapacity === 'high' && occupancyRate > 33) return false;
+          if (filterCapacity === 'medium' && (occupancyRate <= 33 || occupancyRate > 66)) return false;
+          if (filterCapacity === 'low' && occupancyRate <= 66) return false;
         }
         
         return matchesSearch;
       });
-      if(filtered.length > 0) {
+      if (filtered.length > 0) {
         acc[building] = filtered;
       }
       return acc;
@@ -659,9 +656,9 @@ export default function Study() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if(entry.isIntersecting) {
+          if (entry.isIntersecting) {
             const key = entry.target.getAttribute('data-key');
-            if(key) {
+            if (key) {
               setVisibleCards((prev) => new Set([...prev, key]));
             }
           }
@@ -680,7 +677,7 @@ export default function Study() {
 
   // Fetch room users when dialog opens
   React.useEffect(() => {
-    if(openDialogId !== null && uniqueSpaces[openDialogId]) {
+    if (openDialogId !== null && uniqueSpaces[openDialogId]) {
       fetchRoomUsers(uniqueSpaces[openDialogId].building, uniqueSpaces[openDialogId].roomNumber);
     }
   }, [openDialogId, uniqueSpaces]);
@@ -688,12 +685,12 @@ export default function Study() {
   // Infinite scroll observer
   React.useEffect(() => {
     const sentinel = document.getElementById('scroll-sentinel');
-    if(!sentinel) return;
+    if (!sentinel) return;
 
     const scrollObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if(entry.isIntersecting) {
+          if (entry.isIntersecting) {
             // Get total filtered card count
             const totalCards = Object.values(filteredGrouped).reduce(
               (count: number, spaces: any) => count + spaces.length,
@@ -701,7 +698,7 @@ export default function Study() {
             );
             
             // Load more if there are additional cards to display
-            if(cardsToDisplay < totalCards) {
+            if (cardsToDisplay < totalCards) {
               setCardsToDisplay((prev) => prev + 12);
             }
           }
@@ -714,7 +711,7 @@ export default function Study() {
     return () => scrollObserver.unobserve(sentinel);
   }, [cardsToDisplay, filteredGrouped]);
 
-  if(loading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="text-white text-xl">Loading available rooms...</div>
@@ -738,26 +735,9 @@ export default function Study() {
   return (
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-black text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.6)] via-[rgba(0,0,0,0.8)] to-[rgba(0,0,0,0.9)] z-0" />
+        <div className="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.6)] via-[rgba(0,0,0,0.8)] to-[rgba(0,0,0,0.9)] z-0" />
 
-        <div className="position-sticky absolute top-0 left-0">
-          <div style={{ height: '100vh', background: '#1a1a1a' }}>
-            <StaggeredMenu
-              isFixed={false}
-              position="left"
-              items={menuItems}
-              socialItems={socialItems}
-              displaySocials={false}
-              displayItemNumbering={true}
-              menuButtonColor="#fff"
-              openMenuButtonColor="#fff"
-              changeMenuColorOnOpen={true}
-              colors={["#FF0000", "#FF8A8A"]}
-              logoUrl="https://www.svgrepo.com/show/499592/close-x.svg"
-              accentColor="#ff6b6b"
-            />
-          </div>
-        </div>
+        <SideBar/>
 
         <div className="relative z-10 flex flex-col items-center justify-start w-full pt-16 px-8 overflow-y-auto">
           {/* Hero Section */}
@@ -1038,7 +1018,7 @@ export default function Study() {
                   const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
                   // For Saturday (6) and Sunday (0), show all rooms
                   // For other days, only show rooms with classes
-                  if(currentDayIndex === 6 || currentDayIndex === 0) {
+                  if (currentDayIndex === 6 || currentDayIndex === 0) {
                     return true;
                   }
                   const classesInRoom = getClassesForRoom(space.building, space.roomNumber, currentDayIndex);
@@ -1216,7 +1196,7 @@ export default function Study() {
           <Dialog.Root
             open={true}
             onOpenChange={(details) => {
-              if(!details.open) setOpenDialogId(null);
+              if (!details.open) setOpenDialogId(null);
             }}
           >
             <Dialog.Backdrop bg="blackAlpha.700" />
@@ -1269,7 +1249,7 @@ export default function Study() {
                       {(() => {
                         const currentDayIndex = selectedDayIndex !== null ? selectedDayIndex : new Date().getDay();
                         // Don't show classes for Saturday and Sunday
-                        if(currentDayIndex === 6 || currentDayIndex === 0) {
+                        if (currentDayIndex === 6 || currentDayIndex === 0) {
                           return <Text color="gray.400">No classes scheduled (Weekend)</Text>;
                         }
                         const classesInRoom = getClassesForRoom(uniqueSpaces[openDialogId].building, uniqueSpaces[openDialogId].roomNumber, currentDayIndex);
@@ -1352,7 +1332,7 @@ export default function Study() {
                     color="white"
                     _hover={{ bg: "red.700" }}
                     onClick={() => {
-                      if(openDialogId !== null && uniqueSpaces[openDialogId]) {
+                      if (openDialogId !== null && uniqueSpaces[openDialogId]) {
                         handleJoinRoom(uniqueSpaces[openDialogId]);
                         setOpenDialogId(null);
                       }

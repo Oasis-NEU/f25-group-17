@@ -4,10 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "cd frontend && next dev --turbopack",
-    "build": "cd frontend && next build",
-    "start": "cd frontend && next start",
-    "lint": "cd frontend && next lint"
+    "dev": "cd FrontEnd && next dev --turbopack",
+    "build": "cd FrontEnd && next build",
+    "start": "cd FrontEnd && next start",
+    "lint": "cd FrontEnd && next lint"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.4.2",
