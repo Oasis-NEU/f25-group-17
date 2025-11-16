@@ -21,7 +21,6 @@ export default function MoveTo(options?: Redirect) {
         return;
       }
 
-      // User is authenticated, redirect to specified path
       router.push(redirectPath);
     } catch (err) {
       console.error("Unexpected error:", err);

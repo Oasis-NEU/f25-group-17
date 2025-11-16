@@ -4,198 +4,156 @@ import React, { useState, useEffect } from "react";
 import '../globals.css'
 import { Input } from '@chakra-ui/react'
 import Button from '../../components/button'
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../../supabase/lib/supabase";
 import Script from "next/script";
-import { usePathname } from "next/navigation";
-
 
 declare global {
   interface Window {
     onTurnstileLoad?: () => void;
   }
-} 
+}
+
+interface FormData {
+  email: string;
+  password: string;
+}
+
+interface FormErrors {
+  [key: string]: string;
+}
 
 export default function Login() {
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const router = useRouter()
-  
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [errors, setErrors] = useState<{[key: string]: string}>({})
-  const [showPassword, setShowPassword] = useState(false)
-  const [showMagicLinkInput, setShowMagicLinkInput] = useState(false)
-  const [magicLinkEmail, setMagicLinkEmail] = useState('')
-  const [captchaToken, setCaptchaToken] = useState<string>("")
-  const [isMounted, setIsMounted] = React.useState(true)
+  // Form state
+  const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [isMounted, setIsMounted] = useState(true);
 
+  // Email regex
+  const emailRegex = /\S+@\S+\.\S+/;
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => setIsMounted(false);
+  }, []);
+
+  // Initialize Turnstile captcha
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const renderCaptcha = () => {
+      const el = document.getElementById("turnstile-widget");
+      if (window.turnstile && el) {
+        el.innerHTML = "";
+        (window.turnstile as any).render("#turnstile-widget", {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+          callback: (token: string) => {
+            if (isMounted) setCaptchaToken(token);
+          },
+        });
+      }
+    };
+
+    window.onTurnstileLoad = renderCaptcha;
+    if (window.turnstile) renderCaptcha();
+
+    return () => {
+      const el = document.getElementById("turnstile-widget");
+      if (el) el.innerHTML = "";
+    };
+  }, [pathname, isMounted]);
+
+  // Form field change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-    if(errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[name]
-        return newErrors
-      })
-    }
-    setError('')
-  }
-
-  const validateForm = () => {
-    const newErrors: {[key: string]: string} = {}
-
-    if(!formData.email.trim()) {
-      newErrors.email = 'Email is required'
-    } else if(!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email'
-    }
-
-    if(!formData.password) {
-      newErrors.password = 'Password is required'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-    const pathname = usePathname();
-
-    useEffect(() => {
-      setIsMounted(true);
-      return () => {
-        setIsMounted(false);
-      };
-    }, []);
-
-    useEffect(() => {
-      const renderCaptcha = () => {
-        const el = document.getElementById("turnstile-widget");
-        if(window.turnstile && el && isMounted) {
-          el.innerHTML = ""; // prevent duplicates
-          window.turnstile.render("#turnstile-widget", {
-            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-            callback: (token: string) => {
-              if(isMounted) setCaptchaToken(token);
-            },
-          });
-        }
-      };
-
-      window.onTurnstileLoad = renderCaptcha;
-
-      // Render immediately if Turnstile is already loaded
-      if(window.turnstile) renderCaptcha();
-
-      return () => {
-        const el = document.getElementById("turnstile-widget");
-        if(el) el.innerHTML = "";
-      };
-    }, [pathname, isMounted]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setError("");
     
-    if(!validateForm()) {
-      return
+    if (errors[name]) {
+      setErrors((prev) => {
+        const updated = { ...prev };
+        delete updated[name];
+        return updated;
+      });
+    }
+  };
+
+  // Form validation
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
     }
 
-    setIsLoading(true)
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Reset captcha on error
+  const resetCaptcha = () => {
+    setCaptchaToken("");
+    const el = document.getElementById("turnstile-widget");
+    if (el && window.turnstile) {
+      el.innerHTML = "";
+      (window.turnstile as any).render("#turnstile-widget", {
+        sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+        callback: (token: string) => {
+          if (isMounted) setCaptchaToken(token);
+        },
+      });
+    }
+  };
+
+  // Form submission handler
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!validateForm()) return;
+
+    setIsLoading(true);
 
     try {
-      const cleanEmail = formData.email.trim().toLowerCase()
+      const cleanEmail = formData.email.trim().toLowerCase();
 
-      // Sign in with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: cleanEmail,
         password: formData.password,
-        options: {captchaToken},
-      })
+        options: { captchaToken },
+      });
 
-      if(authError) {
-        throw new Error(authError.message || 'Invalid email or password')
+      if (authError) {
+        throw new Error(authError.message || "Invalid email or password");
       }
 
-      if(authData.user && isMounted) {
-        // Login successful - redirect to study page
-        router.push('/study')
-      }
-    } catch (err: any) {
-      if(!isMounted) return;
-      const errorMessage = err.message || 'An error occurred during login'
-      setError(errorMessage)
-      console.error('Login error:', err)
-      
-      // Reset captcha token on failed login so user can try again
-      setCaptchaToken('')
-      // Reset captcha widget
-      const el = document.getElementById("turnstile-widget")
-      if(el && window.turnstile) {
-        el.innerHTML = ""
-        window.turnstile.render("#turnstile-widget", {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-          callback: (token: string) => {
-            if(isMounted) setCaptchaToken(token);
-          },
-        })
-      }
-    } finally {
-      if(isMounted) setIsLoading(false)
-    }
-  }
-
-  const handleMagicLinkLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-
-    if(!magicLinkEmail.trim()) {
-      setError('Email is required')
-      return
-    }
-
-    if(!/\S+@\S+\.\S+/.test(magicLinkEmail)) {
-      setError('Please enter a valid email')
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      const cleanEmail = magicLinkEmail.trim().toLowerCase()
-
-      // Send magic link via Supabase Auth (OAuth passwordless)
-      const { error: magicLinkError } = await supabase.auth.signInWithOtp({
-        email: cleanEmail,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
-
-      if(magicLinkError) {
-        throw new Error(magicLinkError.message || 'Failed to send magic link')
-      }
-
-      if(isMounted) {
-        alert('Magic link sent! Check your email to sign in.')
-        setMagicLinkEmail('')
-        setShowMagicLinkInput(false)
+      if (authData.user && isMounted) {
+        router.push("/study");
       }
     } catch (err: any) {
-      if(!isMounted) return;
-      const errorMessage = err.message || 'An error occurred'
-      setError(errorMessage)
-      console.error('Magic link error:', err)
+      if (!isMounted) return;
+      const errorMessage = err.message || "An error occurred during login";
+      setError(errorMessage);
+      console.error("Login error:", err);
+      resetCaptcha();
     } finally {
-      if(isMounted) setIsLoading(false)
+      if (isMounted) setIsLoading(false);
     }
-  }
+  };
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-900 m-0 p-0 min-h-screen">
@@ -313,56 +271,6 @@ export default function Login() {
                   {isLoading ? 'Signing In...' : 'Sign In'}
                 </button>
               </div>
-
-              {/* Divider */}
-              <div className="my-4 w-full h-px bg-linear-to-r from-transparent via-red-900/40 to-transparent"></div>
-
-              {/* Login with Email Button */}
-              <div className="flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setShowMagicLinkInput(!showMagicLinkInput)}
-                  className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95"
-                >
-                  Login with Email
-                </button>
-              </div>
-
-              {/* Magic Link Email Form */}
-              {showMagicLinkInput && (
-                <form onSubmit={handleMagicLinkLogin} className="space-y-4 mt-6 p-4 bg-gray-800/50 rounded-lg border border-gray-700/50">
-                  <p className="text-gray-300 text-sm">Enter your email to receive a magic link</p>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={magicLinkEmail}
-                    onChange={(e) => setMagicLinkEmail(e.target.value)}
-                    size="lg"
-                    className="bg-linear-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/50 text-white placeholder:text-gray-500"
-                    _focus={{ 
-                      borderColor: 'rgba(220,20,60,0.8)',
-                      boxShadow: '0 0 20px rgba(220,20,60,0.2)',
-                      background: 'linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))'
-                    }}
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-all disabled:opacity-50"
-                    >
-                      {isLoading ? 'Sending...' : 'Send Magic Link'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowMagicLinkInput(false)}
-                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
             </form>
 
             {/* Cloudflare Turnstile Captcha */}
