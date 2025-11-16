@@ -34,27 +34,27 @@ export const SPACE_FEATURES = [
 
 export const TESTIMONIALS = [
   {
-    icon: "🥴",
+    icon: "🤗",
     title: "Jackson",
     description: "EMPTY NEU has completely changed how I study on campus. No more wasting time searching for open spots in Snell Library—I can check availability before I even leave my dorm!"
   },
   {
-    icon: "😎",
+    icon: "😁",
     title: "Ayaan",
     description: "As someone who prefers quiet study spaces, this app is a lifesaver. I can filter by noise level and find the perfect spot every time. Absolutely game-changing for finals week."
   },
   {
-    icon: "🥵",
+    icon: "😎",
     title: "Matt",
     description: "The real-time updates are incredibly accurate. I've been using EMPTY NEU for group projects, and it's so much easier to coordinate meeting spots with my team. Highly recommend!"
   },
   {
-    icon: "🐒",
+    icon: "😀",
     title: "Mason",
     description: "I love how easy it is to discover new study spots I didn't even know existed. The interface is super clean and intuitive—best campus app I've used at NEU!"
   },
   {
-    icon: "🫣",
+    icon: "😊",
     title: "Andy",
     description: "Between classes, finding a quick study spot used to be impossible. Now I can check EMPTY NEU and know exactly where to go. It's saved me so much time and stress this semester!"
   }
