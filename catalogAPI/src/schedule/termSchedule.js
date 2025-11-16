@@ -24,6 +24,7 @@ class TermSchedule {
             );
         }
         const courseMeetingTimes = this.cacheCourseMeetingTimes.read();
+        console.log(`Processing ${courseMeetingTimes.length} courses for term ${this.termCode} into raw room schedules...`)
         courseMeetingTimes.forEach(course => {
             course.meetingTimes.forEach(meetingTime => {
                 // this.#updateRoomScheduleWithMeetingTime(course, meetingTime);
@@ -188,6 +189,7 @@ class TermSchedule {
     }
 
     #generateRoomSchedule() {
+        console.log(`Generating room schedule for term ${this.termCode}...`);
         // let count = 0;
         const dateBoundaries = [];
         Object.keys(this.rawRoomSchedules).forEach(dateKey => {
@@ -214,6 +216,7 @@ class TermSchedule {
                 dateRangeSchedules[i][buildingCode] = {};
             });
         }
+        console.log(`Processing room schedules with date ranges for term ${this.termCode}...`);
         Object.keys(this.rawRoomSchedules).forEach(dateKey => {
             const [startDateStr, endDateStr] = dateKey.split("-");
             if(startDateStr == endDateStr) return;
@@ -254,6 +257,7 @@ class TermSchedule {
                 `${String(inclusiveEndDate.getDate()).padStart(2, '0')}`;
             this.roomSchedules[`${dateBoundaries[i]}-${inclusiveEndDateStr}`] = dateRangeSchedules[i];
         }
+        console.log(`Processing single day room schedules for term ${this.termCode}...`);
         Object.keys(this.rawRoomSchedules).forEach(dateKey => {
             const [startDateStr, endDateStr] = dateKey.split("-");
             if(startDateStr != endDateStr) return;

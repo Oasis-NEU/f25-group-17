@@ -44,9 +44,13 @@ async function getCourseMeetingTimes() {
     return courseMeetingTimes;
 }
 
+const startTime = Date.now();
 await updateCourseCache();
 await updateTermScheduleCache();
 await updateBostonScheduleCache();
+
+const endTime = Date.now();
+console.log(`Main finished in ${(endTime - startTime) / 1000} seconds.`);
 
 
 // console.log(await updateCourseCache());

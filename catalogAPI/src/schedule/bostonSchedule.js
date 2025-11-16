@@ -19,192 +19,23 @@ class BostonSchedule {
         this.dateRanges = [];
     }
 
-    loadTermSchedules() {
+    async loadTermSchedules() {
+        console.log("Loading Boston schedules from term schedules...");
+        const promises = [];
         this.cacheTermSchedules.forEach(cache => {
             this.termSchedules.push(cache.read());
         });
         this.#findDateRangesFromTermSchedules();
-        // let count = 0;
+        let count = 0;
         this.dateRanges.forEach((dateRange, i) => {
             this.bostonSchedules.push({});
-            const bostonSchedule = this.bostonSchedules[i];
-            const dateBoundaries = [];
-            dateRange.indices.forEach(index => {
-                const termSchedule = this.termSchedules[index];
-                Object.keys(termSchedule).forEach(dateKey => {
-                    const [startDateStr, endDateStr] = dateKey.split("-");
-                    if(!endDateStr) return;
-                    const exclusiveEndDate = new Date(
-                        parseInt(endDateStr.slice(0,4)),
-                        parseInt(endDateStr.slice(4,6)) - 1,
-                        parseInt(endDateStr.slice(6,8)) + 1);
-                    const exclusiveEndDateStr =
-                        `${exclusiveEndDate.getFullYear()}`+
-                        `${String(exclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
-                        `${String(exclusiveEndDate.getDate()).padStart(2, '0')}`;
-                    if(!dateBoundaries.includes(startDateStr)) dateBoundaries.push(startDateStr);
-                    if(!dateBoundaries.includes(exclusiveEndDateStr)) dateBoundaries.push(exclusiveEndDateStr);
-                });
-            });
-            dateBoundaries.sort();
-
-            const dateRangeSchedules = [];
-            for(let i = 0; i < dateBoundaries.length - 1; i++) {
-                dateRangeSchedules.push({});
-                Object.keys(getBuildingsMap()).forEach(buildingCode => {
-                    dateRangeSchedules[i][buildingCode] = {};
-                });
-            }
-
-            dateRange.indices.forEach(index => {
-                const termSchedule = this.termSchedules[index];
-                Object.keys(termSchedule).forEach(dateKey => {
-                    const [startDateStr, endDateStr] = dateKey.split("-");
-                    if(!endDateStr) return;
-                    const startIndex = dateBoundaries.indexOf(startDateStr);
-                    const exclusiveEndDate = new Date(
-                        parseInt(endDateStr.slice(0,4)),
-                        parseInt(endDateStr.slice(4,6)) - 1,
-                        parseInt(endDateStr.slice(6,8)) + 1);
-                    const exclusiveEndDateStr =
-                        `${exclusiveEndDate.getFullYear()}`+
-                        `${String(exclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
-                        `${String(exclusiveEndDate.getDate()).padStart(2, '0')}`;
-                    const endIndex = dateBoundaries.indexOf(exclusiveEndDateStr);
-                    for(let i = startIndex; i < endIndex; i++) {
-                        Object.keys(termSchedule[dateKey]).forEach(buildingCode => {
-                            Object.keys(termSchedule[dateKey][buildingCode]).forEach(roomNumber => {
-                                if(!dateRangeSchedules[i][buildingCode][roomNumber]) {
-                                    dateRangeSchedules[i][buildingCode][roomNumber] =
-                                        new RoomSchedule(buildingCode, roomNumber);
-                                }
-                                const roomSchedule = dateRangeSchedules[i][buildingCode][roomNumber];
-                                Object.setPrototypeOf(roomSchedule, RoomSchedule.prototype);
-                                Object.setPrototypeOf(termSchedule[dateKey][buildingCode][roomNumber], RoomSchedule.prototype);
-                                Object.keys(roomSchedule.timeBoundaries).forEach(day => {
-                                    const timeBoundaries = roomSchedule.timeBoundaries[day];
-                                    Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
-                                    timeBoundaries.boundaries.forEach(time => {
-                                        Object.setPrototypeOf(time, TimeHHMM.prototype);
-                                    });
-                                });
-                                Object.keys(termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries).forEach(day => {
-                                    const timeBoundaries = termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries[day];
-                                    Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
-                                    timeBoundaries.boundaries.forEach(time => {
-                                        Object.setPrototypeOf(time, TimeHHMM.prototype);
-                                    });
-                                });
-                                // count++;
-                                // console.log(count);
-                                roomSchedule.merge(termSchedule[dateKey][buildingCode][roomNumber]);
-                            });
-                        });
-                    }
-                });
-            });
-            for(let i = 0; i < dateBoundaries.length - 1; i++) {
-                const inclusiveEndDate = new Date(
-                    parseInt(dateBoundaries[i + 1].slice(0, 4)),
-                    parseInt(dateBoundaries[i + 1].slice(4, 6)) - 1,
-                    parseInt(dateBoundaries[i + 1].slice(6, 8)) - 1);
-                const inclusiveEndDateStr =
-                    `${inclusiveEndDate.getFullYear()}`+
-                    `${String(inclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
-                    `${String(inclusiveEndDate.getDate()).padStart(2, '0')}`;
-                bostonSchedule[`${dateBoundaries[i]}-${inclusiveEndDateStr}`] = dateRangeSchedules[i];
-            }
-            // need to do single days to update date range
-            dateRange.indices.forEach(index => {
-                const termSchedule = this.termSchedules[index];
-                Object.keys(termSchedule).forEach(dateKey => {
-                    const [startDateStr, endDateStr] = dateKey.split("-");
-                    if(endDateStr) return;
-                    const dateStr = startDateStr;
-                    if(bostonSchedule[dateStr]) {
-                        const existingSchedule = bostonSchedule[dateStr];
-                        Object.keys(termSchedule[dateKey]).forEach(buildingCode => {
-                            Object.keys(termSchedule[dateKey][buildingCode]).forEach(roomNumber => {
-                                if(!existingSchedule[buildingCode]) {
-                                    existingSchedule[buildingCode] = {};
-                                }
-                                if(!existingSchedule[buildingCode][roomNumber]) {
-                                    existingSchedule[buildingCode][roomNumber] =
-                                        new RoomSchedule(buildingCode, roomNumber);
-                                }
-                                const roomSchedule = existingSchedule[buildingCode][roomNumber];
-                                // Object.setPrototypeOf(roomSchedule, RoomSchedule.prototype);
-                                // Object.keys(roomSchedule.timeBoundaries).forEach(day => {
-                                //     const timeBoundaries = roomSchedule.timeBoundaries[day];
-                                //     Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
-                                // });
-                                Object.keys(termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries).forEach(day => {
-                                    const timeBoundaries = termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries[day];
-                                    Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
-                                    timeBoundaries.boundaries.forEach(time => {
-                                        Object.setPrototypeOf(time, TimeHHMM.prototype);
-                                    });
-                                });
-                                // count++;
-                                // console.log(count);
-                                roomSchedule.merge(termSchedule[dateKey][buildingCode][roomNumber]);
-                            });
-                        });
-                    }
-                    if(dateStr < dateBoundaries[0] || dateStr > dateBoundaries[dateBoundaries.length - 1]) {
-                        bostonSchedule[dateStr] = termSchedule[dateKey];
-                        return;
-                    }
-                    
-                    for(let i = 1; i < dateBoundaries.length; i++) {
-                        if(dateStr >= dateBoundaries[i]) continue;
-                        const inclusiveEndDate = new Date(
-                            parseInt(dateBoundaries[i].slice(0,4)),
-                            parseInt(dateBoundaries[i].slice(4,6)) - 1,
-                            parseInt(dateBoundaries[i].slice(6,8)) - 1);
-                        const inclusiveEndDateStr =
-                            `${inclusiveEndDate.getFullYear()}`+
-                            `${String(inclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
-                            `${String(inclusiveEndDate.getDate()).padStart(2, '0')}`;
-                        const overlappedSchedule = bostonSchedule[`${dateBoundaries[i - 1]}-${inclusiveEndDateStr}`];
-                        bostonSchedule[dateStr] = {};
-                        Object.keys(termSchedule[dateKey]).forEach(buildingCode => {
-                            Object.keys(termSchedule[dateKey][buildingCode]).forEach(roomNumber => {
-                                if(!bostonSchedule[dateStr][buildingCode]) {
-                                    bostonSchedule[dateStr][buildingCode] = {};
-                                }
-                                if(!bostonSchedule[dateStr][buildingCode][roomNumber]) {
-                                    bostonSchedule[dateStr][buildingCode][roomNumber] =
-                                        new RoomSchedule(buildingCode, roomNumber);
-                                }
-                                const roomSchedule = bostonSchedule[dateStr][buildingCode][roomNumber];
-                                if(overlappedSchedule[buildingCode][roomNumber]) {
-                                    roomSchedule.merge(overlappedSchedule[buildingCode][roomNumber]);
-                                }
-                                // count++;
-                                // console.log(count);
-                                Object.keys(termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries).forEach(day => {
-                                    const timeBoundaries = termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries[day];
-                                    Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
-                                    timeBoundaries.boundaries.forEach(time => {
-                                        Object.setPrototypeOf(time, TimeHHMM.prototype);
-                                    });
-                                });
-                                roomSchedule.merge(termSchedule[dateKey][buildingCode][roomNumber]);
-                            });
-                        });
-                        return;
-                    }
-                    assert(false, "Unreachable code reached when loading Boston schedules");
-                });
-            });
+            promises.push(this.#updateIthBostonScheduleAndCache(dateRange, i));
         });
-        this.bostonSchedules.forEach((bostonSchedule, i) => {
-            this.cacheBostonSchedules[i].update(bostonSchedule);
-        });
+        return Promise.all(promises);
     }
 
     #findDateRangesFromTermSchedules() {
+        console.log("Finding Boston schedule date ranges from term schedules...");
         const termDateRanges = [];
         this.termSchedules.forEach((termSchedule, i) => {
             termDateRanges.push({});
@@ -230,7 +61,7 @@ class BostonSchedule {
                 }
             });
         });
-        console.log(termDateRanges);
+        // console.log(termDateRanges);
         termDateRanges.forEach((termDateRange, i) => {
             let added = false;
             this.dateRanges.forEach(dateRange => {
@@ -253,12 +84,189 @@ class BostonSchedule {
                 });
             }
         });
-        console.log(this.dateRanges);
+        // console.log(this.dateRanges);
         this.dateRanges.forEach((_, i) => {
             this.cacheBostonSchedules.push(new Cache(`masterSchedules/schedule${i}.json`));
         });
     }
 
+    async #updateIthBostonScheduleAndCache(dateRange, i) {
+        console.log(`Processing date range ${i}...`);
+        const bostonSchedule = this.bostonSchedules[i];
+        const dateBoundaries = [];
+        dateRange.indices.forEach(index => {
+            const termSchedule = this.termSchedules[index];
+            Object.keys(termSchedule).forEach(dateKey => {
+                const [startDateStr, endDateStr] = dateKey.split("-");
+                if(!endDateStr) return;
+                const exclusiveEndDate = new Date(
+                    parseInt(endDateStr.slice(0,4)),
+                    parseInt(endDateStr.slice(4,6)) - 1,
+                    parseInt(endDateStr.slice(6,8)) + 1);
+                const exclusiveEndDateStr =
+                    `${exclusiveEndDate.getFullYear()}`+
+                    `${String(exclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
+                    `${String(exclusiveEndDate.getDate()).padStart(2, '0')}`;
+                if(!dateBoundaries.includes(startDateStr)) dateBoundaries.push(startDateStr);
+                if(!dateBoundaries.includes(exclusiveEndDateStr)) dateBoundaries.push(exclusiveEndDateStr);
+            });
+        });
+        dateBoundaries.sort();
+
+        const dateRangeSchedules = [];
+        for(let i = 0; i < dateBoundaries.length - 1; i++) {
+            dateRangeSchedules.push({});
+            Object.keys(getBuildingsMap()).forEach(buildingCode => {
+                dateRangeSchedules[i][buildingCode] = {};
+            });
+        }
+
+        console.log(`Processing room schedules with date ranges for each term for schedule ${i}...`);
+        dateRange.indices.forEach(index => {
+            const termSchedule = this.termSchedules[index];
+            Object.keys(termSchedule).forEach(dateKey => {
+                const [startDateStr, endDateStr] = dateKey.split("-");
+                if(!endDateStr) return;
+                const startIndex = dateBoundaries.indexOf(startDateStr);
+                const exclusiveEndDate = new Date(
+                    parseInt(endDateStr.slice(0,4)),
+                    parseInt(endDateStr.slice(4,6)) - 1,
+                    parseInt(endDateStr.slice(6,8)) + 1);
+                const exclusiveEndDateStr =
+                    `${exclusiveEndDate.getFullYear()}`+
+                    `${String(exclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
+                    `${String(exclusiveEndDate.getDate()).padStart(2, '0')}`;
+                const endIndex = dateBoundaries.indexOf(exclusiveEndDateStr);
+                for(let i = startIndex; i < endIndex; i++) {
+                    Object.keys(termSchedule[dateKey]).forEach(buildingCode => {
+                        Object.keys(termSchedule[dateKey][buildingCode]).forEach(roomNumber => {
+                            if(!dateRangeSchedules[i][buildingCode][roomNumber]) {
+                                dateRangeSchedules[i][buildingCode][roomNumber] =
+                                    new RoomSchedule(buildingCode, roomNumber);
+                            }
+                            const roomSchedule = dateRangeSchedules[i][buildingCode][roomNumber];
+                            Object.setPrototypeOf(roomSchedule, RoomSchedule.prototype);
+                            Object.setPrototypeOf(termSchedule[dateKey][buildingCode][roomNumber], RoomSchedule.prototype);
+                            Object.keys(roomSchedule.timeBoundaries).forEach(day => {
+                                const timeBoundaries = roomSchedule.timeBoundaries[day];
+                                Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
+                                timeBoundaries.boundaries.forEach(time => {
+                                    Object.setPrototypeOf(time, TimeHHMM.prototype);
+                                });
+                            });
+                            Object.keys(termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries).forEach(day => {
+                                const timeBoundaries = termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries[day];
+                                Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
+                                timeBoundaries.boundaries.forEach(time => {
+                                    Object.setPrototypeOf(time, TimeHHMM.prototype);
+                                });
+                            });
+                            // count++;
+                            // console.log(count);
+                            roomSchedule.merge(termSchedule[dateKey][buildingCode][roomNumber]);
+                        });
+                    });
+                }
+            });
+        });
+        for(let i = 0; i < dateBoundaries.length - 1; i++) {
+            const inclusiveEndDate = new Date(
+                parseInt(dateBoundaries[i + 1].slice(0, 4)),
+                parseInt(dateBoundaries[i + 1].slice(4, 6)) - 1,
+                parseInt(dateBoundaries[i + 1].slice(6, 8)) - 1);
+            const inclusiveEndDateStr =
+                `${inclusiveEndDate.getFullYear()}`+
+                `${String(inclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
+                `${String(inclusiveEndDate.getDate()).padStart(2, '0')}`;
+            bostonSchedule[`${dateBoundaries[i]}-${inclusiveEndDateStr}`] = dateRangeSchedules[i];
+        }
+        console.log(`Processing single day room schedules for each term for schedule ${i}...`);
+        dateRange.indices.forEach(index => {
+            const termSchedule = this.termSchedules[index];
+            Object.keys(termSchedule).forEach(dateKey => {
+                const [startDateStr, endDateStr] = dateKey.split("-");
+                if(endDateStr) return;
+                const dateStr = startDateStr;
+                if(bostonSchedule[dateStr]) {
+                    const existingSchedule = bostonSchedule[dateStr];
+                    Object.keys(termSchedule[dateKey]).forEach(buildingCode => {
+                        Object.keys(termSchedule[dateKey][buildingCode]).forEach(roomNumber => {
+                            if(!existingSchedule[buildingCode]) {
+                                existingSchedule[buildingCode] = {};
+                            }
+                            if(!existingSchedule[buildingCode][roomNumber]) {
+                                existingSchedule[buildingCode][roomNumber] =
+                                    new RoomSchedule(buildingCode, roomNumber);
+                            }
+                            const roomSchedule = existingSchedule[buildingCode][roomNumber];
+                            // Object.setPrototypeOf(roomSchedule, RoomSchedule.prototype);
+                            // Object.keys(roomSchedule.timeBoundaries).forEach(day => {
+                            //     const timeBoundaries = roomSchedule.timeBoundaries[day];
+                            //     Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
+                            // });
+                            Object.keys(termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries).forEach(day => {
+                                const timeBoundaries = termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries[day];
+                                Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
+                                timeBoundaries.boundaries.forEach(time => {
+                                    Object.setPrototypeOf(time, TimeHHMM.prototype);
+                                });
+                            });
+                            // count++;
+                            // console.log(count);
+                            roomSchedule.merge(termSchedule[dateKey][buildingCode][roomNumber]);
+                        });
+                    });
+                }
+                if(dateStr < dateBoundaries[0] || dateStr > dateBoundaries[dateBoundaries.length - 1]) {
+                    bostonSchedule[dateStr] = termSchedule[dateKey];
+                    return;
+                }
+                
+                for(let i = 1; i < dateBoundaries.length; i++) {
+                    if(dateStr >= dateBoundaries[i]) continue;
+                    const inclusiveEndDate = new Date(
+                        parseInt(dateBoundaries[i].slice(0,4)),
+                        parseInt(dateBoundaries[i].slice(4,6)) - 1,
+                        parseInt(dateBoundaries[i].slice(6,8)) - 1);
+                    const inclusiveEndDateStr =
+                        `${inclusiveEndDate.getFullYear()}`+
+                        `${String(inclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
+                        `${String(inclusiveEndDate.getDate()).padStart(2, '0')}`;
+                    const overlappedSchedule = bostonSchedule[`${dateBoundaries[i - 1]}-${inclusiveEndDateStr}`];
+                    bostonSchedule[dateStr] = {};
+                    Object.keys(termSchedule[dateKey]).forEach(buildingCode => {
+                        Object.keys(termSchedule[dateKey][buildingCode]).forEach(roomNumber => {
+                            if(!bostonSchedule[dateStr][buildingCode]) {
+                                bostonSchedule[dateStr][buildingCode] = {};
+                            }
+                            if(!bostonSchedule[dateStr][buildingCode][roomNumber]) {
+                                bostonSchedule[dateStr][buildingCode][roomNumber] =
+                                    new RoomSchedule(buildingCode, roomNumber);
+                            }
+                            const roomSchedule = bostonSchedule[dateStr][buildingCode][roomNumber];
+                            if(overlappedSchedule[buildingCode][roomNumber]) {
+                                roomSchedule.merge(overlappedSchedule[buildingCode][roomNumber]);
+                            }
+                            // count++;
+                            // console.log(count);
+                            Object.keys(termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries).forEach(day => {
+                                const timeBoundaries = termSchedule[dateKey][buildingCode][roomNumber].timeBoundaries[day];
+                                Object.setPrototypeOf(timeBoundaries, TimeBoundaries.prototype);
+                                timeBoundaries.boundaries.forEach(time => {
+                                    Object.setPrototypeOf(time, TimeHHMM.prototype);
+                                });
+                            });
+                            roomSchedule.merge(termSchedule[dateKey][buildingCode][roomNumber]);
+                        });
+                    });
+                    return;
+                }
+                assert(false, "Unreachable code reached when loading Boston schedules");
+            });
+        });
+        this.cacheBostonSchedules[i].update(bostonSchedule);
+        console.log(`Finished updating schedule ${i}.`);
+    }
 }
 
 export default BostonSchedule;
