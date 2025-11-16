@@ -1,6 +1,7 @@
 import termParser from "./parser/termParser.js";
 import generateCourseParsers from "./parser/courseParser.js"
 import generateTermSchedules from "./schedule/termSchedule.js";
+import BostonSchedule from "./schedule/bostonSchedule.js";
 
 async function updateCourseCache({ allowRawCacheUse = true, updateRawCache = true } = {}) {
     const promises = [];
@@ -15,7 +16,7 @@ async function updateCourseCache({ allowRawCacheUse = true, updateRawCache = tru
     return Promise.all(promises).then(() => currentCourseParsers);
 }
 
-async function updateScheduleCache() {
+async function updateTermScheduleCache() {
     const currentTermSchedules = await termParser.getCurrentTerms()
         .then(currentTerms => currentTerms.map(term => term.code))
         .then(currentTermCodes => generateTermSchedules(currentTermCodes));
@@ -24,6 +25,13 @@ async function updateScheduleCache() {
         termSchedule.updateCache();
     });
     return currentTermSchedules;
+}
+
+async function updateBostonScheduleCache() {
+    const bostonSchedule = await termParser.getCurrentTerms()
+        .then(currentTerms => currentTerms.map(term => term.code))
+        .then(currentTermCodes => new BostonSchedule(currentTermCodes));
+    bostonSchedule.loadTermSchedules();
 }
 
 async function getCourseMeetingTimes() {
@@ -36,8 +44,14 @@ async function getCourseMeetingTimes() {
     return courseMeetingTimes;
 }
 
+const startTime = Date.now();
 await updateCourseCache();
-await updateScheduleCache();
+await updateTermScheduleCache();
+await updateBostonScheduleCache();
+
+const endTime = Date.now();
+console.log(`Main finished in ${(endTime - startTime) / 1000} seconds.`);
+
 
 // console.log(await updateCourseCache());
 // console.log(await updateScheduleCache());
