@@ -230,7 +230,7 @@ export default function OnboardingCourses() {
 
             <div className="mt-4 text-center">
               <Link href={redirectPath} className="text-gray-200 hover:text-gray-300 text-sm transition-colors">
-                ← {isSignedIn ? "Back to Profile" : "Back to Sign Up"}
+                ← Back
               </Link>
             </div>
           </div>
