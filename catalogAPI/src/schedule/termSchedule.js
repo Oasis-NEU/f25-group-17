@@ -195,9 +195,9 @@ class TermSchedule {
             if(startDateStr != endDateStr) {
                 if(!dateBoundaries.includes(startDateStr)) dateBoundaries.push(startDateStr);
                 const exclusiveEndDate = new Date(
-                    parseInt(endDateStr.slice(0,4)),
-                    parseInt(endDateStr.slice(4,6)) - 1,
-                    parseInt(endDateStr.slice(6,8)) + 1);
+                    parseInt(endDateStr.slice(0, 4)),
+                    parseInt(endDateStr.slice(4, 6)) - 1,
+                    parseInt(endDateStr.slice(6, 8)) + 1);
                 const exclusiveEndDateStr =
                     `${exclusiveEndDate.getFullYear()}`+
                     `${String(exclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
@@ -219,9 +219,9 @@ class TermSchedule {
             if(startDateStr == endDateStr) return;
             const startIndex = dateBoundaries.indexOf(startDateStr);
             const exclusiveEndDate = new Date(
-                parseInt(endDateStr.slice(0,4)),
-                parseInt(endDateStr.slice(4,6)) - 1,
-                parseInt(endDateStr.slice(6,8)) + 1);
+                parseInt(endDateStr.slice(0, 4)),
+                parseInt(endDateStr.slice(4, 6)) - 1,
+                parseInt(endDateStr.slice(6, 8)) + 1);
             const exclusiveEndDateStr =
                 `${exclusiveEndDate.getFullYear()}`+
                 `${String(exclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
@@ -245,9 +245,9 @@ class TermSchedule {
         });
         for(let i = 0; i < dateBoundaries.length - 1; i++) {
             const inclusiveEndDate = new Date(
-                parseInt(dateBoundaries[i + 1].slice(0,4)),
-                parseInt(dateBoundaries[i + 1].slice(4,6)) - 1,
-                parseInt(dateBoundaries[i + 1].slice(6,8)) - 1);
+                parseInt(dateBoundaries[i + 1].slice(0, 4)),
+                parseInt(dateBoundaries[i + 1].slice(4, 6)) - 1,
+                parseInt(dateBoundaries[i + 1].slice(6, 8)) - 1);
             const inclusiveEndDateStr =
                 `${inclusiveEndDate.getFullYear()}`+
                 `${String(inclusiveEndDate.getMonth() + 1).padStart(2, '0')}`+
