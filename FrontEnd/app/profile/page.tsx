@@ -8,9 +8,7 @@ import { Avatar, Box, Heading, Text, Stack, CardRoot, CardBody, Input, Button, S
 import { supabase } from "../../../supabase/lib/supabase";
 import { useRouter } from "next/navigation";
 import json from "../../../Data/combineMajor.json";
-
-import type { UserData } from "../../types/user"
-
+import SideBar from "@/components/SideBar";
 
 export default function Profile() {
   const router = useRouter();
@@ -313,25 +311,9 @@ export default function Profile() {
     <PageTransition>
       <main className="relative flex flex-col min-h-screen bg-gray-900 text-white overflow-auto">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0" />
+        <div className="absolute inset-0 bg-linear-to-b from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.7)] to-[rgba(220,20,60,0.1)] z-0" />
 
-        {/* Staggered Menu */}
-        <div className="absolute top-0 left-0">
-          <div style={{ height: '100vh', background: '#1a1a1a' }}>
-            <StaggeredMenu
-              isFixed={true}
-              position="left"
-              items={menuItems}
-              displayItemNumbering={true}
-              menuButtonColor="#fff"
-              openMenuButtonColor="#fff"
-              changeMenuColorOnOpen={true}
-              colors={['#FF0000', '#FF8A8A']}
-              logoUrl="https://www.svgrepo.com/show/499592/close-x.svg"
-              accentColor="#ff6b6b"
-            />
-          </div>
-        </div>
+        <SideBar/>
 
         {/* Page content - Dashboard Layout */}
         <div className="relative z-10 w-full pt-24 px-8 pb-20">
