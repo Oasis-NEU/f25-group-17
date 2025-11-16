@@ -74,6 +74,7 @@ export default function Profile() {
       handleYearSelection(0, userData.year);
 
       await loadCourses(userData.courses);
+      console.log(userData.courses)
     } catch (err) {
       console.error("Error loading user data:", err);
     }
@@ -155,10 +156,9 @@ export default function Profile() {
       const lastName = nameParts.slice(1).join(' ') || '';
 
       // Load current courses from localStorage
-      const userCourses = localStorage.getItem("userCourses");
-      const coursesArray = userCourses ? JSON.parse(userCourses) : [];
+      const courseNames = courses.map(c => c.courseName);
 
-      const updates = { firstName, lastName, email, major, year, courses: coursesArray };
+      const updates = { firstName, lastName, email, major, year};
 
       const { error: updateError } = await (supabase as any).from('UserData').update(updates).eq('user_id', user.id);
 
