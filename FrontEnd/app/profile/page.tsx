@@ -84,11 +84,6 @@ export default function Profile() {
       setCourses([]);
       return;
     }
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if(authError || !user) {
-        router.push("/login");
-        return;
-      }
 
     try {
       let allClasses: ClassTimeData[] = [];
@@ -112,12 +107,13 @@ export default function Profile() {
       try {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) {
-          router.push("/profile");
+          router.push("/login");
           return;
         }
         await loadUserData(user.id);
       } catch (err) {
         console.error("Error fetching user data:", err);
+        router.push("/login");
       } finally {
         setLoading(false);
       }
