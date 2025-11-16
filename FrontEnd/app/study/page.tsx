@@ -162,13 +162,13 @@ export default function Study() {
       console.log('✅ Insert successful:', data);
 
       // Store the booking ID for later logout
-      if(data && data[0]) {
-        setUserBookingId((data[0] as any).id);
+      if(data) {
+        setUserBookingId((data as any).id);
 
         // Auto-logout after 2 hours (7200 seconds)
         const autoLogoutTime = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
         const timeoutId = setTimeout(() => {
-          handleLeaveRoom((data[0] as any).id);
+          handleLeaveRoom((data as any).id);
           setNotification({ 
             show: true, 
             message: `Auto-logged out from ${space.building} Room ${space.roomNumber}` 
