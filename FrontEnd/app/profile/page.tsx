@@ -191,7 +191,7 @@ export default function Profile() {
     try {
       await supabase.auth.signOut();
       localStorage.removeItem('userCourses');
-      router.push('/profile');
+      router.push('/login');
     } catch (err) {
       console.error('Error signing out:', err);
     }
