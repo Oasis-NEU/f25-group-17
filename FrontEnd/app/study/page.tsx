@@ -416,7 +416,7 @@ export default function Study() {
       });
       setCurrentTime(time);
     };
-
+    //yap
     updateTime(); // Set initial time
     const interval = setInterval(updateTime, 1000); // Update every second
 
