@@ -6,7 +6,7 @@ import Button from "../../components/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../../supabase/lib/supabase";
-import Script from "next/script";
+// import Script from "next/script";
 import { usePathname } from "next/navigation";
 import json from "../../../Data/combineMajor.json";
 
@@ -56,7 +56,7 @@ export default function Signup() {
   const [yearSearch, setYearSearch] = useState("");
   const [showYearDropdown, setShowYearDropdown] = useState(false);
   const [isSelectingYear, setIsSelectingYear] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [captchaToken] = useState<string>("XXXX.DUMMY.TOKEN.XXXX");
 
   const [courses, setCourses] = React.useState<string[]>([]);
   const [showCoursesSection, setShowCoursesSection] = React.useState(false);
@@ -70,6 +70,8 @@ export default function Signup() {
       firstName: formData.firstname,
       lastName: formData.lastname,
       email: formData.email,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
       major: formData.major,
       year: formData.year,
       courses: courses
@@ -185,43 +187,35 @@ export default function Signup() {
     return Object.keys(newErrors).length === 0;
   };
 
-  useEffect(() => {
-    const initializeTurnstile = () => {
-      if (window.turnstile && !widgetRendered.current) {
-        widgetRendered.current = true;
-        window.turnstile.render("#turnstile-widget", {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-          callback: setCaptchaToken,
-          "error-callback": () => console.warn("Captcha error occurred"),
-        });
-      }
-    };
-
-    if (window.turnstile) {
-      initializeTurnstile();
-      return;
-    }
-
-    const interval = setInterval(() => {
-      if (window.turnstile) {
-        clearInterval(interval);
-        initializeTurnstile();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [setCaptchaToken]);
+  // useEffect(() => {
+  //   const initializeTurnstile = () => {
+  //     if (window.turnstile && !widgetRendered.current) {
+  //       widgetRendered.current = true;
+  //       window.turnstile.render("#turnstile-widget", {
+  //         sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+  //         callback: setCaptchaToken,
+  //         "error-callback": () => console.warn("Captcha error occurred"),
+  //       });
+  //     }
+  //   };
+  //   if (window.turnstile) {
+  //     initializeTurnstile();
+  //     return;
+  //   }
+  //   const interval = setInterval(() => {
+  //     if (window.turnstile) {
+  //       clearInterval(interval);
+  //       initializeTurnstile();
+  //     }
+  //   }, 100);
+  //   return () => clearInterval(interval);
+  // }, [setCaptchaToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!validateForm()) {
-      return;
-    }
-
-    if (!captchaToken) {
-      setError("Please complete the captcha verification");
       return;
     }
 
@@ -357,6 +351,8 @@ export default function Signup() {
           firstname: parsed.firstName || "",
           lastname: parsed.lastName || "",
           email: parsed.email || "",
+          password: parsed.password || "",
+          confirmPassword: parsed.confirmPassword || "",
           major: parsed.major || "",
           year: parsed.year || "",
         }));
@@ -382,6 +378,8 @@ export default function Signup() {
           firstName: formData.firstname,
           lastName: formData.lastname,
           email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
           major: formData.major,
           year: formData.year,
           courses: courses
@@ -815,14 +813,6 @@ export default function Signup() {
               </div>
             </div>
 
-            {/* Cloudflare Turnstile Captcha */}
-            <div className="flex justify-center items-center mt-12 mb-6">
-              <div
-                id="turnstile-widget"
-                style={{ transform: "scale(1.5)", transformOrigin: "center" }}
-              ></div>
-            </div>
-
             {/* Error Message */}
             {error && (
               <div className="mt-6 p-4 bg-red-600/20 border border-red-600/50 rounded-lg">
@@ -872,15 +862,7 @@ export default function Signup() {
           <div style={{ height: "100vh", background: "#1a1a1a" }}></div>
         </div>
 
-        {/* Cloudflare Captcha */}
-        <Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="afterInteractive"
-          onLoad={() => {
-            // @ts-ignore
-            if (window.onTurnstileLoad) window.onTurnstileLoad();
-          }}
-        />
+        {/* Cloudflare Captcha disabled */}
       </div>
     </main>
   );

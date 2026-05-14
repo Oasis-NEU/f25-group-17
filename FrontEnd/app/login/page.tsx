@@ -7,7 +7,7 @@ import Button from '../../components/button'
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../../supabase/lib/supabase";
-import Script from "next/script";
+// import Script from "next/script";
 import { usePathname } from "next/navigation";
 
 
@@ -32,7 +32,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const [showMagicLinkInput, setShowMagicLinkInput] = useState(false)
   const [magicLinkEmail, setMagicLinkEmail] = useState('')
-  const [captchaToken, setCaptchaToken] = useState<string>("")
+  const [captchaToken] = useState<string>("XXXX.DUMMY.TOKEN.XXXX")
   const [isMounted, setIsMounted] = React.useState(true)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,30 +74,7 @@ export default function Login() {
       };
     }, []);
 
-    useEffect(() => {
-      const renderCaptcha = () => {
-        const el = document.getElementById("turnstile-widget");
-        if(window.turnstile && el && isMounted) {
-          el.innerHTML = ""; // prevent duplicates
-          window.turnstile.render("#turnstile-widget", {
-            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-            callback: (token: string) => {
-              if(isMounted) setCaptchaToken(token);
-            },
-          });
-        }
-      };
-
-      window.onTurnstileLoad = renderCaptcha;
-
-      // Render immediately if Turnstile is already loaded
-      if(window.turnstile) renderCaptcha();
-
-      return () => {
-        const el = document.getElementById("turnstile-widget");
-        if(el) el.innerHTML = "";
-      };
-    }, [pathname, isMounted]);
+    // useEffect(() => { /* Turnstile captcha disabled */ }, [pathname, isMounted]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -116,7 +93,7 @@ export default function Login() {
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: cleanEmail,
         password: formData.password,
-        options: {captchaToken},
+        options: { captchaToken },
       })
 
       if(authError) {
@@ -133,19 +110,6 @@ export default function Login() {
       setError(errorMessage)
       console.error('Login error:', err)
       
-      // Reset captcha token on failed login so user can try again
-      setCaptchaToken('')
-      // Reset captcha widget
-      const el = document.getElementById("turnstile-widget")
-      if(el && window.turnstile) {
-        el.innerHTML = ""
-        window.turnstile.render("#turnstile-widget", {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-          callback: (token: string) => {
-            if(isMounted) setCaptchaToken(token);
-          },
-        })
-      }
     } finally {
       if(isMounted) setIsLoading(false)
     }
@@ -315,14 +279,6 @@ export default function Login() {
               </div>
             </form>
 
-            {/* Cloudflare Turnstile Captcha */}
-            <div className="flex justify-center items-center mt-12 mb-6">
-              <div 
-                id="turnstile-widget" 
-                style={{ transform: 'scale(1.5)', transformOrigin: 'center' }}
-              ></div>
-            </div>
-            
             {/* Sign up link */}
             <div className="mt-6 pt-3 text-center">
               <p className="text-gray-500 text-sm">
@@ -350,15 +306,7 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Cloudflare Captcha */}
-        <Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="afterInteractive"
-          onLoad={() => {
-          // @ts-ignore
-          if(window.onTurnstileLoad) window.onTurnstileLoad();
-          }}
-        />
+        {/* Cloudflare Captcha disabled */}
       </div>
     </main>
   );

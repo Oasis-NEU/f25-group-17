@@ -12,6 +12,7 @@ import { SearchableInput } from "@/components/SearchableInput";
 import { SavedCoursesBanner } from "@/components/SavedCoursesBanner";
 import { ItemActions } from "@/components/ItemActions";
 import { CoursesHeader } from "@/components/CoursesHeader";
+import { supabase } from "../../../supabase/lib/supabase";
 
 interface ClassTimeData {
   courseName: string;
@@ -163,6 +164,12 @@ export default function OnboardingCourses() {
       
       setSavedCourses(hasCourses ? nonEmptyCourses : []);
       console.log("Saved courses:", hasCourses ? nonEmptyCourses : []);
+
+      // Sync courses to Supabase UserData
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await (supabase as any).from("UserData").update({ courses: hasCourses ? nonEmptyCourses : [] }).eq("user_id", user.id);
+      }
 
       await new Promise(res => setTimeout(res, 400));
       router.push(redirectPath);

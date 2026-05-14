@@ -94,9 +94,9 @@ export default function Profile() {
         else allClasses.push(...data);
       }
 
-      const userCourses = allClasses.filter(c => courseNames.includes(c.courseName));
-      const uniqueCourses = Array.from(new Map(userCourses.map(c => [c.courseName, c])).values());
-      setCourses(uniqueCourses.length ? uniqueCourses : courseNames.map((n: string) => ({ courseName: n })));
+      const dbCourseMap = new Map(allClasses.map(c => [c.courseName, c]));
+      const allUserCourses = courseNames.map((n: string) => dbCourseMap.get(n) ?? { courseName: n });
+      setCourses(allUserCourses);
     } catch (err) {
       console.error("Error loading courses:", err);
     }

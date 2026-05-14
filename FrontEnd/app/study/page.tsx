@@ -102,92 +102,67 @@ export default function Study() {
   };
 
   // Handle Join Room
-  const handleJoinRoom = async (space: any) => {
+  const handleJoinRoom = async (space: any, isCurrentlyAvailable: boolean = true) => {
     try {
+      if (!isCurrentlyAvailable) {
+        setNotification({ show: true, message: `${space.building} Room ${space.roomNumber} is in use, try a different classroom.` });
+        setTimeout(() => setNotification({ show: false, message: '' }), 3000);
+        return;
+      }
+
       console.log('Attempting to join room:', space);
-      
+
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         setNotification({ show: true, message: 'Please log in to join a room' });
         return;
       }
 
-      // Check if user already has an active booking
-      if (userBookingId) {
-        setNotification({ show: true, message: 'You are already in a room. Please leave first.' });
+      // Check if this specific room is already occupied by someone else
+      const { data: roomBooking } = await supabase
+        .from('RoomBooking')
+        .select('*')
+        .eq('space_id', space.id)
+        .eq('inUse', true)
+        .maybeSingle() as any;
+
+      if (roomBooking && roomBooking.user_id !== user.id) {
+        setNotification({ show: true, message: `${space.building} Room ${space.roomNumber} is in use, try a different classroom.` });
+        setTimeout(() => setNotification({ show: false, message: '' }), 3000);
         return;
       }
 
-      // Check if user is already in this specific room
-      const { data: existingBooking, error: checkError } = await supabase
+      // Check if user already has an active booking in a different room
+      const { data: existingBooking } = await supabase
         .from('RoomBooking')
         .select('*')
         .eq('user_id', user.id)
-        .eq('inUse', true);
+        .eq('inUse', true)
+        .maybeSingle() as any;
 
-      if(existingBooking && existingBooking.length > 0) {
-        console.log(existingBooking);
+      if (existingBooking && existingBooking.space_id !== space.id) {
         setNotification({
           show: true,
-          message: `You are already in ${(existingBooking[0] as any).buildingName} Room ${(existingBooking[0] as any).roomNumber}`
+          message: `You are already in ${existingBooking.buildingName} Room ${existingBooking.roomNumber}. Please leave first.`
         });
-        setTimeout(() => {
-          setNotification({ show: false, message: '' });
-        }, 3000);
+        setTimeout(() => setNotification({ show: false, message: '' }), 3000);
         return;
       }
 
-      // Insert booking into RoomBooking table
-      console.log('📝 Inserting booking with data:', {
-        space_id: space.id,
-        buildingName: space.building,
-        roomNumber: space.roomNumber,
-        user: user.id,
-        inUse: true
-      });
-
-      const { data: existing, error: err } = await supabase.from('RoomBooking')
-        .select('*')
-        .eq('space_id', space.id)
-        .eq('buildingName', space.building)
-        .eq('roomNumber', space.roomNumber)
-        .eq('user_id', user.id)
-        .single() as any;
-
-      if(err) {
-        console.error('❌ Error checking existing bookings:', err);
-      }
-      if(existing) {
-        console.log('⚠️ Existing booking found:', existing);
-        const {data: updatedBooking, error: error0 } = await (supabase as any)
-          .from('RoomBooking')
-          .update({ inUse: true })
-          .eq('space_id', existing.space_id)
-          .select();
-        if(error0) {
-          console.error('❌ Error updating existing booking:', error0);
-        }
-        console.log(updatedBooking);
-        setNotification({ 
-          show: true, 
-          message: `You joined ${updatedBooking[0].buildingName} Room ${updatedBooking[0].roomNumber}` 
-        });
-        return;
-      }
-
-      const { data, error } = await supabase.from('RoomBooking').insert([
+      const { data, error } = await (supabase as any).from('RoomBooking').upsert(
         {
           space_id: space.id,
           buildingName: space.building,
           roomNumber: space.roomNumber,
-          user: user.id,
+          user_id: user.id,
           inUse: true
-        }
-      ] as any).select();
+        },
+        { onConflict: 'space_id' }
+      ).select();
 
       if (error) {
-        console.error('Insert error:', error);
+        console.error('Upsert error:', error);
         throw error;
       }
 
@@ -1140,7 +1115,7 @@ export default function Study() {
                                 _hover={{ bg: "red.700" }}
                                 size="sm"
                                 fontWeight="600"
-                                onClick={() => handleJoinRoom(space)}
+                                onClick={() => handleJoinRoom(space, isCurrentlyAvailable)}
                               >
                                 Join Now
                               </Button>
@@ -1176,19 +1151,19 @@ export default function Study() {
               top: '20px',
               right: '20px',
               zIndex: 999,
-              backgroundColor: notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? 'rgba(239, 68, 68, 0.95)' : 'rgba(34, 197, 94, 0.95)',
+              backgroundColor: notification.message.startsWith('You joined') ? 'rgba(34, 197, 94, 0.95)' : 'rgba(220, 38, 39, 0.95)',
               color: 'white',
               padding: '16px 24px',
               borderRadius: '12px',
-              border: notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(34, 197, 94, 0.5)',
-              boxShadow: notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? '0 8px 32px rgba(239, 68, 68, 0.3)' : '0 8px 32px rgba(34, 197, 94, 0.3)',
+              border: notification.message.startsWith('You joined') ? '1px solid rgba(34, 197, 94, 0.5)' : '1px solid rgba(220, 38, 39, 0.5)',
+              boxShadow: notification.message.startsWith('You joined') ? '0 8px 32px rgba(34, 197, 94, 0.3)' : '0 8px 32px rgba(220, 38, 39, 0.3)',
               backdropFilter: 'blur(10px)',
               fontSize: '16px',
               fontWeight: '600',
               maxWidth: '90%'
             }}
           >
-            {notification.message.toLowerCase().includes('error') || notification.message.toLowerCase().includes('failed') ? '✗' : '✓'} {notification.message}
+            {notification.message.startsWith('You joined') ? '✓' : '✗'} {notification.message}
           </motion.div>
         )}
 
