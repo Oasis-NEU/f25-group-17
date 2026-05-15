@@ -2,7 +2,7 @@
 
 **Find open study spaces at Northeastern University**
 
-**Live at**: [empty-neu.vercel.app](https://empty-neu.vercel.app)
+**Live at**: [empty-neu.vercel.app](https://emptyneu.vercel.app/)
 
 EmptyNEU is a web application that helps Northeastern University students discover available study spaces in real-time. Built with modern web technologies, it provides an intuitive interface for browsing study locations and managing user profiles.
 
